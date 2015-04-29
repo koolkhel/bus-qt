@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/blank-bus.png</file>
+        <file>images/end-station.png</file>
+        <file>images/middle-station.png</file>
+        <file>images/next-bus-marker.png</file>
+        <file>images/next-bus-top.png</file>
+        <file>images/night end station.png</file>
+        <file>images/night middle station.png</file>
+        <file>images/night next bus top.png</file>
+        <file>images/night next marker.png</file>
+        <file>images/night our marker.png</file>
+        <file>images/night prev bus top.png</file>
+        <file>images/night prev marker.png</file>
+        <file>images/night right static block.png</file>
+        <file>images/night section.png</file>
+        <file>images/night top static block.png</file>
+        <file>images/previous-bus-marker.png</file>
+        <file>images/previous-bus-top.png</file>
+        <file>images/right-static-block.png</file>
+        <file>images/section.png</file>
+        <file>images/section1.png</file>
+        <file>images/section12.png</file>
+        <file>images/section12-black.png</file>
+        <file>images/section21.png</file>
+        <file>images/section21-black.png</file>
+        <file>images/station.png</file>
+        <file>images/station1.png</file>
+        <file>images/station1-black.png</file>
+        <file>images/top-static-block.png</file>
+        <file>images/us-marker.png</file>
+    </qresource>
+</RCC>
