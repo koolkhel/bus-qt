@@ -38,7 +38,8 @@ OTHER_FILES += indigo.proto
 
 linux-g++ {
     INCLUDEPATH += /usr/local/include
-    LIBS += -L/usr/local/lib -lgps -lprotobuf-lite
+    QMAKE_CXXFLAGS += -fvisibility=default
+    LIBS += -L/usr/local/lib -lgps -lprotobuf-lite -fvisibility=default
 }
 
 linux-arm-indigo-g++ {

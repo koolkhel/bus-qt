@@ -10,9 +10,6 @@
 #include <unistd.h>
 #endif // !Q_OS_WIN32
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDateTime>
-
 #include <execinfo.h>
 #include <cxxabi.h>
 
@@ -77,6 +74,9 @@ static inline void print_stacktrace(FILE *out = stderr, unsigned int max_frames 
                 funcname = ret; // use possibly realloc()-ed string
                 fprintf(out, "  %s : %s+%s\n",
                         symbollist[i], funcname, begin_offset);
+                char syscom[256];
+                sprintf(syscom,"addr2line %p -e tests | grep -v ??:0", addrlist[i]); //last parameter is the name of this app
+                system(syscom);
             }
             else {
                 // demangling failed. Output function name as a C function with
@@ -96,34 +96,19 @@ static inline void print_stacktrace(FILE *out = stderr, unsigned int max_frames 
     free(symbollist);
 }
 
-static void printBacktrace(const QString &header)
-{
-        if (header.isEmpty())
-                fprintf(stderr, "\nbacktrace:\n");
-        else
-                fprintf(stderr, "\nbacktrace: ('%s')\n", qPrintable(header));
-        void *bt_array[100];
-        char **bt_strings;
-        int num_entries;
-        if ((num_entries = backtrace(bt_array, 100)) < 0) {
-                fprintf(stderr, "could not generate backtrace\n");
-                return;
-        }
-        if ((bt_strings = backtrace_symbols(bt_array, num_entries)) == NULL) {
-                fprintf(stderr, "could not get symbol names for backtrace\n");
-                return;
-        }
-        fprintf(stderr, "======= BEGIN OF BACKTRACE =====\n");
-        for (int i = 0; i < num_entries; ++i)
-                fprintf(stderr, "[%d] %s\n", i, bt_strings[i]);
-        fprintf(stderr, "======= END OF BACKTRACE  ======\n");
-        free(bt_strings);
-        fflush(stderr);
-}
-
 static void kadu_signal_handler(int signal)
 {
         fprintf(stderr, "%d\n", signal);
+
+        char str[255];
+        //  | cut -d ' ' -f 1
+        snprintf(str, 255, "pmap %d | grep indigo | head -n 1 | cut -d ' ' -f 1", getpid());
+        FILE *pmap = popen(str, "r");
+        do {
+            fgets(str, 255, pmap);
+            fputs(str, stderr);
+        } while (!feof(pmap));
+        fclose(pmap);
 
         static int sigsegvCount = 0;
 
