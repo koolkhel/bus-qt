@@ -1,3 +1,6 @@
+#define GNU_SOURCE
+
+#include <stdlib.h>
 #include <errno.h>
 #include <time.h>
 #include <stdio.h>
@@ -10,8 +13,13 @@
 #include <unistd.h>
 #endif // !Q_OS_WIN32
 
+#include <dlfcn.h>
 #include <execinfo.h>
 #include <cxxabi.h>
+
+#include <QString>
+#include <QDateTime>
+#include <QCoreApplication>
 
 /** Print a demangled stack backtrace of the caller function to FILE* out. */
 static inline void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63) {
@@ -28,72 +36,42 @@ static inline void print_stacktrace(FILE *out = stderr, unsigned int max_frames 
         return;
     }
 
-    // resolve addresses into strings containing "filename(function+address)",
-    // this array must be free()-ed
-    char** symbollist = backtrace_symbols(addrlist, addrlen);
-
-    // allocate string which will be filled with the demangled function name
-    size_t funcnamesize = 256;
-    char* funcname = (char*)malloc(funcnamesize);
+    Dl_info dlinfo;
+    const char *symname;
+    char *demangled;
+    int status = 0;
 
     // iterate over the returned symbol lines. skip the first, it is the
     // address of this function.
-    for (int i = 1; i < addrlen; i++)
+    for (int i = 2; i < addrlen; i++)
     {
-        char *begin_name = 0, *begin_offset = 0, *end_offset = 0;
+        if(!dladdr(addrlist[i], &dlinfo))
+            continue;
 
-        // find parentheses and +address offset surrounding the mangled name:
-        // ./module(function+0x15c) [0x8048a6d]
-        for (char *p = symbollist[i]; *p; ++p)
-        {
-            if (*p == '(')
-                begin_name = p;
-            else if (*p == '+')
-                begin_offset = p;
-            else if (*p == ')' && begin_offset) {
-                end_offset = p;
-                break;
+        symname = dlinfo.dli_sname;
+
+        demangled = abi::__cxa_demangle(symname, NULL, 0, &status);
+        if(status == 0 && demangled)
+            symname = demangled;
+
+        if (!strstr(dlinfo.dli_fname, "libgtest")) {
+            fprintf(out, "lib: %s, fn: %s\n", dlinfo.dli_fname, symname);
+            char buf[255];
+            memset(buf, 0, 255);
+            snprintf(buf, 255, "addr2line -C -e \"%s\" 0x%lx | grep -v ??", dlinfo.dli_fname, (char *) addrlist[i] - (char *) dlinfo.dli_fbase);
+            FILE *row = popen(buf, "r");
+            while (!feof(row)) {
+                char buf2[255];
+                memset(buf2, 0, 255);
+                fgets(buf2, 255, row);
+                fprintf(out, "%s", buf2);
             }
+            fclose(row);
         }
 
-        if (begin_name && begin_offset && end_offset
-            && begin_name < begin_offset)
-        {
-            *begin_name++ = '\0';
-            *begin_offset++ = '\0';
-            *end_offset = '\0';
-
-            // mangled name is now in [begin_name, begin_offset) and caller
-            // offset in [begin_offset, end_offset). now apply
-            // __cxa_demangle():
-
-            int status;
-            char* ret = abi::__cxa_demangle(begin_name,
-                                            funcname, &funcnamesize, &status);
-            if (status == 0) {
-                funcname = ret; // use possibly realloc()-ed string
-                fprintf(out, "  %s : %s+%s\n",
-                        symbollist[i], funcname, begin_offset);
-                char syscom[256];
-                sprintf(syscom,"addr2line %p -e tests | grep -v ??:0", addrlist[i]); //last parameter is the name of this app
-                system(syscom);
-            }
-            else {
-                // demangling failed. Output function name as a C function with
-                // no arguments.
-                fprintf(out, "  %s : %s()+%s\n",
-                        symbollist[i], begin_name, begin_offset);
-            }
-        }
-        else
-        {
-            // couldn't parse the line? print the whole line.
-            fprintf(out, "  %s\n", symbollist[i]);
-        }
+        if (demangled)
+            free(demangled);
     }
-
-    free(funcname);
-    free(symbollist);
 }
 
 static void kadu_signal_handler(int signal)

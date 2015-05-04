@@ -12,6 +12,8 @@ TEST(myWTF, testOneOne) {
 
 TEST(myWTF, testOneTwo) {
     EXPECT_EQ(2, 2);
+    char *a = (char *) 5;
+    *a = 1;
 }
 
 TEST(Zmq, testWTF) {
