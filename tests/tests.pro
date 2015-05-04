@@ -5,7 +5,7 @@ include(../defaults.pri)
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += network testlib
 
 TARGET = tests
 CONFIG   -= app_bundle
@@ -15,5 +15,9 @@ TEMPLATE = app
 LIBS += -L../src -lindigo -lgtest
 
 INCLUDEPATH += /usr/local/include
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    loggertester.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+HEADERS += \
+    loggertester.h

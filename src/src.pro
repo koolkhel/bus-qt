@@ -22,7 +22,8 @@ SOURCES += gpsdpositionsource.cpp \
         indigoqueue.cpp \
         mainwindow.cpp \
     testclass.cpp \
-    support_unix.cpp
+    support_unix.cpp \
+    indigologger.cpp
 
 HEADERS  += mainwindow.h \
             backend.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h \
             indigoqueue.h \
             gpsdpositionsource.h \
             gpsdsatellitesource.h \
-    testclass.h
+    testclass.h \
+    indigologger.h
 
 FORMS    += mainwindow.ui
 

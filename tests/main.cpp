@@ -3,17 +3,33 @@
 #include "testclass.h"
 #include "nzmqt/nzmqt.hpp"
 
+#include "indigologger.h"
+#include "loggertester.h"
+
 void enableSignalHandling();
 
-TEST(myWTF, testOneOne) {
-    testclass cl;
-    EXPECT_TRUE(cl.test());
-}
+TEST(logging, testLog) {
+    LoggerTester tester;
 
-TEST(myWTF, testOneTwo) {
-    EXPECT_EQ(2, 2);
-    char *a = (char *) 5;
-    *a = 1;
+    QString lastStr;
+
+    lastStr = QString("fuck you");
+    ISL_DEBUG(lastStr);
+    tester.wait();
+    //ASSERT_STREQ(lastStr.simplified().toStdString().c_str(), tester.lastMessage.simplified().toStdString().c_str());
+    ASSERT_TRUE(tester.lastMessage.simplified().contains(lastStr.simplified()));
+
+    lastStr = QString("hello, world!");
+    ISL_ERROR(lastStr);
+    tester.wait();
+    //ASSERT_STREQ(lastStr.simplified().toStdString().c_str(), tester.lastMessage.simplified().toStdString().c_str());
+    ASSERT_TRUE(tester.lastMessage.simplified().contains(lastStr.simplified()));
+
+    lastStr = QString("wtf %1").arg(5);
+    ISL_DEBUG(lastStr);
+    tester.wait();
+    ASSERT_TRUE(tester.lastMessage.simplified().contains(lastStr.simplified()));
+    //ASSERT_STREQ(lastStr.simplified().toStdString().c_str(), .toStdString().c_str());
 }
 
 TEST(Zmq, testWTF) {
