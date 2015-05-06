@@ -5,4 +5,4 @@ find . -name "*.h" -exec git add {} \;
 find . -name "*.sh" -exec git add {} \;
 find . -name "*.ui" -exec git add {} \;
 
-git commit
+EDITOR=vim git commit

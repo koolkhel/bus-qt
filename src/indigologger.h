@@ -2,26 +2,34 @@
 #define INDIGOLOGGER_H
 
 #include <QtNetwork/QUdpSocket>
+#include <QtNetwork/QTcpServer>
+#include <QLoggingCategory>
+#include <QDebug>
+
+Q_DECLARE_LOGGING_CATEGORY(GPS)
+Q_DECLARE_LOGGING_CATEGORY(GSM)
+Q_DECLARE_LOGGING_CATEGORY(ZMQ)
 
 class IndigoLogger;
 
-#define ISL_DEBUG(str) IndigoLogger::getInstance()->log(IndigoLogger::DEBUG, str)
-#define ISL_ERROR(str) IndigoLogger::getInstance()->log(IndigoLogger::ERROR, str)
+extern IndigoLogger *instance;
 
-class IndigoLogger
+void indigoMessageHandler(QtMsgType type,
+   const QMessageLogContext &context,
+   const QString &message);
+
+
+class IndigoLogger : public QObject
 {
+    Q_OBJECT
 public:
-    enum {
-        PORT = 45000
-    };
-    enum LogLevel {
-        // сюда идет все
-        DEBUG = 2,
-        // несбывшиеся предположения по поводу работы кода
-        ERROR = 4,
+    enum Config {
+        PORT = 45000,
+        CONF_PORT = 45001
     };
 
     IndigoLogger();
+    virtual ~IndigoLogger() {}
 
     static IndigoLogger *getInstance() {
         if (instance == NULL)
@@ -29,13 +37,21 @@ public:
         return instance;
     }
 
-    inline QString getLevelTag(int logLevel);
+    void log(QString str);
 
-    void log(int logLevel, QString str);
+    // debug function
+    void wait();
+signals:
+    void configurationChanged();
+private slots:
+    void acceptConfiguration();
+    void configurationDataReceived();
+    void configurationClientDisconnected();
+
 private:
     QUdpSocket *socket;
-
-    static IndigoLogger *instance;
+    QTcpServer *confServer;
+    QTcpSocket *confClientSocket;
 };
 
 #endif // INDIGOLOGGER_H

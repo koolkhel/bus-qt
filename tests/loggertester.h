@@ -12,6 +12,7 @@ class LoggerTester : public QObject
 public:
     explicit LoggerTester(QObject *parent = 0);
     void wait();
+    void putConf(QString conf);
     QString lastMessage;
 signals:
 
