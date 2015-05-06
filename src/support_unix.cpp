@@ -21,8 +21,9 @@
 #include <QDateTime>
 #include <QCoreApplication>
 
+inline void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63);
 /** Print a demangled stack backtrace of the caller function to FILE* out. */
-static inline void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63) {
+void print_stacktrace(FILE *out, unsigned int max_frames) {
     fprintf(out, "stack trace:\n");
 
     // storage array for stack trace address data

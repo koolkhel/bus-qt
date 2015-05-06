@@ -2,6 +2,7 @@
 
 #include "indigologger.h"
 
+#include <QtNetwork/QTcpSocket>
 #include <QDebug>
 
 LoggerTester::LoggerTester(QObject *parent) : QObject(parent)
@@ -27,7 +28,24 @@ void LoggerTester::readyRead()
         loggerSocket->readDatagram(qba.data(), qba.size());
         QString message = QString::fromLocal8Bit(qba);
         lastMessage = message;
-        qDebug() << message;
+        //printf(qPrintable(message));
     }
 }
 
+void LoggerTester::putConf(QString conf)
+{
+    QTcpSocket *socket = new QTcpSocket();
+    socket->connectToHost(QHostAddress::LocalHost, IndigoLogger::CONF_PORT);
+    socket->waitForConnected(500000);
+    if (!socket->state() == QAbstractSocket::ConnectedState) {
+        qDebug() << "bad bad";
+        return;
+    }
+
+    socket->write((conf + "\n").toLocal8Bit());
+    socket->flush();
+    socket->waitForBytesWritten(500000);
+    socket->close();
+    socket->waitForDisconnected(500000);
+
+}

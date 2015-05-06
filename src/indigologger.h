@@ -9,6 +9,7 @@
 Q_DECLARE_LOGGING_CATEGORY(GPS)
 Q_DECLARE_LOGGING_CATEGORY(GSM)
 Q_DECLARE_LOGGING_CATEGORY(ZMQ)
+Q_DECLARE_LOGGING_CATEGORY(LOG)
 
 class IndigoLogger;
 
@@ -39,8 +40,6 @@ public:
 
     void log(QString str);
 
-    // debug function
-    void wait();
 signals:
     void configurationChanged();
 private slots:
