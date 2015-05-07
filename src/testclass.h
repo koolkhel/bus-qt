@@ -1,13 +1,19 @@
 #ifndef TESTCLASS_H
 #define TESTCLASS_H
+#include <nzmqt/nzmqt.hpp>
 
-
-class testclass
+class testclass : public QObject
 {
+    nzmqt::ZMQSocket* subscriber;
+    nzmqt::ZMQSocket* pusher;
 public:
-    testclass();
+    testclass(QObject *parent=0);
 
     bool test();
+
+protected slots:
+    void messageReceived(QList<QByteArray>);
+
 };
 
 #endif // TESTCLASS_H
