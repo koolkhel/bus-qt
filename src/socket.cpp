@@ -18,7 +18,7 @@ QThread(parent)
     r_socket = context->createSocket(ZMQSocket::TYP_SUB);
 
     connect(r_socket, SIGNAL(messageReceived(const QList<QByteArray>&)), SLOT(messageReceived(const QList<QByteArray>&)));
-
+    connect(this, SIGNAL(stringSent(QList<QByteArray>)),SLOT(stringSended(const QList<QByteArray>&)));
     timerout = new QTimer(this);
     timerout->setInterval(2500);
     timerout->setSingleShot(true);
@@ -58,12 +58,16 @@ void Socket::sendMessage()
     QList<QByteArray> msg;
     msg+= message.toLocal8Bit();
     m_socket->sendMessage(msg);
-    //qDebug() << msg;
     emit stringSent(msg);
     QTimer::singleShot(0, this, SLOT(stop()));
 }
 
+void Socket::stringSended(const QList<QByteArray> &message)
+{
+    qDebug()<<"Send: "<<message;
+}
+
 void Socket::messageReceived(const QList<QByteArray>& message)
 {
-    qDebug() << message;
+    qDebug() << "Recieved" <<message;
 }

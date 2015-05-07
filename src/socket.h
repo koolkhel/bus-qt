@@ -33,6 +33,8 @@ signals:
 protected slots:
     void messageReceived(const QList<QByteArray>& message);
     void sendMessage();
+    void stringSended(const QList<QByteArray> &message);
+
 
 private:
     QString message;

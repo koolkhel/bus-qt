@@ -12,7 +12,7 @@ public:
     bool test();
 
 protected slots:
-    void messageReceived(QList<QByteArray>);
+    void messageRecieved(const QList<QByteArray>&);
 
 };
 

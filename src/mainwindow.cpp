@@ -10,6 +10,7 @@
 #include <QScrollBar>
 
 #include <qdatetime.h>
+#include "socket.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -141,3 +142,10 @@ void MainWindow::satellitesInUseUpdated(int count)
     ui->label->setText(QString("%1").arg(count));
 }
 
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    nzmqt::Socket socket;
+    socket.send("Hello");
+    socket.run();
+}
