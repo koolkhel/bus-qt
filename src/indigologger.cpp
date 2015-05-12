@@ -38,7 +38,7 @@ void indigoMessageHandler(QtMsgType type,
         instance->log(logString);
     }
 
-    fprintf(stderr, "using log format %s", qPrintable(logPattern));
+    //fprintf(stderr, "using log format %s", qPrintable(logPattern));
 }
 
 IndigoLogger::IndigoLogger()

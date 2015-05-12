@@ -16,8 +16,14 @@ LIBS += -L../src -lindigo -lgtest
 
 INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
-    loggertester.cpp
+    loggertester.cpp \
+    zeromqpublisher.cpp \
+    zeromqsubscriber.cpp \
+    context.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    loggertester.h
+    loggertester.h \
+    zeromqpublisher.h \
+    zeromqsubscriber.h \
+    context.h

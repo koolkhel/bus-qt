@@ -145,7 +145,7 @@ void MainWindow::satellitesInUseUpdated(int count)
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    nzmqt::Socket socket;
+    /*nzmqt::Socket socket;
     socket.send("Hello");
-    socket.run();
+    socket.run();*/
 }

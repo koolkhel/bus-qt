@@ -24,7 +24,8 @@ SOURCES += gpsdpositionsource.cpp \
     testclass.cpp \
     support_unix.cpp \
     indigologger.cpp \
-    socket.cpp
+    socket.cpp \
+    subscribedispatcher.cpp
 
 HEADERS  += mainwindow.h \
             backend.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
             gpsdsatellitesource.h \
     testclass.h \
     indigologger.h \
-    socket.h
+    socket.h \
+    subscribedispatcher.h
 
 FORMS    += mainwindow.ui
 

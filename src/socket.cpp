@@ -11,11 +11,12 @@ QThread(parent)
     ZMQContext* context = createDefaultContext(this);
     context->start();
 
-    m_socket = context->createSocket(ZMQSocket::TYP_PUSH);
+    m_socket = context->createSocket(ZMQSocket::TYP_PUB);
 
     topic_ = "Hello";
-    r_address = "tcp://127.0.0.1:8888";
+    r_address = "tcp://127.0.0.1:8887";
     r_socket = context->createSocket(ZMQSocket::TYP_SUB);
+    r_socket1 = context->createSocket(ZMQSocket::TYP_SUB);
 
     connect(r_socket, SIGNAL(messageReceived(const QList<QByteArray>&)), SLOT(messageReceived(const QList<QByteArray>&)));
     connect(this, SIGNAL(stringSent(QList<QByteArray>)),SLOT(stringSended(const QList<QByteArray>&)));
@@ -36,6 +37,10 @@ void Socket::run()
 
     r_socket->subscribeTo(topic_);
     r_socket->connectTo(r_address);
+
+    r_socket1->subscribeTo(topic_);
+    r_socket1->connectTo(r_address);
+
 
     timerout->start();
     this->exec();
@@ -62,7 +67,7 @@ void Socket::sendMessage()
     QTimer::singleShot(0, this, SLOT(stop()));
 }
 
-void Socket::stringSended(const QList<QByteArray> &message)
+void Socket::stringSended(const QList<QByteArray>& message)
 {
     qDebug()<<"Send: "<<message;
 }

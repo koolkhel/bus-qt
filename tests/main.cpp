@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "testclass.h"
-#include "nzmqt/nzmqt.hpp"
+#include "zeromqpublisher.h"
+#include "zeromqsubscriber.h"
 
 #include "indigologger.h"
 #include "loggertester.h"
@@ -12,6 +13,12 @@
 #include <QTest>
 
 #include <QSignalSpy>
+
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+
+#include <google/protobuf/text_format.h>
+#include "context.h"
 
 void enableSignalHandling();
 void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63);
@@ -79,6 +86,30 @@ TEST(Zmq, testWTF) {
     nzmqt::ZMQContext* context = nzmqt::createDefaultContext(&obj);
     context->start();
     context->stop();
+}
+
+TEST(Zmq, tests) {
+    QString address = "tcp://127.0.0.1:8887";
+
+    QString filter = "GPS";
+    qInstallMessageHandler(indigoMessageHandler);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(address,filter);
+
+    ZeroMQSubscriber *subscriber1 = new ZeroMQSubscriber;
+    subscriber1->subscribeTo(address,filter);
+
+
+    QSignalSpy spy(subscriber1,SIGNAL(recieved()));
+    spy.wait(500);
+
+    ZeroMQSubscriber *subscriber2 = new ZeroMQSubscriber;
+    subscriber2->subscribeTo(address,filter);
+
+    publisher->sendMessage("Hello");
+
+    spy.wait(500);
+
+    ASSERT_TRUE(spy.size() != 0);
 }
 
 int main(int argc, char **argv) {
