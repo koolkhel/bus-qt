@@ -7,15 +7,15 @@
 
 testclass::testclass(QObject* parent) : QObject(parent)
 {
-    nzmqt::ZMQContext* context = nzmqt::createDefaultContext();
+   /* nzmqt::ZMQContext* context = nzmqt::createDefaultContext();
     subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_SUB);
     pusher = context->createSocket(nzmqt::ZMQSocket::TYP_PUSH);
-    connect(subscriber,SIGNAL(messageReceived(const QList<QByteArray>&)),SLOT(messageRecieved(const QList<QByteArray>&)));
+    connect(subscriber,SIGNAL(messageReceived(const QList<QByteArray>&)),SLOT(messageRecieved(const QList<QByteArray>&)));*/
 }
 
 bool testclass::test()
 {
-    subscriber->subscribeTo("");
+   /* subscriber->subscribeTo("");
     subscriber->connectTo("tcp://127.0.0.1:5555");
     pusher->connectTo("tcp://127.0.0.1:5556");
     nzmqt::ZMQMessage message(6);
@@ -76,9 +76,7 @@ bool testclass::test()
 
 
     return true;
+
 }
 
-void testclass::messageRecieved(const QList<QByteArray>& message)
-{
-    qDebug()<<message;
-}
+

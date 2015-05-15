@@ -14,7 +14,7 @@ QThread(parent)
     m_socket = context->createSocket(ZMQSocket::TYP_PUB);
 
     topic_ = "Hello";
-    r_address = "tcp://127.0.0.1:8887";
+    r_address = "tcp://127.0.0.1:8888";
     r_socket = context->createSocket(ZMQSocket::TYP_SUB);
     r_socket1 = context->createSocket(ZMQSocket::TYP_SUB);
 

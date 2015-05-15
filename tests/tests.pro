@@ -26,4 +26,7 @@ HEADERS += \
     loggertester.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
-    context.h
+    context.h \
+    Publisher.hpp \
+    Subscriber.hpp \
+    SampleBase.hpp

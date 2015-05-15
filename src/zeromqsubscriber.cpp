@@ -3,9 +3,9 @@
 
 ZeroMQSubscriber::ZeroMQSubscriber()
 {
-   subscriber = Context::instance()->context->createSocket(nzmqt::ZMQSocket::TYP_SUB);
-   //connect(subscriber,SIGNAL(messageReceived(QList<QByteArray>)),this,SIGNAL(recieved()));
-   connect(subscriber,SIGNAL(messageReceived(QList<QByteArray>&)),this,SLOT(messageRecieved(QList<QByteArray>&)));
+   subscriber = Context::instance()->context->createSocket(nzmqt::ZMQSocket::TYP_SUB,this);
+   subscriber->setLinger(0);
+   connect(subscriber,SIGNAL(messageReceived(const QList<QByteArray>&)),this,SLOT(messageRecieved(const QList<QByteArray>&)));
 }
 
 void ZeroMQSubscriber::subscribeTo(QString address,QString subscriberFilter)

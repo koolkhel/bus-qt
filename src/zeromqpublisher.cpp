@@ -6,7 +6,7 @@ ZeroMQPublisher::ZeroMQPublisher(const QString address, const QString filter)
 {
     this->address = address;
     this->filter = filter;
-    publisher = Context::instance()->context->createSocket(nzmqt::ZMQSocket::TYP_PUB);
+    publisher = Context::instance()->context->createSocket(nzmqt::ZMQSocket::TYP_PUB,this);
     publisher->connectTo(address);
     //publisher->bindTo(address);
     connect(this,SIGNAL(messageSend(QByteArray)),this,SLOT(messageSended(QByteArray)));

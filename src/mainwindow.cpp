@@ -11,6 +11,24 @@
 
 #include <qdatetime.h>
 #include "socket.h"
+#include "Publisher.hpp"
+#include "zeromqpublisher.h"
+#include "zeromqsubscriber.h"
+#include <zmq.hpp>
+
+QThread* makeExecutionThread(SampleBase& sample)
+{
+    QThread* thread = new QThread;
+    sample.moveToThread(thread);
+
+    bool connected = false;
+    connected = QObject::connect(thread, SIGNAL(started()), &sample, SLOT(start()));         Q_ASSERT(connected);
+    connected = QObject::connect(&sample, SIGNAL(finished()), thread, SLOT(quit()));         Q_ASSERT(connected);
+    connected = QObject::connect(&sample, SIGNAL(finished()), &sample, SLOT(deleteLater())); Q_ASSERT(connected);
+    connected = QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));   Q_ASSERT(connected);
+
+    return thread;
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -69,7 +87,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(anim, SIGNAL(finished()), anim_2, SLOT(start()));
     connect(anim_2, SIGNAL(finished()), anim, SLOT(start()));
-
 
     anim->start();
 }
@@ -142,10 +159,65 @@ void MainWindow::satellitesInUseUpdated(int count)
     ui->label->setText(QString("%1").arg(count));
 }
 
-
 void MainWindow::on_pushButton_2_clicked()
 {
-    /*nzmqt::Socket socket;
+    zmq::context_t context(1);
+    zmq::socket_t socket (context, ZMQ_SUB);
+    socket.connect ("tcp://localhost:5555");
+    zmq::message_t request (6);
+    memcpy ((void *) request.data (), "Hello", 5);
+    qDebug() << "Sending Hello ";
+    socket.send (request);
+}
+
+
+    /*Socket socket;
     socket.send("Hello");
     socket.run();*/
-}
+    /*QString filter = "GPS";
+    ZeroMQPublisher *publisher = new ZeroMQPublisher("tcp://127.0.0.1:8080",filter);
+    ZeroMQSubscriber *subscriberPlus = new ZeroMQSubscriber();
+    subscriberPlus->subscribeTo("tcp://127.0.0.1:8080",filter);
+
+    publisher->sendMessage("Hello");*/
+
+   /* try {
+        QScopedPointer<nzmqt::ZMQContext> context(nzmqt::createDefaultContext());
+
+        Publisher* publisher = new Publisher(*context, "tcp://127.0.0.1:8887", "ping");
+
+
+        QThread* publisherThread = makeExecutionThread(*publisher);
+
+       Subscriber* subscriber = new Subscriber(*context, "tcp://127.0.0.1:8887", "ping");
+
+
+        QThread* subscriberThread = makeExecutionThread(*subscriber);
+
+        //
+        // START TEST
+        //
+
+        context->start();
+
+        publisherThread->start();
+        subscriberThread->start();
+
+        QTimer::singleShot(6000, publisher, SLOT(stop()));
+        QTimer::singleShot(6000, subscriber, SLOT(stop()));
+
+
+        //
+        // CHECK POSTCONDITIONS
+        //
+
+        //qDebug() << "Publisher pings sent:" << spyPublisherPingSent.size();
+        //qDebug() << "Subscriber pings received:" << spySubscriberPingReceived.size();
+
+
+    }
+    catch (std::exception& ex)
+    {
+        ex.what();
+    }*/
+

@@ -8,12 +8,7 @@ class testclass : public QObject
     nzmqt::ZMQSocket* pusher;
 public:
     testclass(QObject *parent=0);
-
     bool test();
-
-protected slots:
-    void messageRecieved(const QList<QByteArray>&);
-
 };
 
 #endif // TESTCLASS_H

@@ -19,9 +19,25 @@
 
 #include <google/protobuf/text_format.h>
 #include "context.h"
+#include "Publisher.hpp"
+#include "Subscriber.hpp"
 
 void enableSignalHandling();
 void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63);
+
+QThread* makeExecutionThread(nzmqt::samples::SampleBase& sample)
+{
+    QThread* thread = new QThread;
+    sample.moveToThread(thread);
+
+    bool connected = false;
+    connected = QObject::connect(thread, SIGNAL(started()), &sample, SLOT(start()));         Q_ASSERT(connected);
+    connected = QObject::connect(&sample, SIGNAL(finished()), thread, SLOT(quit()));         Q_ASSERT(connected);
+    connected = QObject::connect(&sample, SIGNAL(finished()), &sample, SLOT(deleteLater())); Q_ASSERT(connected);
+    connected = QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));   Q_ASSERT(connected);
+
+    return thread;
+}
 
 TEST(logging, testLog) {
     LoggerTester tester;
@@ -88,28 +104,74 @@ TEST(Zmq, testWTF) {
     context->stop();
 }
 
-TEST(Zmq, tests) {
-    QString address = "tcp://127.0.0.1:8887";
+TEST(logging, tests) {
 
     QString filter = "GPS";
-    qInstallMessageHandler(indigoMessageHandler);
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(address,filter);
-
-    ZeroMQSubscriber *subscriber1 = new ZeroMQSubscriber;
-    subscriber1->subscribeTo(address,filter);
-
-
-    QSignalSpy spy(subscriber1,SIGNAL(recieved()));
-    spy.wait(500);
-
-    ZeroMQSubscriber *subscriber2 = new ZeroMQSubscriber;
-    subscriber2->subscribeTo(address,filter);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher("tcp://127.0.0.1:8080",filter);
+    ZeroMQSubscriber *subscriber = new ZeroMQSubscriber();
+    subscriber->subscribeTo("tcp://127.0.0.1:8080",filter);
 
     publisher->sendMessage("Hello");
+      /* try {
+           QScopedPointer<nzmqt::ZMQContext> context(nzmqt::createDefaultContext());
 
-    spy.wait(500);
+           nzmqt::samples::pubsub::Publisher* publisher = new nzmqt::samples::pubsub::Publisher(*context, "inproc://pubsub", "ping");
+           QSignalSpy spyPublisherPingSent(publisher, SIGNAL(pingSent(const QList<QByteArray>&)));
+           QSignalSpy spyPublisherFailure(publisher, SIGNAL(failure(const QString&)));
+           QSignalSpy spyPublisherFinished(publisher, SIGNAL(finished()));
 
-    ASSERT_TRUE(spy.size() != 0);
+           QThread* publisherThread = makeExecutionThread(*publisher);
+           QSignalSpy spyPublisherThreadFinished(publisherThread, SIGNAL(finished()));
+
+           nzmqt::samples::pubsub::Subscriber* subscriber = new nzmqt::samples::pubsub::Subscriber(*context, "inproc://pubsub", "ping");
+           QSignalSpy spySubscriberPingReceived(subscriber, SIGNAL(pingReceived(const QList<QByteArray>&)));
+           QSignalSpy spySubscriberFailure(subscriber, SIGNAL(failure(const QString&)));
+           QSignalSpy spySubscriberFinished(subscriber, SIGNAL(finished()));
+
+           QThread* subscriberThread = makeExecutionThread(*subscriber);
+           QSignalSpy spySubscriberThreadFinished(subscriberThread, SIGNAL(finished()));
+
+           //
+           // START TEST
+           //
+
+           context->start();
+
+           publisherThread->start();
+           QTest::qWait(500);
+           subscriberThread->start();
+
+           QTimer::singleShot(6000, publisher, SLOT(stop()));
+           QTimer::singleShot(6000, subscriber, SLOT(stop()));
+
+           QTest::qWait(8000);
+
+           //
+           // CHECK POSTCONDITIONS
+           //
+
+           qDebug() << "Publisher pings sent:" << spyPublisherPingSent.size();
+           qDebug() << "Subscriber pings received:" << spySubscriberPingReceived.size();
+
+           QCOMPARE(spyPublisherFailure.size(), 0);
+           QCOMPARE(spySubscriberFailure.size(), 0);
+
+           QVERIFY2(spyPublisherPingSent.size() > 3, "Server didn't send any/enough pings.");
+           QVERIFY2(spySubscriberPingReceived.size() > 3, "Client didn't receive any/enough pings.");
+
+           QVERIFY2(qAbs(spyPublisherPingSent.size() - spySubscriberPingReceived.size()) < 3, "Publisher and subscriber communication flawed.");
+
+           QCOMPARE(spyPublisherFinished.size(), 1);
+           QCOMPARE(spySubscriberFinished.size(), 1);
+
+           QCOMPARE(spyPublisherThreadFinished.size(), 1);
+           QCOMPARE(spySubscriberThreadFinished.size(), 1);
+       }
+       catch (std::exception& ex)
+       {
+           QFAIL(ex.what());
+       }*/
+
 }
 
 int main(int argc, char **argv) {
