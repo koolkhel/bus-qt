@@ -1,6 +1,8 @@
 #include "zeromqsubscriber.h"
 #include "context.h"
 
+#include <QDebug>
+
 ZeroMQSubscriber::ZeroMQSubscriber()
 {
    subscriber = Context::instance()->context->createSocket(nzmqt::ZMQSocket::TYP_SUB,this);

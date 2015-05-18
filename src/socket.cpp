@@ -2,6 +2,8 @@
 #include <QByteArray>
 #include <QList>
 
+#include <QDebug>
+
 using namespace nzmqt;
 
 Socket::Socket(QObject* parent) :
