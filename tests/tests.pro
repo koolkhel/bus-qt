@@ -29,4 +29,5 @@ HEADERS += \
     context.h \
     Publisher.hpp \
     Subscriber.hpp \
-    SampleBase.hpp
+    SampleBase.hpp \
+    zhelpers.h
