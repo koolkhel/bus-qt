@@ -9,35 +9,18 @@
 #include <QtNetwork/QTcpSocket>
 
 #include <QDebug>
-
 #include <QTest>
-
 #include <QSignalSpy>
-
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 
 #include <google/protobuf/text_format.h>
 #include "context.h"
-#include "Publisher.hpp"
-#include "Subscriber.hpp"
+#include "zhelpers.h"
 
 void enableSignalHandling();
 void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63);
 
-QThread* makeExecutionThread(nzmqt::samples::SampleBase& sample)
-{
-    QThread* thread = new QThread;
-    sample.moveToThread(thread);
-
-    bool connected = false;
-    connected = QObject::connect(thread, SIGNAL(started()), &sample, SLOT(start()));         Q_ASSERT(connected);
-    connected = QObject::connect(&sample, SIGNAL(finished()), thread, SLOT(quit()));         Q_ASSERT(connected);
-    connected = QObject::connect(&sample, SIGNAL(finished()), &sample, SLOT(deleteLater())); Q_ASSERT(connected);
-    connected = QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));   Q_ASSERT(connected);
-
-    return thread;
-}
 
 TEST(logging, testLog) {
     LoggerTester tester;
@@ -104,14 +87,124 @@ TEST(Zmq, testWTF) {
     context->stop();
 }
 
-TEST(logging, tests) {
+TEST(ZMQ, Qts) {
 
     QString filter = "GPS";
     ZeroMQPublisher *publisher = new ZeroMQPublisher("tcp://127.0.0.1:8080",filter);
     ZeroMQSubscriber *subscriber = new ZeroMQSubscriber();
     subscriber->subscribeTo("tcp://127.0.0.1:8080",filter);
+    QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
+    QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
 
     publisher->sendMessage("Hello");
+
+    QVERIFY2(spyPublisherMessageSent.size() > 3, "Server didn't send any/enough messages.");
+    QVERIFY2(spySubscriberMessageRecieved.size() > 3, "Client didn't receive any/enough messages.");
+}
+
+TEST(ZMQ, CPLUS) {
+    #define within(num) (int) ((float) num * random () / (RAND_MAX + 1.0))
+
+    zmq::context_t context (1);
+    zmq::socket_t publisher (context, ZMQ_PUB);
+    publisher.bind("tcp://*:5556");
+    publisher.bind("ipc://weather.ipc");
+
+    zmq::socket_t subscriber (context, ZMQ_SUB);
+    subscriber.connect("tcp://localhost:5556");
+
+    zmq::message_t message(20);
+    int temperature;
+    temperature = within (215) - 80;
+    snprintf ((char *) message.data(), 20 ,
+        "%05d", temperature);
+    fprintf(stdout, "%s\n", message.data());
+
+    const char *filter = "";
+    subscriber.setsockopt(ZMQ_SUBSCRIBE, filter, strlen (filter));
+
+    sleep(1);
+
+    long total_temp = 0;
+
+    zmq::message_t update;
+    int temperatureRecv;
+
+
+    bool isSended = publisher.send(message);
+
+    ASSERT_TRUE(isSended);
+
+
+    bool isRecieved = subscriber.recv(&update);
+
+    ASSERT_TRUE(isRecieved);
+
+    std::istringstream iss(static_cast<char*>(update.data()));
+    iss>> temperatureRecv;
+
+    total_temp += temperatureRecv;
+}
+
+
+
+TEST(ZMQ, C) {
+    void *context = zmq_ctx_new ();
+    void *publisher = zmq_socket (context, ZMQ_PUB);
+    int rc = zmq_bind (publisher, "tcp://*:5556");
+    ASSERT_TRUE (rc == 0);
+
+    sleep(1);
+
+    void *subscriber = zmq_socket (context, ZMQ_SUB);
+    int rec = zmq_connect (subscriber, "tcp://localhost:5556");
+    ASSERT_TRUE (rec == 0);
+
+    sleep(1);
+
+    //  Subscribe to zipcode, default is NYC, 10001
+    char *filter = "";
+    rc = zmq_setsockopt (subscriber, ZMQ_SUBSCRIBE,
+                         filter, strlen (filter));
+
+    sleep(1);
+
+    long total_temp = 0;
+    //  Send message to all subscribers
+    char update [20];
+    sprintf (update, "%05d", 2);
+
+    int send = s_send (publisher, update);
+
+    sleep(1);
+
+    ASSERT_TRUE(send > 0);
+
+    ASSERT_TRUE (rec == 0);
+
+    char *string = s_recv (subscriber);
+
+    ASSERT_TRUE(strlen(string) > 0);
+
+    int zipcodeRecv;
+    sscanf (string, "%d",
+        &zipcodeRecv);
+    total_temp += zipcodeRecv;
+    free (string);
+    fprintf(stderr, "OK!\n");
+
+
+    zmq_close (subscriber);
+    zmq_close (publisher);
+    zmq_ctx_destroy (context);
+
+
+}
+
+
+
+
+
       /* try {
            QScopedPointer<nzmqt::ZMQContext> context(nzmqt::createDefaultContext());
 
@@ -172,7 +265,7 @@ TEST(logging, tests) {
            QFAIL(ex.what());
        }*/
 
-}
+
 
 int main(int argc, char **argv) {
     enableSignalHandling();

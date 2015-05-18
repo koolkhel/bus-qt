@@ -12,9 +12,14 @@
 #include <qdatetime.h>
 #include "socket.h"
 #include "Publisher.hpp"
+#include "Subscriber.hpp"
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
 #include <zmq.hpp>
+#include <sstream>
+
+#define within(num) (int) ((float) num * random () / (RAND_MAX + 1.0))
+
 
 QThread* makeExecutionThread(SampleBase& sample)
 {
@@ -161,27 +166,20 @@ void MainWindow::satellitesInUseUpdated(int count)
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    zmq::context_t context(1);
-    zmq::socket_t socket (context, ZMQ_SUB);
-    socket.connect ("tcp://localhost:5555");
-    zmq::message_t request (6);
-    memcpy ((void *) request.data (), "Hello", 5);
-    qDebug() << "Sending Hello ";
-    socket.send (request);
-}
+    /*QString filter = "GPS";
+    ZeroMQPublisher *publisher = new ZeroMQPublisher("tcp://127.0.0.1:8080",filter);
+    ZeroMQSubscriber *subscriber = new ZeroMQSubscriber();
+    subscriber->subscribeTo("tcp://127.0.0.1:8080",filter);
 
-
+    publisher->sendMessage("Hello");
+*/
     /*Socket socket;
     socket.send("Hello");
     socket.run();*/
-    /*QString filter = "GPS";
-    ZeroMQPublisher *publisher = new ZeroMQPublisher("tcp://127.0.0.1:8080",filter);
-    ZeroMQSubscriber *subscriberPlus = new ZeroMQSubscriber();
-    subscriberPlus->subscribeTo("tcp://127.0.0.1:8080",filter);
 
-    publisher->sendMessage("Hello");*/
 
-   /* try {
+
+   try {
         QScopedPointer<nzmqt::ZMQContext> context(nzmqt::createDefaultContext());
 
         Publisher* publisher = new Publisher(*context, "tcp://127.0.0.1:8887", "ping");
@@ -189,7 +187,7 @@ void MainWindow::on_pushButton_2_clicked()
 
         QThread* publisherThread = makeExecutionThread(*publisher);
 
-       Subscriber* subscriber = new Subscriber(*context, "tcp://127.0.0.1:8887", "ping");
+        Subscriber* subscriber = new Subscriber(*context, "tcp://127.0.0.1:8887", "ping");
 
 
         QThread* subscriberThread = makeExecutionThread(*subscriber);
@@ -219,5 +217,6 @@ void MainWindow::on_pushButton_2_clicked()
     catch (std::exception& ex)
     {
         ex.what();
-    }*/
+    }
 
+}

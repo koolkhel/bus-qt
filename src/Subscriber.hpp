@@ -35,6 +35,7 @@ protected:
     {
         socket_->subscribeTo(topic_);
         socket_->connectTo(address_);
+        socket_->setOption(ZMQSocket::OPT_SUBSCRIBE,topic_.toStdString().c_str());
     }
 
 protected slots:
