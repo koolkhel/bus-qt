@@ -38,9 +38,6 @@
 namespace nzmqt
 {
 
-namespace samples
-{
-
 namespace pubsub
 {
 
@@ -83,8 +80,6 @@ private:
 
     ZMQSocket* socket_;
 };
-
-}
 
 }
 

@@ -10,9 +10,10 @@ class ZeroMQSubscriber: public QObject
     Q_OBJECT
     nzmqt::ZMQSocket* subscriber;
 public:
-    ZeroMQSubscriber();
+    ZeroMQSubscriber(nzmqt::ZMQContext*);
     void subscribeTo(QString,QString);
 
+    void close();
 signals:
     void recieved();
 public slots:

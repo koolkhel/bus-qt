@@ -8,18 +8,15 @@ class ZeroMQPublisher: public QObject
     Q_OBJECT
 
     QString address;
-    QString filter;
     nzmqt::ZMQSocket* publisher;
 
 public:
-    ZeroMQPublisher(QString,QString);
+    ZeroMQPublisher(QString,nzmqt::ZMQContext*);
     void sendMessage(QString);
 
-    QString getFilter() const;
-    void setFilter(const QString &value);
-
     QString getAddress() const;
-    void setAddress(const QString &value);
+
+    void close();
 
 public slots:
     void messageSended(QByteArray);

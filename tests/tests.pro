@@ -18,15 +18,13 @@ INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
     loggertester.cpp \
     zeromqpublisher.cpp \
-    zeromqsubscriber.cpp \
-    context.cpp
+    zeromqsubscriber.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     loggertester.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
-    context.h \
     Publisher.hpp \
     Subscriber.hpp \
     SampleBase.hpp \
