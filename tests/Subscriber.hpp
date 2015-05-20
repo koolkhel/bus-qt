@@ -41,7 +41,7 @@ namespace nzmqt
 namespace pubsub
 {
 
-class Subscriber : public SampleBase
+class Subscriber : public nzmqt::samples::SampleBase
 {
     Q_OBJECT
     typedef SampleBase super;

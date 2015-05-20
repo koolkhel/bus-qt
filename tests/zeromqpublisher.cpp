@@ -1,6 +1,5 @@
 #include "zeromqpublisher.h"
 #include <QDebug>
-#include "context.h"
 
 ZeroMQPublisher::ZeroMQPublisher(const QString address,nzmqt::ZMQContext* context)
 {
