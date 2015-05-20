@@ -85,6 +85,9 @@ TEST(ZMQ, FromTestSources) {
     subscriber->close();
     publisher->close();
     context->stop();
+
+    usleep(100 * 1000);
+
 }
 
 
@@ -138,6 +141,9 @@ TEST(ZMQ, Qts) {
     subscriber->close();
     publisher->close();
     context->stop();
+
+    usleep(100 * 1000);
+
 }
 
 TEST(ZMQ, Qt50) {
@@ -189,6 +195,9 @@ TEST(ZMQ, Qt50) {
     subscriber->close();
     publisher->close();
     context->stop();
+
+    usleep(100 * 1000);
+
 }
 
 TEST(ZMQ, QtWithProxy) {
@@ -243,6 +252,9 @@ TEST(ZMQ, QtWithProxy) {
     subscriber->close();
     publisher->close();
     context->stop();
+
+    usleep(100 * 1000);
+
 }
 
 TEST(ZMQ, CPLUS) {
@@ -288,6 +300,9 @@ TEST(ZMQ, CPLUS) {
 
     subscriber.close();
     publisher.close();
+
+    usleep(100 * 1000);
+
 }
 
 
