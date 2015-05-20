@@ -18,7 +18,9 @@ INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
     loggertester.cpp \
     zeromqpublisher.cpp \
-    zeromqsubscriber.cpp
+    zeromqsubscriber.cpp \
+    loggertests.cpp \
+    zeromqtests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
