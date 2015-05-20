@@ -8,9 +8,22 @@
 #include <QTest>
 #include <QSignalSpy>
 
-TEST(logging, testLog) {
+class IndigoLoggingTest : public ::testing::Test {
+protected:
+    virtual void SetUp() {
+        qInstallMessageHandler(indigoMessageHandler);
+        indigoLoggerStart();
+    }
+
+    virtual void TearDown() {
+        indigoLoggerStop();
+    }
+
+
     LoggerTester tester;
-    qInstallMessageHandler(indigoMessageHandler);
+};
+
+TEST_F(IndigoLoggingTest, testLog) {
 
     QString lastStr;
 
@@ -30,10 +43,7 @@ TEST(logging, testLog) {
     ASSERT_TRUE(tester.lastMessage.simplified().contains(lastStr.simplified()));
 }
 
-TEST(logging, categories) {
-    LoggerTester tester;
-    qInstallMessageHandler(indigoMessageHandler);
-
+TEST_F(IndigoLoggingTest, categories) {
     qCDebug(GSM, "Gsm test");
     tester.wait();
     ASSERT_TRUE(tester.lastMessage.contains("indigo.gsm"));
@@ -43,10 +53,7 @@ TEST(logging, categories) {
     ASSERT_TRUE(tester.lastMessage.contains("indigo.zmq"));
 }
 
-TEST(logging, configuration) {
-    LoggerTester tester;
-    qInstallMessageHandler(indigoMessageHandler);
-
+TEST_F(IndigoLoggingTest, configuration) {
     qCDebug(ZMQ, "Gsm test");
     tester.wait();
     ASSERT_TRUE(tester.lastMessage.simplified().contains("Gsm test"));
