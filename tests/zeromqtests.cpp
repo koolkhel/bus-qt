@@ -236,7 +236,7 @@ TEST(ZMQ, 2subs2Pubs) {
     usleep(100 * 1000);
 }
 
-TEST(ZMQ, 1_publisher_3_subscribers)
+TEST(ZMQ, 1publisher_3subscribers)
 {
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
@@ -309,7 +309,7 @@ TEST(ZMQ, 1_publisher_3_subscribers)
     usleep(100 * 10000);
 }
 
-TEST(ZMQ, 2_publisher_3_subscribers)
+TEST(ZMQ, 2publisher_3_subscribers)
 {
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
@@ -368,11 +368,12 @@ TEST(ZMQ, 2_publisher_3_subscribers)
     usleep(100 * 1000);
     spyPublisherMessageSent.wait(100);
     spySecondPublisherMessageSent.wait(100);
-   ASSERT_TRUE(spyPublisherMessageSent.size() > 0) << "Server didn't send any/enough messages.";
-   ASSERT_TRUE(spySecondPublisherMessageSent.size() > 0 ) << "Server didn't send any/enough messages.";
-   ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
-   ASSERT_TRUE(spySecondSubscriberMessageRecieved.size() > 0) <<"Client didn't receive any/enough messages.";
-   ASSERT_TRUE(spyThridSubscriberMessageRecieved.size() > 0) <<"Client didn't receive any/enough messages.";
+
+    ASSERT_TRUE(spyPublisherMessageSent.size() > 0) << "Server didn't send any/enough messages.";
+    ASSERT_TRUE(spySecondPublisherMessageSent.size() > 0 ) << "Server didn't send any/enough messages.";
+    ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
+    ASSERT_TRUE(spySecondSubscriberMessageRecieved.size() > 0) <<"Client didn't receive any/enough messages.";
+    ASSERT_TRUE(spyThridSubscriberMessageRecieved.size() > 0) <<"Client didn't receive any/enough messages.";
 
 
     QList<QVariant> params = spySubscriberMessageRecieved.takeFirst();
@@ -408,7 +409,7 @@ TEST(ZMQ, QtWithProxy) {
     subscriber->moveToThread(subscriberThread);
     subscriberThread->start();
 
-    zmq_proxy(publisher,subscriber,NULL);
+    zmq_proxy(publisher->getPublisher(),subscriber->getSubscriber(),NULL);
 
 
     QString filter = "";

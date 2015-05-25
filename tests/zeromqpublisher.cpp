@@ -1,6 +1,11 @@
 #include "zeromqpublisher.h"
 #include <QDebug>
 
+
+nzmqt::ZMQSocket *ZeroMQPublisher::getPublisher() const
+{
+    return publisher;
+}
 ZeroMQPublisher::ZeroMQPublisher(const QString address,nzmqt::ZMQContext* context)
 {
     this->address = address;
@@ -29,5 +34,6 @@ QString ZeroMQPublisher::getAddress() const
 {
     return address;
 }
+
 
 

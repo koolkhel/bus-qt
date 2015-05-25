@@ -7,7 +7,7 @@ class ZeroMQPublisher: public QObject
 {
     Q_OBJECT
     QString address;
-    nzmqt::ZMQSocket* publisher;
+    nzmqt::ZMQSocket *publisher;
 
 public:
     ZeroMQPublisher(QString,nzmqt::ZMQContext*);
@@ -16,6 +16,8 @@ public:
     QString getAddress() const;
 
     void close();
+
+    nzmqt::ZMQSocket *getPublisher() const;
 
 public slots:
     void messageSended(QByteArray);

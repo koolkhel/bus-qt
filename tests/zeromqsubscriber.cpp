@@ -15,6 +15,11 @@ void ZeroMQSubscriber::subscribeTo(QString address,QString subscriberFilter)
     subscriber->subscribeTo(subscriberFilter);
 }
 
+nzmqt::ZMQSocket *ZeroMQSubscriber::getSubscriber() const
+{
+    return subscriber;
+}
+
 void ZeroMQSubscriber::close()
 {
     subscriber->close();
