@@ -162,11 +162,12 @@ TEST(ZMQ, Qts) {
 
 }
 
-TEST(ZMQ, Qt50) {
+TEST(ZMQ, 2subs2Pubs) {
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
     QThread *subscriberThread = new QThread;
     QThread *publisherSecondThread = new QThread;
+    QThread *secondSubscrberThread = new QThread;
 
     nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
     context->moveToThread(contextThread);
@@ -188,25 +189,37 @@ TEST(ZMQ, Qt50) {
     subscriber->moveToThread(subscriberThread);
     subscriberThread->start();
 
-    QString filter = "";
-    subscriber->subscribeTo(QString(ZMQ_PUB_STR_SECOND), filter);
+    usleep(100 * 1000);
+
+
+    ZeroMQSubscriber *secondSubscriber = new ZeroMQSubscriber(context);
+    secondSubscriber->moveToThread(secondSubscrberThread);
+    secondSubscrberThread->start();
 
     usleep(100 * 1000);
 
-    //QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
+
+    QString filter = "";
+    subscriber->subscribeTo(QString(ZMQ_PUB_STR_SECOND), filter);
+    secondSubscriber->subscribeTo(QString(ZMQ_PUB_STR),filter);
+
+    usleep(100 * 1000);
+
+    QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
     QSignalSpy spySecondPublisherMessageSent(secondPublisher, SIGNAL(messageSend(QByteArray)));
     QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
 
     context->start();
 
     secondPublisher->sendMessage("Hello");
+    publisher->sendMessage("Hello");
 
     usleep(100 * 1000);
     spySecondPublisherMessageSent.wait(100);
 
     ASSERT_TRUE(spySecondPublisherMessageSent.size() > 0) << "Second server didn't send any messages";
-   //ASSERT_TRUE(spyPublisherMessageSent.size() > 0) << "Server didn't send any/enough messages.";
-   ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
+    ASSERT_TRUE(spyPublisherMessageSent.size() > 0) << "Server didn't send any/enough messages.";
+    ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
 
     QList<QVariant> params = spySubscriberMessageRecieved.takeFirst();
 
@@ -222,7 +235,7 @@ TEST(ZMQ, Qt50) {
     usleep(100 * 1000);
 }
 
-TEST(ZMQ, QtManySubscribers)
+TEST(ZMQ, 1_publisher_3_subscribers)
 {
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
@@ -255,6 +268,7 @@ TEST(ZMQ, QtManySubscribers)
     QString filter = "";
     subscriber->subscribeTo(QString(ZMQ_SUB_STR), filter);
     secondSubscriber->subscribeTo(QString(ZMQ_SUB_STR),filter);
+    thirdSubscriber->subscribeTo(QString(ZMQ_SUB_STR),filter);
 
 
     usleep(100 * 1000);
@@ -262,6 +276,7 @@ TEST(ZMQ, QtManySubscribers)
     QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
     QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
     QSignalSpy spySecondSubscriberMessageRecieved(secondSubscriber,SIGNAL(recieved()));
+    QSignalSpy spyThridSubscriberMessageRecieved(thirdSubscriber,SIGNAL(recieved()));
 
     context->start();
 
@@ -270,9 +285,11 @@ TEST(ZMQ, QtManySubscribers)
     usleep(100 * 1000);
     spyPublisherMessageSent.wait(100);
 
-   ASSERT_TRUE(spySecondSubscriberMessageRecieved.size() > 0) <<"Client didn't receive any/enough messages.";
    ASSERT_TRUE(spyPublisherMessageSent.size() > 0) << "Server didn't send any/enough messages.";
    ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
+   ASSERT_TRUE(spySecondSubscriberMessageRecieved.size() > 0) <<"Client didn't receive any/enough messages.";
+   ASSERT_TRUE(spyThridSubscriberMessageRecieved.size() > 0) <<"Client didn't receive any/enough messages.";
+
 
     QList<QVariant> params = spySubscriberMessageRecieved.takeFirst();
 
