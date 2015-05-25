@@ -6,7 +6,6 @@
 class ZeroMQPublisher: public QObject
 {
     Q_OBJECT
-
     QString address;
     nzmqt::ZMQSocket* publisher;
 
