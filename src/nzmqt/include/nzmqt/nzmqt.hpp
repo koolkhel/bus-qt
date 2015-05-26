@@ -349,6 +349,9 @@ namespace nzmqt
 
         virtual const Sockets& registeredSockets() const;
 
+    signals:
+        void contextStopped();
+
     private:
         Sockets m_sockets;
     };
@@ -459,7 +462,6 @@ namespace nzmqt
         int m_interval;
         volatile bool m_stopped;
     };
-
 
     // An instance of this class cannot directly be created. Use one
     // of the 'SocketNotifierZMQContext::createSocket()' factory methods instead.

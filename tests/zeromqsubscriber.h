@@ -8,10 +8,11 @@
 class ZeroMQSubscriber: public QObject
 {
     Q_OBJECT
-    nzmqt::ZMQSocket* subscriber;
+    nzmqt::ZMQSocket *subscriber;
 public:
     ZeroMQSubscriber(nzmqt::ZMQContext*);
     void subscribeTo(QString,QString);
+    nzmqt::ZMQSocket *getSubscriber() const;
 
     void close();
 signals:

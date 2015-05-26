@@ -500,11 +500,15 @@ NZMQT_INLINE bool PollingZMQContext::isStopped() const
 NZMQT_INLINE void PollingZMQContext::run()
 {
     if (m_stopped)
+    {
+        emit contextStopped();
         return;
+    }
 
     try
     {
         poll();
+
     }
     catch (const ZMQException& ex)
     {
