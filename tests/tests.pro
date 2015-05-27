@@ -20,7 +20,10 @@ SOURCES += main.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
     loggertests.cpp \
-    zeromqtests.cpp
+    zeromqtests.cpp \
+    modulep.cpp \
+    module.cpp \
+    dispatcher.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -30,4 +33,7 @@ HEADERS += \
     Publisher.hpp \
     Subscriber.hpp \
     SampleBase.hpp \
-    zhelpers.h
+    zhelpers.h \
+    modulep.h \
+    module.h \
+    dispatcher.h

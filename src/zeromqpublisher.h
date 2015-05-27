@@ -9,7 +9,7 @@ class ZeroMQPublisher: public QObject
 
     QString address;
     QString filter;
-    nzmqt::ZMQSocket* publisher;
+    nzmqt::ZMQSocket *publisher;
 
 public:
     ZeroMQPublisher(QString,QString);

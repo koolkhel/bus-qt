@@ -8,7 +8,7 @@
 class ZeroMQSubscriber: public QObject
 {
     Q_OBJECT
-    nzmqt::ZMQSocket* subscriber;
+    nzmqt::ZMQSocket *subscriber;
 public:
     ZeroMQSubscriber();
     void subscribeTo(QString,QString);
