@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     zeromqtests.cpp \
     modulep.cpp \
     module.cpp \
-    dispatcher.cpp
+    dispatcher.cpp \
+    dispatchertests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \

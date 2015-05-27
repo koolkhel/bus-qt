@@ -4,15 +4,23 @@
 #include <QString>
 #include <functional>
 
-class Dispatcher
+class Dispatcher : public QObject
 {
-    QMap<QString,QString> modules;
+    Q_OBJECT
+
+    friend class ModuleP;
+    friend class Module;
+    QMap<QString,Module> modules;
 public:
     Dispatcher();
-    void publish(QString);
-    static void dispatch();
-    static void sub();
+    virtual ~Dispatcher();
+    void addModule(Name, Module *);
 
+    void publish(Module, QByteArray Data, QString Topic);
+
+    void sub(Module, Topic);
+private:
+    nzmqt::ZMQContext *context;
 };
 
 #endif // DISPATCHER_H

@@ -1,11 +1,8 @@
 #include "modulep.h"
 #include <QString>
 
-ModuleP::ModuleP(QString& host)
+ModuleP::ModuleP()
 {
-   nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
-   publisher = new ZeroMQPublisher(host,context);
-   subscriber = new ZeroMQSubscriber(context);
 }
 
 void ModuleP::printDebug()

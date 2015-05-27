@@ -3,14 +3,17 @@
 #include <QString>
 #include "modulep.h"
 
-class Module
+class Module : public QObject
 {
-    friend class ModuleP;
+    Q_OBJECT
+
     QString name;
 
 public:
-    Module();
+    Module(QMap<String key, String val> configuration);
     Module(QString);
+private:
+    Module_p *mod_p;
 };
 
 #endif // MODULE_H
