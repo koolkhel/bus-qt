@@ -305,7 +305,8 @@ TEST(ZMQ, 1publisher_3subscribers)
     secondSubscriber->close();
     thirdSubscriber->close();
 
-    usleep(100 * 10000);
+    context->stop();
+    usleep(100 * 1000);
 }
 
 TEST(ZMQ, 2publisher_3_subscribers)

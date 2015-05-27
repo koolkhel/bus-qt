@@ -15,6 +15,9 @@ class IndigoLogger;
 
 extern IndigoLogger *instance;
 
+void indigoLoggerStart();
+void indigoLoggerStop();
+
 void indigoMessageHandler(QtMsgType type,
    const QMessageLogContext &context,
    const QString &message);
@@ -39,6 +42,10 @@ public:
     }
 
     void log(QString str);
+
+    void startServer();
+    void stopServer();
+
 
 signals:
     void configurationChanged();

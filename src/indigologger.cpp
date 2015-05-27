@@ -21,6 +21,21 @@ IndigoLogger *instance;
 
 const QString logPattern = QString("%{time yyyy.MM.dd h:mm:ss.zzz} %{appname}: %{type} %{category} t:%{threadid} -- %{file}:%{line} -- %{message} %{if-fatal}%{backtrace depth=10}%{endif}\n");
 
+void indigoLoggerStop()
+{
+    instance->stopServer();
+}
+
+void indigoLoggerStart()
+{
+    if (instance == NULL) {
+        instance = new IndigoLogger();
+        qSetMessagePattern(logPattern);
+    }
+
+    instance->startServer();
+}
+
 void indigoMessageHandler(QtMsgType type,
    const QMessageLogContext &context,
    const QString &message)
@@ -47,9 +62,19 @@ IndigoLogger::IndigoLogger()
 
     confServer = new QTcpServer();
     QObject::connect(confServer, SIGNAL(newConnection()), SLOT(acceptConfiguration()));
+    startServer();
+}
+
+void IndigoLogger::startServer()
+{
     if (!confServer->listen(QHostAddress::Any, CONF_PORT)) {
-        fprintf(stderr, "no start server");
+        fprintf(stderr, "no start server\n");
     }
+}
+
+void IndigoLogger::stopServer()
+{
+    confServer->close();
 }
 
 void IndigoLogger::acceptConfiguration()
