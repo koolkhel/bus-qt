@@ -18,7 +18,6 @@ SUB SUB SUB
 
 Dispatcher::Dispatcher()
 {
-    qRegisterMetaType<Module>("Module");
     context = nzmqt::createDefaultContext();
     //modules.insert("GPS","HelloGPS");
     //modules.insert("GEOCOORD","HelloGEOCOORD");

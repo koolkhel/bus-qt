@@ -7,14 +7,13 @@
 class Module : public QObject
 {
     Q_OBJECT
-
     QString name;
 
 public:
     Module();
     Module(QMap<QString, QString> configuration);
     Module(QString);
-    virtual ~Module() = 0;
+    ~Module() = 0;
     ModuleP *getMod_p() const;
     void setMod_p(ModuleP *value);
 

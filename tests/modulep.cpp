@@ -26,6 +26,7 @@ void ModuleP::setSubscriber(ZeroMQSubscriber *value)
 {
     subscriber = value;
 }
+
 void ModuleP::printDebug()
 {
 

@@ -1,15 +1,13 @@
 #ifndef DISPATCHER_H
 #define DISPATCHER_H
+
 #include <QMap>
 #include <QString>
 #include <functional>
 #include <QObject>
 #include "module.h"
 #include "topic.h"
-#include <QMetaType>
 #include <map>
-
-
 
 class Dispatcher : public QObject
 {
