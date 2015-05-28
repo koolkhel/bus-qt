@@ -3,6 +3,13 @@
 #include <QMap>
 #include <QString>
 #include <functional>
+#include <QObject>
+#include "module.h"
+#include "topic.h"
+#include <QMetaType>
+#include <map>
+
+
 
 class Dispatcher : public QObject
 {
@@ -10,15 +17,13 @@ class Dispatcher : public QObject
 
     friend class ModuleP;
     friend class Module;
-    QMap<QString,Module> modules;
+    std::map<QString,Module *> modules;
 public:
     Dispatcher();
     virtual ~Dispatcher();
-    void addModule(Name, Module *);
-
-    void publish(Module, QByteArray Data, QString Topic);
-
-    void sub(Module, Topic);
+    Module* addModule(Module *,QString);
+    void publish(Module *mod, QByteArray Data, QString Topic);
+    //void sub(Module *, Topic);
 private:
     nzmqt::ZMQContext *context;
 };
