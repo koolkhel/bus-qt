@@ -3,7 +3,7 @@
 #include <QtCore/QQueue>
 #include <QtCore/QByteArray>
 
-#include "indigo.pb.h"
+#include "pb/indigo.pb.h"
 
 /**
 	* Класс нужен для того, чтобы относительно дёшево и удобно держать очередь с необработанными
@@ -17,16 +17,16 @@
 class IndigoOrderQueue
 {
 private:
-    QQueue<indigo_msg> queue;
+    QQueue< ::indigo::pb::indigo_msg> queue;
 
 public:
 	IndigoOrderQueue(void)
 	{}
 	~IndigoOrderQueue(void);
 
-    void push(indigo_msg data);
-    indigo_msg pop();
-    indigo_msg peek();
+    void push(::indigo::pb::indigo_msg data);
+    ::indigo::pb::indigo_msg pop();
+    ::indigo::pb::indigo_msg peek();
 	int size();
     bool isEmpty();
 };

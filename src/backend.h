@@ -9,7 +9,10 @@
 
 #include <google/protobuf/text_format.h>
 
-#include "indigo.pb.h"
+#include "pb/indigo.pb.h"
+#include "pb/events.pb.h"
+#include "pb/geo.pb.h"
+
 #include "indigoqueue.h"
 
 #include <QGeoPositionInfo>
@@ -27,11 +30,11 @@ class Backend : public QObject
 public:
 	Backend(QObject *parent);
     ~Backend();
-    indigo_UUID getDeviceId() { return deviceId; }
+    ::indigo::pb::indigo_UUID getDeviceId() { return deviceId; }
 
 signals:
 	// передаётся по значению
-    void protobuf_message(indigo_msg message);
+    void protobuf_message(::indigo::pb::indigo_msg message);
 	void connectedToServer(bool status);
     void deviceIdChanged(int deviceId);
 	void newPosition(QGeoCoordinate coordinate);
@@ -45,8 +48,8 @@ public slots:
 	void positionUpdated(const QGeoPositionInfo &update);
     void satellitesInUseUpdated(const QList<QGeoSatelliteInfo> & satelliteInfo);
 
-    void sendMessageQueued(indigo_msg var);
-    void sendEvent(indigo_event event);
+    void sendMessageQueued(::indigo::pb::indigo_msg var);
+    void sendEvent(::indigo::pb::indigo_event event);
     //void sendOrderEvent(indigo_event event, ITaxiOrder *order);
 
 	// from timer
@@ -60,10 +63,10 @@ public slots:
 	void flushOrderEvents();
 
 	
-    void send_message(indigo_msg &var);
+    void send_message(::indigo::pb::indigo_msg &var);
 
 private:
-    void stamp_uuid(indigo_msg &var);
+    void stamp_uuid(::indigo::pb::indigo_msg &var);
 	QSettings *settingsIniFile;
 	void consumeSocketData();
 
@@ -86,11 +89,11 @@ private:
 	const google::protobuf::uint8 *message_start;
 	int remainder;
 
-    indigo_UUID deviceId;
+    ::indigo::pb::indigo_UUID deviceId;
 
 	QTimer *gpsTimer;
     QGeoPositionInfoSource *positionSource;
-    indigo_msg positionMessage;
+    ::indigo::pb::indigo_msg positionMessage;
 
     int satellites_used;
 	

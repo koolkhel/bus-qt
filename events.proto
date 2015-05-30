@@ -1,0 +1,30 @@
+package indigo.pb;
+
+import "indigo.proto";
+
+option optimize_for = LITE_RUNTIME;
+
+option java_package = "ru.indigosystem.serv.pb";
+
+option java_outer_classname = "IndigoPB";
+
+enum indigo_event_type {
+    EVENT_NOTHING = 0;
+}
+
+message indigo_event {
+	optional indigo_event_type type = 1;
+
+	optional int32 time = 2;
+
+	optional int32 parameter = 3;
+
+	extend indigo_msg {
+		repeated indigo_event events = 101;
+	}
+
+	extend internal_msg {
+		repeated indigo_event events_in = 101;
+	}
+}
+

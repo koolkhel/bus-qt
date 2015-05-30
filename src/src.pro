@@ -15,9 +15,17 @@ TEMPLATE = lib
 
 include(nzmqt/nzmqt.pri)
 
+GP = pb
+GEN_CODE = $$GP/events.pb.cc \
+    $$GP/geo.pb.cc \
+    $$GP/indigo.pb.cc
+
+GEN_HED = $$GP/events.pb.h \
+    $$GP/geo.pb.h \
+    $$GP/indigo.pb.h
+
 SOURCES += gpsdpositionsource.cpp \
         gpsdsatellitesource.cpp \
-        indigo.pb.cc \
         backend.cpp \
         indigoqueue.cpp \
         mainwindow.cpp \
@@ -28,11 +36,11 @@ SOURCES += gpsdpositionsource.cpp \
     subscribedispatcher.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
-    context.cpp
+    context.cpp \
+    $$GEN_CODE
 
 HEADERS  += mainwindow.h \
             backend.h \
-            indigo.pb.h \
             indigoqueue.h \
             gpsdpositionsource.h \
             gpsdsatellitesource.h \
@@ -45,7 +53,8 @@ HEADERS  += mainwindow.h \
     SampleBase.hpp \
     zeromqpublisher.h \
     zeromqsubscriber.h \
-    context.h
+    context.h \
+    $$GEN_HED
 
 FORMS    += mainwindow.ui
 

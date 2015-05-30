@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "indigo.pb.h"
+#include "pb/indigo.pb.h"
 
 #include <QDebug>
 #include <QScreen>

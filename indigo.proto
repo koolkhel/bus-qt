@@ -1,3 +1,5 @@
+package indigo.pb;
+
 option optimize_for = LITE_RUNTIME;
 
 option java_package = "ru.indigosystem.serv.pb";
@@ -7,28 +9,13 @@ option java_outer_classname = "IndigoPB";
 message indigo_msg {
         optional indigo_UUID device_id = 1;
 
-        repeated indigo_geo coordinates = 3;
-
-        repeated indigo_event events = 4;
+	extensions 100 to max;
 }
 
-message indigo_geo {
-    required double longitude = 1;
-
-    required double latitude = 2;
-
-    required int32 unixtime = 3;
-
-    optional int32 speed_kmh = 4 [ default = 0 ];
-
-    optional int32 track = 5 [ default = 0 ];
-
-    optional int32 satellites_used = 6 [ default = 0 ];
+message internal_msg {
+	extensions 100 to max;
 }
 
-enum indigo_event {
-    NOTHING = 0;
-}
 
 // A 128-bit id, transferred as two 64-bit longs
 message indigo_UUID {

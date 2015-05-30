@@ -59,30 +59,30 @@ IndigoOrderQueue::~IndigoOrderQueue(void)
 {
 }
 
-void IndigoOrderQueue::push(indigo_msg data)
+void IndigoOrderQueue::push(::indigo::pb::indigo_msg data)
 {
     queue.enqueue(data);
 }
 
-indigo_msg IndigoOrderQueue::pop()
+::indigo::pb::indigo_msg IndigoOrderQueue::pop()
 {
     if(queue.size() <= 0)
     {
         // You should handle Queue underflow the way you want here.
 		qDebug() << "queue underflow!!!";
-        return indigo_msg::default_instance();
+        return ::indigo::pb::indigo_msg::default_instance();
     }
 
 	return queue.dequeue();
 }
 
-indigo_msg IndigoOrderQueue::peek()
+::indigo::pb::indigo_msg IndigoOrderQueue::peek()
 {
     if(queue.size() <= 0)
     {
         // You should handle Queue underflow the way you want here.
 		qDebug() << "queue underflow!!!";
-        return indigo_msg::default_instance(); // сообщение ни о чём
+        return ::indigo::pb::indigo_msg::default_instance(); // сообщение ни о чём
     }
 
     return queue.head();

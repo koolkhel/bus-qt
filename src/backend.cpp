@@ -172,21 +172,21 @@ void Backend::reconnect()
 	socket->connectToHost(SERVER_ADDRESS, SERVER_PORT);
 }
 
-void Backend::stamp_uuid(indigo_msg &var)
+void Backend::stamp_uuid(::indigo::pb::indigo_msg &var)
 {
     var.mutable_device_id()->CopyFrom(deviceId);
 }
 
-void Backend::sendEvent(indigo_event event)
+void Backend::sendEvent(::indigo::pb::indigo_event event)
 {
-    indigo_msg var;
+    ::indigo::pb::indigo_msg var;
     stamp_uuid(var);
 
 	orderEventsQueue.push(var);
 	flushOrderEvents();
 }
 
-void Backend::sendMessageQueued(indigo_msg var)
+void Backend::sendMessageQueued(::indigo::pb::indigo_msg var)
 {
     stamp_uuid(var);
 
@@ -199,7 +199,7 @@ void Backend::flushOrderEvents()
 {		
 	while (!orderEventsQueue.isEmpty()) {
 		if (socket->state() == QTcpSocket::ConnectedState) {
-            indigo_msg var = orderEventsQueue.peek();
+            ::indigo::pb::indigo_msg var = orderEventsQueue.peek();
 			
 			char buffer[1024];
 			google::protobuf::io::ArrayOutputStream arr(buffer, sizeof(buffer));
@@ -230,7 +230,7 @@ void Backend::flushOrderEvents()
 
 
 // сообщение не будет доставлено, если нет связи
-void Backend::send_message(indigo_msg &var)
+void Backend::send_message(::indigo::pb::indigo_msg &var)
 {
 	char buffer[1024];
 	google::protobuf::io::ArrayOutputStream arr(buffer, sizeof(buffer));
@@ -307,7 +307,7 @@ void Backend::consumeSocketData()
 			if (remainder != 0) {
 				break;
 			}
-            indigo_msg var;
+            ::indigo::pb::indigo_msg var;
 
 			google::protobuf::io::ArrayInputStream arrayIn(message_start, message_length);
 			google::protobuf::io::CodedInputStream codedIn(&arrayIn);	
@@ -340,23 +340,24 @@ void Backend::positionUpdated(const QGeoPositionInfo &update)
 	if (update.isValid()) {
 		qDebug() << "longitude" << update.coordinate().longitude() << "latitude" << update.coordinate().latitude();
 
-        positionMessage.clear_coordinates();
-        indigo_geo *geo = positionMessage.add_coordinates();
+        ::indigo::pb::indigo_geo geo;
 
-        geo->set_longitude(update.coordinate().longitude());
-        geo->set_latitude(update.coordinate().latitude());
-        geo->set_unixtime(QDateTime::currentMSecsSinceEpoch() / 1000);
-        geo->set_satellites_used(satellites_used);
+        geo.set_longitude(update.coordinate().longitude());
+        geo.set_latitude(update.coordinate().latitude());
+        geo.set_unixtime(QDateTime::currentMSecsSinceEpoch() / 1000);
+        geo.set_satellites_used(satellites_used);
 		
 		if (update.hasAttribute(QGeoPositionInfo::GroundSpeed)) {
 			int speed = (int) (update.attribute(QGeoPositionInfo::GroundSpeed) * 3.6);
 
-            geo->set_speed_kmh(speed);
+            geo.set_speed_kmh(speed);
 			emit newSpeed(speed);
             qDebug() << "speed: " << speed;
 
             detectStartStop(speed);
 		}
+
+        positionMessage.AddExtension(::indigo::pb::indigo_geo::geo_coords)->CopyFrom(geo);
 
 		emit newPosition(update.coordinate());
 	}
@@ -364,8 +365,8 @@ void Backend::positionUpdated(const QGeoPositionInfo &update)
 
 void Backend::sendLocationData()
 {
-	// нет связи -- не доставлено    
-	send_message(positionMessage);	
+    // нет связи -- не доставлено
+    send_message(positionMessage);
 }
 
 void Backend::detectStartStop(int speed)
