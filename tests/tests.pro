@@ -24,7 +24,10 @@ SOURCES += main.cpp \
     modulep.cpp \
     module.cpp \
     dispatcher.cpp \
-    dispatchertests.cpp
+    dispatchertests.cpp \
+    topic.cpp \
+    gpsmodule.cpp \
+    testmodule.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -37,4 +40,7 @@ HEADERS += \
     zhelpers.h \
     modulep.h \
     module.h \
-    dispatcher.h
+    dispatcher.h \
+    topic.h \
+    gpsmodule.h \
+    testmodule.h
