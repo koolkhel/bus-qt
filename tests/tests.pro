@@ -12,7 +12,7 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-LIBS += -L../src -lindigo -lgtest
+LIBS += -L../src -lindigo -lgtest -lprotobuf-lite
 
 INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
@@ -25,6 +25,7 @@ SOURCES += main.cpp \
     module.cpp \
     dispatcher.cpp \
     dispatchertests.cpp \
+    protobuftests.cpp \
     topic.cpp \
     gpsmodule.cpp \
     testmodule.cpp

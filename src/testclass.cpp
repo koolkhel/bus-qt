@@ -1,6 +1,5 @@
 #include "testclass.h"
 
-#include "indigo.pb.h"
 #include <sstream>
 #include <QDebug>
 #include "zmq.hpp"

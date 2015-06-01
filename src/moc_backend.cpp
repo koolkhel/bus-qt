@@ -21,7 +21,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Backend_t {
     QByteArrayData data[39];
-    char stringdata[496];
+    char stringdata[538];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,58 +33,59 @@ static const qt_meta_stringdata_Backend_t qt_meta_stringdata_Backend = {
 QT_MOC_LITERAL(0, 0, 7), // "Backend"
 QT_MOC_LITERAL(1, 8, 16), // "protobuf_message"
 QT_MOC_LITERAL(2, 25, 0), // ""
-QT_MOC_LITERAL(3, 26, 10), // "indigo_msg"
-QT_MOC_LITERAL(4, 37, 7), // "message"
-QT_MOC_LITERAL(5, 45, 17), // "connectedToServer"
-QT_MOC_LITERAL(6, 63, 6), // "status"
-QT_MOC_LITERAL(7, 70, 15), // "deviceIdChanged"
-QT_MOC_LITERAL(8, 86, 8), // "deviceId"
-QT_MOC_LITERAL(9, 95, 11), // "newPosition"
-QT_MOC_LITERAL(10, 107, 14), // "QGeoCoordinate"
-QT_MOC_LITERAL(11, 122, 10), // "coordinate"
-QT_MOC_LITERAL(12, 133, 8), // "newSpeed"
-QT_MOC_LITERAL(13, 142, 9), // "speed_kmh"
-QT_MOC_LITERAL(14, 152, 17), // "newSatellitesUsed"
-QT_MOC_LITERAL(15, 170, 14), // "satellitesUsed"
-QT_MOC_LITERAL(16, 185, 13), // "movementStart"
-QT_MOC_LITERAL(17, 199, 5), // "start"
-QT_MOC_LITERAL(18, 205, 15), // "positionUpdated"
-QT_MOC_LITERAL(19, 221, 16), // "QGeoPositionInfo"
-QT_MOC_LITERAL(20, 238, 6), // "update"
-QT_MOC_LITERAL(21, 245, 22), // "satellitesInUseUpdated"
-QT_MOC_LITERAL(22, 268, 24), // "QList<QGeoSatelliteInfo>"
-QT_MOC_LITERAL(23, 293, 13), // "satelliteInfo"
-QT_MOC_LITERAL(24, 307, 17), // "sendMessageQueued"
-QT_MOC_LITERAL(25, 325, 3), // "var"
-QT_MOC_LITERAL(26, 329, 9), // "sendEvent"
-QT_MOC_LITERAL(27, 339, 12), // "indigo_event"
-QT_MOC_LITERAL(28, 352, 5), // "event"
-QT_MOC_LITERAL(29, 358, 16), // "sendLocationData"
-QT_MOC_LITERAL(30, 375, 9), // "readyRead"
-QT_MOC_LITERAL(31, 385, 9), // "connected"
-QT_MOC_LITERAL(32, 395, 5), // "error"
-QT_MOC_LITERAL(33, 401, 29), // "QAbstractSocket::SocketError&"
-QT_MOC_LITERAL(34, 431, 12), // "disconnected"
-QT_MOC_LITERAL(35, 444, 9), // "reconnect"
-QT_MOC_LITERAL(36, 454, 16), // "flushOrderEvents"
-QT_MOC_LITERAL(37, 471, 12), // "send_message"
-QT_MOC_LITERAL(38, 484, 11) // "indigo_msg&"
+QT_MOC_LITERAL(3, 26, 24), // "::indigo::pb::indigo_msg"
+QT_MOC_LITERAL(4, 51, 7), // "message"
+QT_MOC_LITERAL(5, 59, 17), // "connectedToServer"
+QT_MOC_LITERAL(6, 77, 6), // "status"
+QT_MOC_LITERAL(7, 84, 15), // "deviceIdChanged"
+QT_MOC_LITERAL(8, 100, 8), // "deviceId"
+QT_MOC_LITERAL(9, 109, 11), // "newPosition"
+QT_MOC_LITERAL(10, 121, 14), // "QGeoCoordinate"
+QT_MOC_LITERAL(11, 136, 10), // "coordinate"
+QT_MOC_LITERAL(12, 147, 8), // "newSpeed"
+QT_MOC_LITERAL(13, 156, 9), // "speed_kmh"
+QT_MOC_LITERAL(14, 166, 17), // "newSatellitesUsed"
+QT_MOC_LITERAL(15, 184, 14), // "satellitesUsed"
+QT_MOC_LITERAL(16, 199, 13), // "movementStart"
+QT_MOC_LITERAL(17, 213, 5), // "start"
+QT_MOC_LITERAL(18, 219, 15), // "positionUpdated"
+QT_MOC_LITERAL(19, 235, 16), // "QGeoPositionInfo"
+QT_MOC_LITERAL(20, 252, 6), // "update"
+QT_MOC_LITERAL(21, 259, 22), // "satellitesInUseUpdated"
+QT_MOC_LITERAL(22, 282, 24), // "QList<QGeoSatelliteInfo>"
+QT_MOC_LITERAL(23, 307, 13), // "satelliteInfo"
+QT_MOC_LITERAL(24, 321, 17), // "sendMessageQueued"
+QT_MOC_LITERAL(25, 339, 3), // "var"
+QT_MOC_LITERAL(26, 343, 9), // "sendEvent"
+QT_MOC_LITERAL(27, 353, 26), // "::indigo::pb::indigo_event"
+QT_MOC_LITERAL(28, 380, 5), // "event"
+QT_MOC_LITERAL(29, 386, 16), // "sendLocationData"
+QT_MOC_LITERAL(30, 403, 9), // "readyRead"
+QT_MOC_LITERAL(31, 413, 9), // "connected"
+QT_MOC_LITERAL(32, 423, 5), // "error"
+QT_MOC_LITERAL(33, 429, 29), // "QAbstractSocket::SocketError&"
+QT_MOC_LITERAL(34, 459, 12), // "disconnected"
+QT_MOC_LITERAL(35, 472, 9), // "reconnect"
+QT_MOC_LITERAL(36, 482, 16), // "flushOrderEvents"
+QT_MOC_LITERAL(37, 499, 12), // "send_message"
+QT_MOC_LITERAL(38, 512, 25) // "::indigo::pb::indigo_msg&"
 
     },
-    "Backend\0protobuf_message\0\0indigo_msg\0"
-    "message\0connectedToServer\0status\0"
-    "deviceIdChanged\0deviceId\0newPosition\0"
-    "QGeoCoordinate\0coordinate\0newSpeed\0"
-    "speed_kmh\0newSatellitesUsed\0satellitesUsed\0"
+    "Backend\0protobuf_message\0\0"
+    "::indigo::pb::indigo_msg\0message\0"
+    "connectedToServer\0status\0deviceIdChanged\0"
+    "deviceId\0newPosition\0QGeoCoordinate\0"
+    "coordinate\0newSpeed\0speed_kmh\0"
+    "newSatellitesUsed\0satellitesUsed\0"
     "movementStart\0start\0positionUpdated\0"
     "QGeoPositionInfo\0update\0satellitesInUseUpdated\0"
     "QList<QGeoSatelliteInfo>\0satelliteInfo\0"
     "sendMessageQueued\0var\0sendEvent\0"
-    "indigo_event\0event\0sendLocationData\0"
-    "readyRead\0connected\0error\0"
-    "QAbstractSocket::SocketError&\0"
+    "::indigo::pb::indigo_event\0event\0"
+    "sendLocationData\0readyRead\0connected\0"
+    "error\0QAbstractSocket::SocketError&\0"
     "disconnected\0reconnect\0flushOrderEvents\0"
-    "send_message\0indigo_msg&"
+    "send_message\0::indigo::pb::indigo_msg&"
 };
 #undef QT_MOC_LITERAL
 
@@ -155,7 +156,7 @@ void Backend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
     if (_c == QMetaObject::InvokeMetaMethod) {
         Backend *_t = static_cast<Backend *>(_o);
         switch (_id) {
-        case 0: _t->protobuf_message((*reinterpret_cast< indigo_msg(*)>(_a[1]))); break;
+        case 0: _t->protobuf_message((*reinterpret_cast< ::indigo::pb::indigo_msg(*)>(_a[1]))); break;
         case 1: _t->connectedToServer((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 2: _t->deviceIdChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 3: _t->newPosition((*reinterpret_cast< QGeoCoordinate(*)>(_a[1]))); break;
@@ -164,8 +165,8 @@ void Backend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 6: _t->movementStart((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 7: _t->positionUpdated((*reinterpret_cast< const QGeoPositionInfo(*)>(_a[1]))); break;
         case 8: _t->satellitesInUseUpdated((*reinterpret_cast< const QList<QGeoSatelliteInfo>(*)>(_a[1]))); break;
-        case 9: _t->sendMessageQueued((*reinterpret_cast< indigo_msg(*)>(_a[1]))); break;
-        case 10: _t->sendEvent((*reinterpret_cast< indigo_event(*)>(_a[1]))); break;
+        case 9: _t->sendMessageQueued((*reinterpret_cast< ::indigo::pb::indigo_msg(*)>(_a[1]))); break;
+        case 10: _t->sendEvent((*reinterpret_cast< ::indigo::pb::indigo_event(*)>(_a[1]))); break;
         case 11: _t->sendLocationData(); break;
         case 12: _t->readyRead(); break;
         case 13: _t->connected(); break;
@@ -173,7 +174,7 @@ void Backend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 15: _t->disconnected(); break;
         case 16: _t->reconnect(); break;
         case 17: _t->flushOrderEvents(); break;
-        case 18: _t->send_message((*reinterpret_cast< indigo_msg(*)>(_a[1]))); break;
+        case 18: _t->send_message((*reinterpret_cast< ::indigo::pb::indigo_msg(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -191,7 +192,7 @@ void Backend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (Backend::*_t)(indigo_msg );
+            typedef void (Backend::*_t)(::indigo::pb::indigo_msg );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Backend::protobuf_message)) {
                 *result = 0;
             }
@@ -272,7 +273,7 @@ int Backend::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void Backend::protobuf_message(indigo_msg _t1)
+void Backend::protobuf_message(::indigo::pb::indigo_msg _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);

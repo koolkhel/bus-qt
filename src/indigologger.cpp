@@ -99,7 +99,9 @@ void IndigoLogger::configurationDataReceived()
 void IndigoLogger::configurationClientDisconnected()
 {
     qCDebug(LOG) << "server: client disconnected";
-    confServer->resumeAccepting();
+    if (confServer != NULL) {
+        confServer->resumeAccepting();
+    }
     QObject::connect(confClientSocket, 0, 0);
     confClientSocket->deleteLater();
     confClientSocket = NULL;
