@@ -11,7 +11,7 @@ ZeroMQPublisher::ZeroMQPublisher(const QString address,nzmqt::ZMQContext* contex
 {
     this->address = address;
     publisher = context->createSocket(nzmqt::ZMQSocket::TYP_PUB);
-    publisher->bindTo(address);
+    publisher->connectTo(address);
     connect(this,SIGNAL(messageSend(QByteArray)),this,SLOT(messageSended(QByteArray)));
 }
 

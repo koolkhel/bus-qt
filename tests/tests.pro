@@ -28,7 +28,8 @@ SOURCES += main.cpp \
     protobuftests.cpp \
     topic.cpp \
     gpsmodule.cpp \
-    testmodule.cpp
+    testmodule.cpp \
+    proxy.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -44,4 +45,5 @@ HEADERS += \
     dispatcher.h \
     topic.h \
     gpsmodule.h \
-    testmodule.h
+    testmodule.h \
+    proxy.h
