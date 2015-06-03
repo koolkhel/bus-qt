@@ -37,6 +37,7 @@ TEST(ZMQ, testWTF) {
 
     context->start();
     context->stop();
+    usleep(100 * 1000);
 }
 
 
@@ -69,15 +70,15 @@ TEST(ZMQ, FromTestSources) {
 
     QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
     QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
-    QSignalSpy spyFinishedContext(context,SIGNAL(contextStopped()));
 
 
     context->start();
 
     publisher->sendMessage("Hello");
 
-    usleep(100 * 1000);
     spyPublisherMessageSent.wait(100);
+    usleep(100 * 1000);
+
 
    ASSERT_TRUE(spyPublisherMessageSent.size() > 0) << "Server didn't send any/enough messages.";
    ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
@@ -542,8 +543,8 @@ TEST(ZMQ, C) {
     zmq_ctx_destroy (context);
 }
 
-TEST(ZMQ, 100messages)
-{
+TEST(ZMQ, 100messages) {
+
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
     QThread *subscriberThread = new QThread;
@@ -597,8 +598,8 @@ TEST(ZMQ, 100messages)
     usleep(100 * 1000);
 }
 
-TEST(ZMQ, TenThousand)
-{
+TEST(ZMQ, TenThousand) {
+
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
     QThread *subscriberThread = new QThread;
@@ -637,7 +638,7 @@ TEST(ZMQ, TenThousand)
     }
 
     usleep(100 * 100000);
-    spyPublisherMessageSent.wait(10000);
+   // spyPublisherMessageSent.wait(10000);
 
     //ASSERT_TRUE(spyPublisherMessageSent.size() == 10000)<< "Server didn't send any/enough messages.";
     //ASSERT_TRUE(spySubscriberMessageRecieved.size() ==10000) << "Client didn't receive any/enough messages.";
@@ -654,8 +655,8 @@ TEST(ZMQ, TenThousand)
     context->stop();
     usleep(100 * 1000);
 }
-TEST(ZMQ, C_10th)
-{
+
+TEST(ZMQ, C_10th) {
     void *context = zmq_ctx_new ();
 
     void *publisher = zmq_socket (context, ZMQ_PUB);
