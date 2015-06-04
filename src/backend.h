@@ -9,9 +9,9 @@
 
 #include <google/protobuf/text_format.h>
 
-#include "pb/indigo.pb.h"
-#include "pb/events.pb.h"
-#include "pb/geo.pb.h"
+#include "indigo_message.pb.h"
+#include "events_message.pb.h"
+#include "geo_message.pb.h"
 
 #include "indigoqueue.h"
 

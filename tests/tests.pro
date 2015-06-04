@@ -12,7 +12,7 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-LIBS += -L../src -lindigo -lgtest -lprotobuf-lite
+LIBS += -L../src -lindigo -lindigo_message -lgeo_message -levents_message -lgtest -lprotobuf-lite
 
 INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
@@ -21,15 +21,12 @@ SOURCES += main.cpp \
     zeromqsubscriber.cpp \
     loggertests.cpp \
     zeromqtests.cpp \
-    modulep.cpp \
-    module.cpp \
-    dispatcher.cpp \
     dispatchertests.cpp \
     protobuftests.cpp \
-    topic.cpp \
     gpsmodule.cpp \
     testmodule.cpp \
-    proxy.cpp
+    proxy.cpp \
+    plugintests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -40,10 +37,6 @@ HEADERS += \
     Subscriber.hpp \
     SampleBase.hpp \
     zhelpers.h \
-    modulep.h \
-    module.h \
-    dispatcher.h \
-    topic.h \
     gpsmodule.h \
     testmodule.h \
     proxy.h

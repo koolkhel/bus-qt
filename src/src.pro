@@ -15,15 +15,6 @@ TEMPLATE = lib
 
 include(nzmqt/nzmqt.pri)
 
-GP = pb
-GEN_CODE = $$GP/events.pb.cc \
-    $$GP/geo.pb.cc \
-    $$GP/indigo.pb.cc
-
-GEN_HED = $$GP/events.pb.h \
-    $$GP/geo.pb.h \
-    $$GP/indigo.pb.h
-
 SOURCES += gpsdpositionsource.cpp \
         gpsdsatellitesource.cpp \
         backend.cpp \
@@ -37,7 +28,11 @@ SOURCES += gpsdpositionsource.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
     context.cpp \
-    $$GEN_CODE
+    dispatcher.cpp \
+    module.cpp \
+    modulep.cpp \
+    topic.cpp \
+    pluginmodulefactory.cpp
 
 HEADERS  += mainwindow.h \
             backend.h \
@@ -54,11 +49,16 @@ HEADERS  += mainwindow.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
     context.h \
-    $$GEN_HED
+    dispatcher.h \
+    module.h \
+    modulep.h \
+    topic.h \
+    pluginmodulefactory.h
 
 FORMS    += mainwindow.ui
 
-OTHER_FILES += indigo.proto
+INCLUDEPATH += ../modules/protos/include
+LIBS += -L../modules/protos/bin -lindigo_message -levents_message -lgeo_message
 
 linux-g++ {
     INCLUDEPATH += /usr/local/include

@@ -1,0 +1,7 @@
+package indigo.pb;
+
+option optimize_for = LITE_RUNTIME;
+
+message test_message {
+	optional string test_string = 4;
+}

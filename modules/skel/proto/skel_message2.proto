@@ -1,0 +1,6 @@
+package indigo.pb;
+
+option optimize_for = LITE_RUNTIME;
+
+message skel_message2 {
+}
