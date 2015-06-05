@@ -28,8 +28,7 @@ void Dispatcher::publish(QByteArray data, QString topic)
     p->sendMessage(data);
 }
 
-template<class T>
-Module *Dispatcher::addModule(T *module,QString name)
+Module *Dispatcher::addModule(Module *module,QString name)
 {
     ModuleP *mod_p = module->getMod_p();
     mod_p->setPublisher(new ZeroMQPublisher(context, QString("127.0.0.1:5555")));
