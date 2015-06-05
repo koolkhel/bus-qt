@@ -4,19 +4,6 @@
 #include <QThread>
 #include "modulep.h"
 
-
-/*
-PUB PUB PUB
-
-    XSUB
-
-  zmq_proxy
-
-    XPUB
-
-SUB SUB SUB
-*/
-
 Dispatcher::Dispatcher()
 {
     context = new Context();
@@ -29,36 +16,32 @@ Dispatcher::Dispatcher()
 
 Dispatcher::~Dispatcher()
 {
-    //context->stop();
+    context->stop();
 }
 
 
-
-void Dispatcher::publish(Module *module, QByteArray data, QString topic)
+void Dispatcher::publish(QByteArray data, QString topic)
 {
-    /*
+    Module *module = modules[topic];
     ZeroMQPublisher *p = module->getMod_p()->getPublisher();
-    assert(p != NULL);
 
     p->sendMessage(data);
-    */
 }
 
-Module *Dispatcher::addModule(Module *module,QString name)
+template<class T>
+Module *Dispatcher::addModule(T *module,QString name)
 {
-    /*
     ModuleP *mod_p = module->getMod_p();
-    //Адрес xsub из zmq_proxy
-    mod_p->publisher = new ZeroMQPublisher(context, QString("127.0.0.1"));
-    mod_p->subscriber = new ZeroMQSubscriber(context);
+    mod_p->setPublisher(new ZeroMQPublisher(context, QString("127.0.0.1:5555")));
+    mod_p->setSubscriber(new ZeroMQSubscriber(context));
     //module->d = this; // хз как ссылку передать, не указатель
 
     connect(mod_p->subscriber, SIGNAL(newMessage(QByteArray)), module, SLOT(dispatchModule()));
 
-
+    modules.insert(name,module);
     QThread *publisherThread = new QThread;
     mod_p->publisher->moveToThread(publisherThread);
     publisherThread->start();
-    */
+
 }
 

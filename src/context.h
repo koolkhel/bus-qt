@@ -12,6 +12,7 @@ public:
     static Context* instance();
     Context(const Context&);
     nzmqt::PollingZMQContext* context;
+    void stop();
 
 };
 

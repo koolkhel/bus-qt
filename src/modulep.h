@@ -5,24 +5,24 @@
 
 class ModuleP
 {
-
+    ZeroMQPublisher *publisher;
+    ZeroMQSubscriber *subscriber;
     QString debugInfo;
 
 public:
-    ZeroMQPublisher *publisher;
-    ZeroMQSubscriber *subscriber;
+
     ModuleP(QString&);
     void printDebug();
+
     ZeroMQPublisher *getPublisher() const;
-    void setPublisher(ZeroMQPublisher *value);
     ZeroMQSubscriber *getSubscriber() const;
+    void setPublisher(ZeroMQPublisher *value);
     void setSubscriber(ZeroMQSubscriber *value);
 
     QString getDebugInfo() const;
-    void setDebugInfo(const QString &value);
-
     QString getName() const;
 
+    void setDebugInfo(const QString &value);
 };
 
 #endif // MODULEP_H

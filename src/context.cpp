@@ -15,3 +15,8 @@ Context *Context::instance()
     return pInstance;
 }
 
+void Context::stop()
+{
+    context->stop();
+}
+

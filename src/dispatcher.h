@@ -24,6 +24,7 @@ public:
     virtual ~Dispatcher();
 
     Module* addModule(Module *,QString);
+
     void publish(Module *mod, QByteArray Data, QString Topic);
     //void sub(Module *, Topic);
 private:
