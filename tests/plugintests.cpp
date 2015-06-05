@@ -38,5 +38,5 @@ TEST(PLUGINS, test)
 
     PluginModuleFactory *factory = qobject_cast<PluginModuleFactory *>(obj);
     Module *module = factory->createModule();
-    ASSERT_TRUE(module->name() == "skel works");
+    ASSERT_TRUE(module->name == "skel works");
 }

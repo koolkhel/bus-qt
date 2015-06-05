@@ -41,7 +41,7 @@ void indigoMessageHandler(QtMsgType type,
    const QString &message)
 {
     static QMutex mutex;
-    //QMutexLocker lock(&mutex);
+    QMutexLocker lock(&mutex);
     if (instance == NULL) {
         instance = new IndigoLogger();
         qSetMessagePattern(logPattern);

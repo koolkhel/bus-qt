@@ -8,7 +8,7 @@ Q_LOGGING_CATEGORY(SKELETON, "skel");
 
 Skel::Skel(QObject *parent)
 {
-    this->_name = "skel works";
+    this->name = "skel works";
     ::indigo::pb::test_message test2;
 
 	::indigo::pb::skel_message skel;
