@@ -23,9 +23,11 @@ Dispatcher::~Dispatcher()
 void Dispatcher::publish(QByteArray data, QString topic)
 {
     Module *module = modules[topic];
-    ZeroMQPublisher *p = module->getMod_p()->getPublisher();
-
-    p->sendMessage(data);
+    if(module)
+    {
+        ZeroMQPublisher *p = module->getMod_p()->getPublisher();
+        p->sendMessage(data);
+    }
 }
 
 Module *Dispatcher::addModule(Module *module,QString name)
