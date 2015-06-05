@@ -18,8 +18,8 @@ public:
     void setMod_p(ModuleP *value);
 
     void configure(QMap<QString, QString>&);
-    void start();
-    void stop();
+    virtual void start();
+    virtual void stop();
     //virtual ~Module();
 
 private:

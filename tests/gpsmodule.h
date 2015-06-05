@@ -10,6 +10,8 @@ public:
     GPSModule(QString&);
     ~GPSModule();
     void start_simulation(double,double);
+    void start();
+    void stop();
 };
 
 #endif // GPSMODULE_H

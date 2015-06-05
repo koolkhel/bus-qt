@@ -20,3 +20,15 @@ void GPSModule::start_simulation(double lat, double longit)
 
 }
 
+void GPSModule::start()
+{
+
+}
+
+void GPSModule::stop()
+{
+
+}
+
+
+
