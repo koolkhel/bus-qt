@@ -19,15 +19,19 @@ Dispatcher::~Dispatcher()
     context->stop();
 }
 
-
 void Dispatcher::publish(QByteArray data, QString topic)
 {
     Module *module = modules[topic];
     if(module)
     {
-        ZeroMQPublisher *p = module->getMod_p()->getPublisher();
-        p->sendMessage(data);
+        ZeroMQPublisher *publisher = module->getMod_p()->getPublisher();
+        QThread *publisherThread = new QThread;
+        publisher->moveToThread(publisherThread);
+        publisherThread->start();
+
+        publisher->sendMessage(data);
     }
+
 }
 
 Module *Dispatcher::addModule(Module *module,QString name)
@@ -40,9 +44,8 @@ Module *Dispatcher::addModule(Module *module,QString name)
     connect(mod_p->subscriber, SIGNAL(newMessage(QByteArray)), module, SLOT(dispatchModule()));
 
     modules.insert(name,module);
-    QThread *publisherThread = new QThread;
-    mod_p->publisher->moveToThread(publisherThread);
-    publisherThread->start();
+
+
 
 }
 
