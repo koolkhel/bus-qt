@@ -14,4 +14,6 @@ HEADERS += skel.h \
     skelpluginfactory.h
 
 DISTFILES += \
-    skel.json
+    skel.json \
+    proto/skel_message.proto \
+    proto/skel_message2.proto

@@ -40,3 +40,8 @@ HEADERS += \
     gpsmodule.h \
     testmodule.h \
     proxy.h
+
+OTHER_FILES += testconfig.ini
+
+DISTFILES += \
+    testconfig.ini

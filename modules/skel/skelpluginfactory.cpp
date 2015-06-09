@@ -7,7 +7,12 @@ SkelPluginFactory::SkelPluginFactory()
 
 }
 
-Module *SkelPluginFactory::createModule()
+Module *SkelPluginFactory::createModule(QObject parent)
 {
-    return new Skel();
+    return new Skel(parent);
+}
+
+QString SkelPluginFactory::getModuleType()
+{
+    return "skel";
 }

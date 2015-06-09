@@ -1,10 +1,16 @@
+#include <QThread>
+#include <QSettings>
+#include <QDir>
+
 #include "dispatcher.h"
+#include "modulep.h"
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
-#include <QThread>
+#include "module.h"
+#include "pluginmodulefactory.h"
 #include "modulep.h"
 
-Dispatcher::Dispatcher()
+Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 {
     context = new Context();
     //modules.insert("GPS","HelloGPS");
@@ -19,11 +25,11 @@ Dispatcher::~Dispatcher()
     context->stop();
 }
 
+#if 0
 void Dispatcher::publish(QByteArray data, QString topic)
 {
     Module *module = modules[topic];
-    if(module)
-    {
+    if (module) {
         ZeroMQPublisher *publisher = module->getMod_p()->getPublisher();
         QThread *publisherThread = new QThread;
         publisher->moveToThread(publisherThread);
@@ -34,18 +40,113 @@ void Dispatcher::publish(QByteArray data, QString topic)
 
 }
 
-Module *Dispatcher::addModule(Module *module,QString name)
+Module *Dispatcher::addModule(Module *module, QString name)
 {
     ModuleP *mod_p = module->getMod_p();
-    mod_p->setPublisher(new ZeroMQPublisher(context, QString("127.0.0.1:5555")));
-    mod_p->setSubscriber(new ZeroMQSubscriber(context));
+
     //module->d = this; // хз как ссылку передать, не указатель
 
     connect(mod_p->subscriber, SIGNAL(newMessage(QByteArray)), module, SLOT(dispatchModule()));
 
     modules.insert(name,module);
+}
+#endif
 
-
-
+QString Dispatcher::getFreePublisherEndpoint()
+{
+    return QString("tcp://127.0.0.1:%1").arg(freePort++);
 }
 
+void Dispatcher::startAll()
+{
+    foreach (QString instanceName, moduleInstances.keys()) {
+        Module *module = moduleInstances.find(instanceName).value();
+
+        ModuleP *mod_p = new ModuleP;
+
+        QString endPoint = getFreePublisherEndpoint();
+        mod_p->setPublisher(new ZeroMQPublisher(context, endPoint));
+
+        // TODO подписать прокси на endPoint
+
+        ZeroMQSubscriber *sub = new ZeroMQSubscriber(context);
+        mod_p->setSubscriber(sub);
+
+        module->start();
+    }
+}
+
+void Dispatcher::subscribe(Module *module, QString topicName)
+{
+    ModuleP *mod_p = module->mod_p;
+    mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
+}
+
+void Dispatcher::initializeAll(QString configurationFilePath)
+{
+    loadAllPlugins();
+
+    QSettings iniFile(configurationFilePath, QSettings::IniFormat);
+
+    iniFile.beginGroup("modules");
+    QStringList modules = iniFile.childKeys();
+    iniFile.endGroup();
+
+    foreach (QString key, modules) {
+        QVariant value = iniFile.value(key);
+
+        QString moduleName = value.toString();
+        QString instanceName = key;
+
+        QMap<QString, QVariant> configuration;
+        readConfiguration(iniFile, instanceName, configuration);
+
+        Module *new_instance = NULL;
+        PluginModuleFactory *factory = pluginFactories.find(moduleName);
+        if (factory == NULL) {
+            // FIXME
+            throw "cannot create module";
+        }
+
+        new_instance = factory->createModule(this);
+
+        new_instance->configure(configuration);
+
+        moduleInstances.insert(instanceName, new_instance);
+    }
+}
+
+ void Dispatcher::readConfiguration(QSettings &settings, QString moduleInstanceName,
+                               QMap<QString, QVariant> &configuration)
+{
+    settings.beginGroup(moduleInstanceName);
+    foreach (QString parameterName, settings.childKeys()) {
+        configuration.insert(parameterName, settings.value(parameterName));
+    }
+
+    settings.endGroup();
+}
+
+ void Dispatcher::loadAllPlugins()
+ {
+     QDir pluginDir("../modules/bin");
+     QStringList pluginsFilter;
+     pluginsFilter << "*.so";
+     pluginDir.setNameFilters(pluginsFilter);
+
+     foreach (QString pluginFilePath, pluginDir.entryList()) {
+         QPluginLoader loader(pluginFilePath);
+         QJsonObject metadata = loader.metaData();
+         //printf("%s\n", qPrintable(metadata.keys().join(",")));
+         //printf("%s\n", qPrintable(metadata.value("IID").toString()));
+
+         bool result = loader.load();
+         //ASSERT_TRUE(result);
+         //printf("%s\n", qPrintable(loader.errorString()));
+
+         QObject *obj = loader.instance();
+
+         PluginModuleFactory *factory = qobject_cast<PluginModuleFactory *>(obj);
+         pluginFactories.insert(factory->getModuleType(), factory);
+     }
+ }

@@ -21,3 +21,32 @@ Skel::~Skel()
 {
 
 }
+
+QStringList Skel::getPubTopics()
+{
+    QStringList topics;
+    topics << "skel_topic";
+
+    return topics;
+}
+
+void Skel::respond(indigo::pb::internal_msg &message)
+{
+    if (message.HasExtension(::indigo::pb::skel_message::skel_message_in)) {
+        qCWarning(SKELETON, "got my message!");
+    }
+
+    if (message.HasExtension(::indigo::pb::skel_message2::skel_message_2_in)) {
+        qCWarning(SKELETON, "got my message2!");
+    }
+}
+
+void Skel::start()
+{
+
+}
+
+void Skel::stop()
+{
+
+}

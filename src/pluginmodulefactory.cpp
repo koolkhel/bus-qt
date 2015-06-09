@@ -5,7 +5,12 @@ PluginModuleFactory::PluginModuleFactory(QObject *parent) : QObject(parent)
 
 }
 
-Module *PluginModuleFactory::createModule()
+Module *PluginModuleFactory::createModule(QObject parent)
 {
     return NULL;
+}
+
+QString PluginModuleFactory::getModuleType()
+{
+    return "wtf";
 }

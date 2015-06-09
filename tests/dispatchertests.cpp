@@ -41,3 +41,11 @@ TEST(disptest, sanity) {
     //ASSERT_EQ(protobuf_gen_code.latitude, 5.0);
     //ASSERT_EQ(protobuf_gen_code.longitude, 6.0);
 }
+
+TEST(dispatcher, creation) {
+    Dispatcher *dispatcher = new Dispatcher();
+
+    dispatcher->initializeAll("testconfig.ini");
+
+    delete dispatcher();
+}

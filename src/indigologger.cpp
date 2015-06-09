@@ -100,7 +100,8 @@ void IndigoLogger::configurationClientDisconnected()
 {
     qCDebug(LOG) << "server: client disconnected";
     if (confServer != NULL) {
-        confServer->resumeAccepting();
+        // FIXME сокет вылетает
+        //confServer->resumeAccepting();
     }
     QObject::connect(confClientSocket, 0, 0);
     confClientSocket->deleteLater();

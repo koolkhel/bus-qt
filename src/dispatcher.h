@@ -3,12 +3,15 @@
 
 #include <QMap>
 #include <QString>
+#include <QList>
+#include <QVariant>
 #include <functional>
 #include <QObject>
+#include <map>
+
 #include "module.h"
 #include "topic.h"
 #include "context.h"
-#include <map>
 
 class Dispatcher : public QObject
 {
@@ -17,18 +20,39 @@ class Dispatcher : public QObject
     friend class ModuleP;
     friend class Module;
 
-    // имя, модуль
-    std::map<QString,Module *> modules;
 public:
     Dispatcher();
     virtual ~Dispatcher();
 
-    Module* addModule(Module *,QString);
+    void initializeAll(QString configurationFilePath);
 
-    void publish(Module *mod, QByteArray Data, QString Topic);
-    //void sub(Module *, Topic);
+    void startAll();
+
+    //Module* addModule(Module *,QString);
+    //void publish(Module *mod, QByteArray Data, QString Topic);
+
+    void subscribe(Module *module, QString topicName);
 private:
     Context *context;
+
+    void readConfiguration(QSettings &settings, QString moduleInstanceName,
+                           QMap<QString, QVariant> &configuration);
+
+    void loadAllPlugins();
+
+    QString getFreePublisherEndpoint();
+
+    int freePort;
+
+    // тип-модуля - фабрика
+    QMap<QString, PluginModuleFactory *> pluginFactories;
+
+    // имя-модуля - модуль
+    QMap<QString, Module *> moduleInstances;\
+
+    //QString proxyXSub;
+
+    QString proxyXPub;
 };
 
 #endif // DISPATCHER_H

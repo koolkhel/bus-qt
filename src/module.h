@@ -1,29 +1,46 @@
 #ifndef MODULE_H
 #define MODULE_H
+
+#include <QStringList>
 #include <QString>
 #include <QMap>
+
+#include "indigo_message.pb.h"
 #include "modulep.h"
+
+class Dispatcher;
 
 class Module : public QObject
 {
     Q_OBJECT
-    QMap<QString, QString> configuration;
+
 public:
     Module();
-    Module(QMap<QString, QString>& configuration, QString);
-    Module(QString);
-    ~Module() = 0;
-    ModuleP *getMod_p() const;
-    QString name;
-    void setMod_p(ModuleP *value);
+    Module(QMap<QString, QVariant>& configuration, QString name);
+    Module(QString name);
+    virtual ~Module() = 0;
 
-    void configure(QMap<QString, QString>&);
+    void configure(QMap<QString, QVariant> &configuration, Dispatcher *d);
+
     virtual void start();
     virtual void stop();
-    //virtual ~Module();
+
+    virtual QStringList getPubTopics() = 0;
+
+public slots:
+    void messageReceived(QList<QByteArray> &data);
+
+    virtual void respond(::indigo::pb::internal_msg &message) = 0;
+protected:
+    void publish();
+    void subscribe(QString topicName);
 
 private:
     ModuleP *mod_p;
+    QString name;
+    Dispatcher *dispatcher;
+
+    QMap<QString, QVariant> configuration;
 };
 
 #endif // MODULE_H

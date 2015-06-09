@@ -12,7 +12,8 @@ class SkelPluginFactory : public PluginModuleFactory
 public:
     SkelPluginFactory();
 
-    virtual Module *createModule();
+    virtual Module *createModule(QObject parent = 0);
+    virtual QString getModuleType();
 };
 
 #endif // SKELPLUGINFACTORY_H

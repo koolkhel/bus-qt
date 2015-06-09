@@ -11,7 +11,8 @@ class PluginModuleFactory : public QObject
 public:
     explicit PluginModuleFactory(QObject *parent = 0);
 
-    virtual Module *createModule();
+    virtual Module *createModule(QObject *parent = 0);
+    virtual QString getModuleType();
 signals:
 
 public slots:

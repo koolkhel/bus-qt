@@ -58,7 +58,7 @@ TEST(protobuf, workWithExtensions) {
     result = message2.ParseFromArray(buffer, byte_size);
 
     // Печаль, но почему-то нельзя понять, распарсили мы что-то или нет
-    ASSERT_TRUE(result) << ".ParseFromArray() returned failse. Perhaps. wrong message border";
+    ASSERT_TRUE(result) << ".ParseFromArray() returned false. Perhaps. wrong message border";
 
     // проверка того, что установлены required поля
     ASSERT_TRUE(message2.IsInitialized())
@@ -91,4 +91,18 @@ TEST(protobuf, workWithExtensions) {
             << "Incorrect parsed event type";
     ASSERT_EQ(event2.time(), 666)
             << "Incorrect parsed event time";
+}
+
+TEST(protobuf, setBinarySubmessage) {
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+    ::indigo::pb::indigo_msg message;
+    ::indigo::pb::indigo_geo geo;
+    ::indigo::pb::indigo_event myevent;
+
+    geo.set_latitude(5.0);
+    geo.set_longitude(6.0);
+    geo.set_unixtime(555);
+
+    // TODO проверить
 }
