@@ -3,7 +3,7 @@
 
 ZeroMQSubscriber::ZeroMQSubscriber(nzmqt::ZMQContext* context)
 {
-   subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_SUB);
+   subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_XSUB);
 
    connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SIGNAL(recieved()));
    connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SLOT(messageRecieved(const QList<QByteArray>&)));

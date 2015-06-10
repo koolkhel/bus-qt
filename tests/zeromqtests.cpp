@@ -14,6 +14,7 @@
 #include "testclass.h"
 #include "context.h"
 #include "zhelpers.h"
+#include "proxy.h"
 
 #include "events_message.pb.h"
 #include "geo_message.pb.h"
@@ -180,7 +181,7 @@ TEST(ZMQ, PROXY)
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
     QThread *subscriberThread = new QThread;
-    QThread *proxyThread = new QThread;
+    QThread *secondPublisherThread = new QThread;
 
     nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
     context->moveToThread(contextThread);
@@ -192,11 +193,16 @@ TEST(ZMQ, PROXY)
     publisherThread->start();
     usleep(100 * 1000);
 
+    ZeroMQPublisher *secondPublisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
+    secondPublisher->moveToThread(secondPublisherThread);
+    secondPublisherThread->start();
+    usleep(100 * 1000);
+
     ZeroMQSubscriber *subscriber = new ZeroMQSubscriber(context);
     subscriber->moveToThread(subscriberThread);
     subscriberThread->start();
 
-    QString filter = "";
+    QString filter = "Bear";
     subscriber->subscribeTo(QString(ZMQ_SUB_STR), filter);
 
     usleep(100 * 1000);
@@ -204,11 +210,10 @@ TEST(ZMQ, PROXY)
     QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
     QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
 
-    context->start();
-
     nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber());
-    //QFuture<void> future = QtConcurrent::run(nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber()));
 
+    usleep(100 * 1000);
+    context->start();
 
     publisher->sendMessage("Hello","B");
 
