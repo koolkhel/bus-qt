@@ -138,7 +138,7 @@ TEST(ZMQ, ProtobufSendFilter)
     subscriber->moveToThread(subscriberThread);
     subscriberThread->start();
 
-    QString filter = "";
+    QString filter = "1";
     subscriber->subscribeTo(QString(ZMQ_SUB_STR), filter);
 
     usleep(100 * 1000);
@@ -148,14 +148,13 @@ TEST(ZMQ, ProtobufSendFilter)
 
     context->start();
 
-
-
     QByteArray byteArray(message.SerializeAsString().c_str());
     nzmqt::ZMQMessage *msg = new nzmqt::ZMQMessage(byteArray);
     publisher->sendMessage(msg);
 
     usleep(100 * 1000);
     spyPublisherMessageSent.wait(100);
+    spySubscriberMessageRecieved.wait(100);
 
     ASSERT_TRUE(spyPublisherMessageSent.size() > 0)<< "Server didn't send any/enough messages.";
     ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
@@ -210,7 +209,9 @@ TEST(ZMQ, PROXY)
     nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber());
     //QFuture<void> future = QtConcurrent::run(nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber()));
 
-    publisher->sendMessage("Hello");
+
+    publisher->sendMessage("Hello","B");
+
 
     usleep(100 * 1000);
     spyPublisherMessageSent.wait(100);

@@ -25,11 +25,23 @@ void ZeroMQPublisher::sendMessage(const QString msg)
     publisher->sendMessage(msg.toLocal8Bit());
     emit messageSend(msg.toLocal8Bit());
 }
-void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage* msg)
+void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message)
 {
-   // QByteArray array = msg.toByteArray();
-    publisher->sendMessage(msg->toByteArray());
-    emit messageSend(msg->toByteArray());
+    publisher->sendMessage(message->toByteArray());
+    emit messageSend(message->toByteArray());
+}
+void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message, const QString filter)
+{
+    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    publisher->sendMessage(message->toByteArray());
+    emit messageSend(message->toByteArray());
+}
+void ZeroMQPublisher::sendMessage(const QString message, const QString filter)
+{
+    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    publisher->sendMessage(message.toLocal8Bit());
+    emit messageSend(message.toLocal8Bit());
+
 }
 
 void ZeroMQPublisher::messageSended(const QByteArray sended)
