@@ -3,18 +3,21 @@
 #include <QDebug>
 #include <QTest>
 #include <QSignalSpy>
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
-
 #include <google/protobuf/text_format.h>
 
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
-
 #include "testclass.h"
-
 #include "context.h"
 #include "zhelpers.h"
+
+#include "events_message.pb.h"
+#include "geo_message.pb.h"
+#include "indigo_message.pb.h"
 
 #define ZMQ_PUB_STR "tcp://127.0.0.1:8080"
 #define ZMQ_SUB_STR "tcp://127.0.0.1:8080"
@@ -41,11 +44,144 @@ TEST(ZMQ, testWTF)
     usleep(100 * 1000);
 }
 
+TEST(ZMQ, ProtobufSendFilter)
+{
+    ::indigo::pb::indigo_msg message;
+    ::indigo::pb::indigo_geo geo;
+    ::indigo::pb::indigo_event myevent;
+
+    geo.set_latitude(5.0);
+    geo.set_longitude(6.0);
+    geo.set_unixtime(555);
+
+    // код расширения берется из расширяющего класса. В нем записано название
+    // поля из основного класса
+    message.AddExtension(::indigo::pb::indigo_geo::geo_coords)->CopyFrom(geo);
+    ASSERT_TRUE(message.HasExtension(::indigo::pb::indigo_geo::geo_coords))
+            << "Geo coord extension failed to add";
+
+    myevent.set_type(::indigo::pb::EVENT_NOTHING);
+    myevent.set_time(666);
+    message.AddExtension(::indigo::pb::indigo_event::events)->CopyFrom(myevent);
+    ASSERT_TRUE(message.HasExtension(::indigo::pb::indigo_event::events))
+            << "Events extension failed to add";
+
+    message.mutable_device_id()->set_least_significant_bits(5);
+    message.mutable_device_id()->set_most_significant_bits(7);
+
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+
+    bool result = false;
+    int byte_size = message.ByteSize();
+    result = message.SerializeToArray(buffer, sizeof(buffer));
+    ASSERT_TRUE(result)
+            << "unable to successfully serialize indigo_msg object";
+
+    ::indigo::pb::indigo_msg message2;
+
+    // здесь принципиально важно парсить столько, сколько ожидается длина сообщения
+    // TRUE будет только если мы закончили разбор сообщения четко по границе входного буфера
+    result = message2.ParseFromArray(buffer, byte_size);
+
+    // Печаль, но почему-то нельзя понять, распарсили мы что-то или нет
+    ASSERT_TRUE(result) << ".ParseFromArray() returned false. Perhaps. wrong message border";
+
+    // проверка того, что установлены required поля
+    ASSERT_TRUE(message2.IsInitialized())
+            << "message not initialized; not enough required fields";
+
+    ASSERT_EQ(message2.device_id().least_significant_bits(), 5)
+            << "parsed data differs from sent data";
+    ASSERT_EQ(message2.device_id().most_significant_bits(), 7)
+            << "parsed data differs from sent data";;
+
+    ASSERT_TRUE(message2.HasExtension(::indigo::pb::indigo_geo::geo_coords))
+            << "Geo coord extension failed to parse after serialization";
+
+    ::indigo::pb::indigo_geo geo2;
+    geo2.CopyFrom(message2.GetRepeatedExtension(::indigo::pb::indigo_geo::geo_coords).Get(0));
+
+    ASSERT_EQ(geo2.latitude(), 5.0)
+            << "Wrong received latitude";
+    ASSERT_EQ(geo2.longitude(), 6.0)
+            << "Wrong received longitude";
+    ASSERT_EQ(geo2.unixtime(), 555)
+            << "Wrong received unixtime";
+
+    ASSERT_TRUE(message2.HasExtension(::indigo::pb::indigo_event::events))
+            << "Events extension failed to parse after serialization";
+    ::indigo::pb::indigo_event event2;
+    event2.CopyFrom(message2.GetRepeatedExtension(::indigo::pb::indigo_event::events).Get(0));
+
+    ASSERT_EQ(event2.type(), ::indigo::pb::EVENT_NOTHING)
+            << "Incorrect parsed event type";
+    ASSERT_EQ(event2.time(), 666)
+            << "Incorrect parsed event time";
+
+    QThread *contextThread = new QThread;
+    QThread *publisherThread = new QThread;
+    QThread *subscriberThread = new QThread;
+
+    nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
+    context->moveToThread(contextThread);
+
+    contextThread->start();
+
+
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
+    publisher->moveToThread(publisherThread);
+    publisherThread->start();
+    usleep(100 * 1000);
+
+    ZeroMQSubscriber *subscriber = new ZeroMQSubscriber(context);
+    subscriber->moveToThread(subscriberThread);
+    subscriberThread->start();
+
+    QString filter = "";
+    subscriber->subscribeTo(QString(ZMQ_SUB_STR), filter);
+
+    usleep(100 * 1000);
+
+    QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
+    QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
+
+    context->start();
+
+
+
+    QByteArray byteArray(message.SerializeAsString().c_str());
+    nzmqt::ZMQMessage *msg = new nzmqt::ZMQMessage(byteArray);
+    publisher->sendMessage(msg);
+
+    usleep(100 * 1000);
+    spyPublisherMessageSent.wait(100);
+
+    ASSERT_TRUE(spyPublisherMessageSent.size() > 0)<< "Server didn't send any/enough messages.";
+    ASSERT_TRUE(spySubscriberMessageRecieved.size() > 0) << "Client didn't receive any/enough messages.";
+
+
+    QList<QVariant> params = spySubscriberMessageRecieved.takeFirst();
+
+  //  ASSERT_TRUE(params.size() > 0) << "no signals received";
+
+    if (params.size() > 0) {
+        ASSERT_TRUE(params.at(0).toString() == "Hello") << "Other data received";
+    }
+    subscriber->close();
+    publisher->close();
+    context->stop();
+    usleep(100 * 1000);
+    spyPublisherMessageSent.wait(100);
+
+}
+
 TEST(ZMQ, PROXY)
 {
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
     QThread *subscriberThread = new QThread;
+    QThread *proxyThread = new QThread;
 
     nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
     context->moveToThread(contextThread);
@@ -71,6 +207,9 @@ TEST(ZMQ, PROXY)
 
     context->start();
 
+    nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber());
+    //QFuture<void> future = QtConcurrent::run(nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber()));
+
     publisher->sendMessage("Hello");
 
     usleep(100 * 1000);
@@ -86,11 +225,11 @@ TEST(ZMQ, PROXY)
     if (params.size() > 0) {
         ASSERT_TRUE(params.at(0).toString() == "Hello") << "Other data received";
     }
-    nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber());
     subscriber->close();
     publisher->close();
     context->stop();
     usleep(100 * 1000);
+
 }
 
 TEST(ZMQ, FromTestSources) {

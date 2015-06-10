@@ -25,6 +25,12 @@ void ZeroMQPublisher::sendMessage(const QString msg)
     publisher->sendMessage(msg.toLocal8Bit());
     emit messageSend(msg.toLocal8Bit());
 }
+void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage* msg)
+{
+   // QByteArray array = msg.toByteArray();
+    publisher->sendMessage(msg->toByteArray());
+    emit messageSend(msg->toByteArray());
+}
 
 void ZeroMQPublisher::messageSended(const QByteArray sended)
 {
