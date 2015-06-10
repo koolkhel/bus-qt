@@ -14,7 +14,7 @@
 
 Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 {
-    context = new nzmqt::PollingZMQContext(this,1);
+    context = nzmqt::createDefaultContext();
     context->start();
     //modules.insert("GPS","HelloGPS");
     //modules.insert("GEOCOORD","HelloGEOCOORD");
