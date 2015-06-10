@@ -151,7 +151,7 @@ TEST(ZMQ, ProtobufSendFilter)
 
     QByteArray byteArray(message.SerializeAsString().c_str());
     nzmqt::ZMQMessage *msg = new nzmqt::ZMQMessage(byteArray);
-    publisher->sendMessage(msg);
+    publisher->sendMessage(msg->toByteArray());
 
     usleep(100 * 1000);
     spyPublisherMessageSent.wait(100);

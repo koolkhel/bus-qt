@@ -3,13 +3,13 @@
 
 Proxy::Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber)
 {
-    this->publisher = publisher;
-    this->subscriber = subscriber;
+    this->xPublisher = publisher;
+    this->xSubscriber = subscriber;
 }
 
 void Proxy::run()
 {
-    nzmqt::proxyFromTo(publisher, subscriber);
+    nzmqt::proxyFromTo(xPublisher, xSubscriber);
 }
 
 

@@ -13,8 +13,8 @@ public:
     ZeroMQPublisher(nzmqt::ZMQContext*,QString);
     void sendMessage(QString);
     void sendMessage(nzmqt::ZMQMessage*);
-    void sendMessage(const QString message, const QString filter);
     void sendMessage(nzmqt::ZMQMessage *message, const QString filter);
+    void sendMessage(const QByteArray message, const QString filter);
     QString getAddress() const;
 
     void close();

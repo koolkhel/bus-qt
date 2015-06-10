@@ -11,8 +11,8 @@ public:
     Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber);
     void run();
 private:
-    nzmqt::ZMQSocket *publisher;
-    nzmqt::ZMQSocket *subscriber;
+    nzmqt::ZMQSocket *xPublisher;
+    nzmqt::ZMQSocket *xSubscriber;
  signals:
     void resultReady(const QString &s);
 };
