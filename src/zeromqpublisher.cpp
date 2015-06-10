@@ -25,6 +25,24 @@ void ZeroMQPublisher::sendMessage(const QString msg)
     publisher->sendMessage(msg.toLocal8Bit());
     emit messageSend(msg.toLocal8Bit());
 }
+void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message)
+{
+    publisher->sendMessage(message->toByteArray());
+    emit messageSend(message->toByteArray());
+}
+void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message, const QString filter)
+{
+    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    publisher->sendMessage(message->toByteArray());
+    emit messageSend(message->toByteArray());
+}
+void ZeroMQPublisher::sendMessage(const QByteArray message, const QString filter)
+{
+    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    publisher->sendMessage(message);
+    emit messageSend(message);
+
+}
 
 void ZeroMQPublisher::messageSended(const QByteArray sended)
 {
@@ -35,4 +53,6 @@ QString ZeroMQPublisher::getAddress() const
 {
     return address;
 }
+
+
 

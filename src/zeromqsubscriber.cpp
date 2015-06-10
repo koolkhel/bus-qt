@@ -30,3 +30,4 @@ void ZeroMQSubscriber::messageRecieved(const QList<QByteArray>& message)
 {
     qDebug()<<"Recieved: "<<message;
 }
+
