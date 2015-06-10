@@ -12,6 +12,7 @@
 #include "module.h"
 #include "topic.h"
 #include "context.h"
+#include "pluginmodulefactory.h"
 
 class Dispatcher : public QObject
 {
