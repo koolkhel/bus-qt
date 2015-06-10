@@ -54,7 +54,7 @@ TEST(ZMQ, FromTestSources) {
     contextThread->start();
 
     //nzmqt::pubsub::Publisher *publisher = new nzmqt::pubsub::Publisher(context, ZMQ_PUB_STR);
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);
@@ -121,7 +121,7 @@ TEST(ZMQ, Qts) {
 
     contextThread->start();
 
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);
@@ -163,6 +163,60 @@ TEST(ZMQ, Qts) {
 
 }
 
+TEST(ZMQ, PROXY)
+{
+    QThread *contextThread = new QThread;
+    QThread *publisherThread = new QThread;
+    QThread *subscriberThread = new QThread;
+
+    nzmqt::ZMQContext *context = nzmqt::createDefaultContext();
+    context->moveToThread(contextThread);
+
+    contextThread->start();
+
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
+    publisher->moveToThread(publisherThread);
+    publisherThread->start();
+    usleep(100 * 1000);
+
+    ZeroMQSubscriber *subscriber = new ZeroMQSubscriber(context);
+    subscriber->moveToThread(subscriberThread);
+    subscriberThread->start();
+
+    QString filter = "";
+    subscriber->subscribeTo(QString(ZMQ_SUB_STR), filter);
+
+    usleep(100 * 1000);
+
+    QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
+    QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
+
+    context->start();
+    for(int i=0; i<100;i++)
+    {
+        publisher->sendMessage("Hello");
+    }
+    usleep(100 * 1000);
+    spyPublisherMessageSent.wait(100);
+
+   ASSERT_TRUE(spyPublisherMessageSent.size() == 100) << "Server didn't send any/enough messages.";
+   ASSERT_TRUE(spySubscriberMessageRecieved.size() == 100) << "Client didn't receive any/enough messages.";
+
+    QList<QVariant> params = spySubscriberMessageRecieved.takeFirst();
+
+  //  ASSERT_TRUE(params.size() > 0) << "no signals received";
+
+    if (params.size() > 0) {
+        ASSERT_TRUE(params.at(0).toString() == "Hello") << "Other data received";
+    }
+    nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber());
+    subscriber->close();
+    publisher->close();
+    context->stop();
+    usleep(100 * 1000);
+
+}
+
 TEST(ZMQ, 2subs2Pubs) {
     QThread *contextThread = new QThread;
     QThread *publisherThread = new QThread;
@@ -175,12 +229,12 @@ TEST(ZMQ, 2subs2Pubs) {
 
     contextThread->start();
 
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);
 
-    ZeroMQPublisher *secondPublisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR_SECOND),context);
+    ZeroMQPublisher *secondPublisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR_SECOND));
     secondPublisher->moveToThread(publisherSecondThread);
     publisherSecondThread->start();
     usleep(100 * 1000);
@@ -249,7 +303,7 @@ TEST(ZMQ, 1publisher_3subscribers)
 
     contextThread->start();
 
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);
@@ -324,12 +378,12 @@ TEST(ZMQ, 2publisher_3_subscribers)
 
     contextThread->start();
 
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);
 
-    ZeroMQPublisher *secondPublisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR_SECOND), context);
+    ZeroMQPublisher *secondPublisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR_SECOND));
     secondPublisher->moveToThread(secondPublisherThread);
     secondPublisherThread->start();
     usleep(100 * 1000);
@@ -401,7 +455,7 @@ TEST(ZMQ, QtWithProxy) {
     contextThread->start();
 
 
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);
@@ -555,7 +609,7 @@ TEST(ZMQ, 100messages) {
     contextThread->start();
 
 
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);
@@ -610,7 +664,7 @@ TEST(ZMQ, TenThousand) {
     contextThread->start();
 
 
-    ZeroMQPublisher *publisher = new ZeroMQPublisher(QString(ZMQ_PUB_STR), context);
+    ZeroMQPublisher *publisher = new ZeroMQPublisher(context,QString(ZMQ_PUB_STR));
     publisher->moveToThread(publisherThread);
     publisherThread->start();
     usleep(100 * 1000);

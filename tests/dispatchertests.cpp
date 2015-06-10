@@ -10,29 +10,29 @@
 
 TEST(disptest, sanity) {
     // запуск контекстов и т.д.
-    Dispatcher *dispatcher = new Dispatcher();
+    //Dispatcher *dispatcher = new Dispatcher();
     // class GPSModule : protected Module
     //GPSModule *module = new GPSModule(simulation);
-    GPSModule *module = new GPSModule();
+    //GPSModule *module = new GPSModule();
 
 
-    dispatcher->addModule(module, "GPS");
+    //dispatcher->addModule(module, "GPS");
 
     // TestModule : protected Module
-    TestModule *test_module = new TestModule;
-    dispatcher->addModule(test_module, "test");
+    //TestModule *test_module = new TestModule;
+   // dispatcher->addModule(test_module, "test");
     // ждем вот это
     //test->test_subscribe("GPS_data_raw"); // != название модуля
 
     // подписаться можно только у тестового модуля, интерфейс остальных пока осторожно скрываем
-    QSignalSpy spy(test_module, SIGNAL(messageReceived(QByteArray)));
+   // QSignalSpy spy(test_module, SIGNAL(messageReceived(QByteArray)));
 
     // gps, мы здеся
-    module->start_simulation(5.0, 6.0); // async
+    //module->start_simulation(5.0, 6.0); // async
     // поработай
-    test_module->test_step(); // sync
+    //test_module->test_step(); // sync
 
-    spy.wait(200);
+    //spy.wait(200);
     //data = spy.at(0);
 
     //protobuf_gen_code = dispatcher->parseData(topic, data); // знает, какие топики как должны парситься
@@ -47,5 +47,5 @@ TEST(dispatcher, creation) {
 
     dispatcher->initializeAll("testconfig.ini");
 
-    delete dispatcher();
+    delete dispatcher;
 }

@@ -7,7 +7,7 @@
 #include <QVariant>
 #include <functional>
 #include <QObject>
-#include <map>
+#include <QSettings>
 
 #include "module.h"
 #include "topic.h"
@@ -18,11 +18,11 @@ class Dispatcher : public QObject
 {
     Q_OBJECT
 
-    friend class ModuleP;
-    friend class Module;
+
 
 public:
     Dispatcher();
+
     virtual ~Dispatcher();
 
     void initializeAll(QString configurationFilePath);
@@ -34,7 +34,7 @@ public:
 
     void subscribe(Module *module, QString topicName);
 private:
-    Context *context;
+    nzmqt::ZMQContext *context;
 
     void readConfiguration(QSettings &settings, QString moduleInstanceName,
                            QMap<QString, QVariant> &configuration);

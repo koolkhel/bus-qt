@@ -1,24 +1,32 @@
 #include "zeromqsubscriber.h"
 #include "context.h"
-
 #include <QDebug>
 
-ZeroMQSubscriber::ZeroMQSubscriber()
+ZeroMQSubscriber::ZeroMQSubscriber(nzmqt::ZMQContext* context)
 {
-   subscriber = Context::instance()->context->createSocket(nzmqt::ZMQSocket::TYP_SUB,this);
+   subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_XSUB);
 
-   connect(subscriber,SIGNAL(messageReceived(const QList<QByteArray>&)),this,SLOT(messageRecieved(const QList<QByteArray>&)));
+   connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SIGNAL(recieved()));
+   connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SLOT(messageRecieved(const QList<QByteArray>&)));
 }
 
 void ZeroMQSubscriber::subscribeTo(QString address,QString subscriberFilter)
 {
     subscriber->connectTo(address);
     subscriber->subscribeTo(subscriberFilter);
-    subscriber->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE, subscriberFilter.toStdString().c_str());
+}
+
+nzmqt::ZMQSocket *ZeroMQSubscriber::getSubscriber() const
+{
+    return subscriber;
+}
+
+void ZeroMQSubscriber::close()
+{
+    subscriber->close();
 }
 
 void ZeroMQSubscriber::messageRecieved(const QList<QByteArray>& message)
 {
     qDebug()<<"Recieved: "<<message;
 }
-

@@ -44,8 +44,13 @@ void Module::publish()
 
 void Module::subscribe(QString topicName)
 {
-    d->subscribe(this, topicName);
+    dispatcher->subscribe(this, topicName);
 }
+QString Module::getName() const
+{
+    return name;
+}
+
 
 void Module::messageReceived(QList<QByteArray> &data)
 {

@@ -1,16 +1,23 @@
 #include "zeromqpublisher.h"
 #include <QDebug>
-#include "context.h"
 
-ZeroMQPublisher::ZeroMQPublisher(const QString address, const QString filter)
+
+nzmqt::ZMQSocket *ZeroMQPublisher::getPublisher() const
+{
+    return publisher;
+}
+
+ZeroMQPublisher::ZeroMQPublisher(nzmqt::ZMQContext* context,const QString address)
 {
     this->address = address;
-    this->filter = filter;
-    publisher = Context::instance()->context->createSocket(nzmqt::ZMQSocket::TYP_PUB,this);
-    //publisher->connectTo(address);
-    publisher->bindTo(address);
-
+    publisher = context->createSocket(nzmqt::ZMQSocket::TYP_XPUB);
+    publisher->connectTo(address);
     connect(this,SIGNAL(messageSend(QByteArray)),this,SLOT(messageSended(QByteArray)));
+}
+
+void ZeroMQPublisher::close()
+{
+    publisher->close();
 }
 
 void ZeroMQPublisher::sendMessage(const QString msg)
@@ -24,23 +31,8 @@ void ZeroMQPublisher::messageSended(const QByteArray sended)
     qDebug()<<"Sended: "<<sended;
 }
 
-QString ZeroMQPublisher::getFilter() const
-{
-    return filter;
-}
-
-void ZeroMQPublisher::setFilter(const QString &value)
-{
-    filter = value;
-}
-
 QString ZeroMQPublisher::getAddress() const
 {
     return address;
-}
-
-void ZeroMQPublisher::setAddress(const QString &value)
-{
-    address = value;
 }
 

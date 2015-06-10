@@ -6,8 +6,8 @@
 
 class ModuleP
 {
-public:
 
+public:
     ModuleP(QString &name);
     void printDebug();
 
@@ -15,7 +15,7 @@ public:
     QString getName() const;
 
     void setDebugInfo(const QString &value);
-
+    friend class Dispatcher;
 private:
     // только диспетчеру
     ZeroMQPublisher *getPublisher() const;

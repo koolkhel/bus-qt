@@ -12,7 +12,7 @@ class SkelPluginFactory : public PluginModuleFactory
 public:
     SkelPluginFactory();
 
-    virtual Module *createModule(QObject parent = 0);
+    virtual Module *createModule(QObject *parent = 0);
     virtual QString getModuleType();
 };
 

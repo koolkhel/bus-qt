@@ -1,6 +1,7 @@
 #include <QThread>
 #include <QSettings>
 #include <QDir>
+#include <QPluginLoader>
 
 #include "dispatcher.h"
 #include "modulep.h"
@@ -10,9 +11,11 @@
 #include "pluginmodulefactory.h"
 #include "modulep.h"
 
+
 Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 {
-    context = new Context();
+    context = new nzmqt::PollingZMQContext(this,1);
+    context->start();
     //modules.insert("GPS","HelloGPS");
     //modules.insert("GEOCOORD","HelloGEOCOORD");
 
@@ -62,7 +65,7 @@ void Dispatcher::startAll()
     foreach (QString instanceName, moduleInstances.keys()) {
         Module *module = moduleInstances.find(instanceName).value();
 
-        ModuleP *mod_p = new ModuleP;
+        ModuleP *mod_p = new ModuleP(instanceName);
 
         QString endPoint = getFreePublisherEndpoint();
         mod_p->setPublisher(new ZeroMQPublisher(context, endPoint));
@@ -78,8 +81,9 @@ void Dispatcher::startAll()
 
 void Dispatcher::subscribe(Module *module, QString topicName)
 {
-    ModuleP *mod_p = module->mod_p;
-    mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
+    module->subscribe(topicName);
+   // ModuleP *mod_p = module->mod_p;
+    //mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
 }
 
 void Dispatcher::initializeAll(QString configurationFilePath)
@@ -102,7 +106,7 @@ void Dispatcher::initializeAll(QString configurationFilePath)
         readConfiguration(iniFile, instanceName, configuration);
 
         Module *new_instance = NULL;
-        PluginModuleFactory *factory = pluginFactories.find(moduleName);
+        PluginModuleFactory *factory = pluginFactories[moduleName];
         if (factory == NULL) {
             // FIXME
             throw "cannot create module";
@@ -110,7 +114,7 @@ void Dispatcher::initializeAll(QString configurationFilePath)
 
         new_instance = factory->createModule(this);
 
-        new_instance->configure(configuration);
+        new_instance->configure(configuration,this);
 
         moduleInstances.insert(instanceName, new_instance);
     }

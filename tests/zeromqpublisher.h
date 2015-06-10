@@ -10,7 +10,7 @@ class ZeroMQPublisher: public QObject
     nzmqt::ZMQSocket *publisher;
 
 public:
-    ZeroMQPublisher(QString,nzmqt::ZMQContext*);
+    ZeroMQPublisher(nzmqt::ZMQContext*,QString);
     void sendMessage(QString);
 
     QString getAddress() const;

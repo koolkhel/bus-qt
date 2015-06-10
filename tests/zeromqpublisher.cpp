@@ -7,7 +7,7 @@ nzmqt::ZMQSocket *ZeroMQPublisher::getPublisher() const
     return publisher;
 }
 
-ZeroMQPublisher::ZeroMQPublisher(const QString address,nzmqt::ZMQContext* context)
+ZeroMQPublisher::ZeroMQPublisher(nzmqt::ZMQContext* context,const QString address)
 {
     this->address = address;
     publisher = context->createSocket(nzmqt::ZMQSocket::TYP_PUB);

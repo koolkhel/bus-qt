@@ -7,6 +7,7 @@
 
 #include "indigo_message.pb.h"
 #include "modulep.h"
+#include "dispatcher.h"
 
 class Dispatcher;
 
@@ -20,12 +21,16 @@ public:
     Module(QString name);
     virtual ~Module() = 0;
 
+    friend class Dispatcher;
+
     void configure(QMap<QString, QVariant> &configuration, Dispatcher *d);
 
     virtual void start();
     virtual void stop();
 
     virtual QStringList getPubTopics() = 0;
+
+    QString getName() const;
 
 public slots:
     void messageReceived(QList<QByteArray> &data);
