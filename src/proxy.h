@@ -9,9 +9,11 @@ class Proxy: public QThread
 
 public:
     Proxy();
+    Proxy(QString host, QString pub);
     Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber);
     void run();
 private:
+    nzmqt::ZMQContext *context;
     nzmqt::ZMQSocket *xPublisher;
     nzmqt::ZMQSocket *xSubscriber;
  signals:
