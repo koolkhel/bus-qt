@@ -10,7 +10,6 @@
 #include <QScrollBar>
 
 #include <qdatetime.h>
-#include "socket.h"
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
 #include <zmq.hpp>
