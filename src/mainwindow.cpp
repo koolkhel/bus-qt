@@ -11,8 +11,6 @@
 
 #include <qdatetime.h>
 #include "socket.h"
-#include "Publisher.hpp"
-#include "Subscriber.hpp"
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
 #include <zmq.hpp>
@@ -21,19 +19,6 @@
 #define within(num) (int) ((float) num * random () / (RAND_MAX + 1.0))
 
 
-QThread* makeExecutionThread(SampleBase& sample)
-{
-    QThread* thread = new QThread;
-    sample.moveToThread(thread);
-
-    bool connected = false;
-    connected = QObject::connect(thread, SIGNAL(started()), &sample, SLOT(start()));         Q_ASSERT(connected);
-    connected = QObject::connect(&sample, SIGNAL(finished()), thread, SLOT(quit()));         Q_ASSERT(connected);
-    connected = QObject::connect(&sample, SIGNAL(finished()), &sample, SLOT(deleteLater())); Q_ASSERT(connected);
-    connected = QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));   Q_ASSERT(connected);
-
-    return thread;
-}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -176,47 +161,5 @@ void MainWindow::on_pushButton_2_clicked()
     /*Socket socket;
     socket.send("Hello");
     socket.run();*/
-
-
-
-   try {
-        QScopedPointer<nzmqt::ZMQContext> context(nzmqt::createDefaultContext());
-
-        Publisher* publisher = new Publisher(*context, "tcp://127.0.0.1:8887", "ping");
-
-
-        QThread* publisherThread = makeExecutionThread(*publisher);
-
-        Subscriber* subscriber = new Subscriber(*context, "tcp://127.0.0.1:8887", "ping");
-
-
-        QThread* subscriberThread = makeExecutionThread(*subscriber);
-
-        //
-        // START TEST
-        //
-
-        context->start();
-
-        publisherThread->start();
-        subscriberThread->start();
-
-        QTimer::singleShot(6000, publisher, SLOT(stop()));
-        QTimer::singleShot(6000, subscriber, SLOT(stop()));
-
-
-        //
-        // CHECK POSTCONDITIONS
-        //
-
-        //qDebug() << "Publisher pings sent:" << spyPublisherPingSent.size();
-        //qDebug() << "Subscriber pings received:" << spySubscriberPingReceived.size();
-
-
-    }
-    catch (std::exception& ex)
-    {
-        ex.what();
-    }
 
 }

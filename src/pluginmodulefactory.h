@@ -16,6 +16,7 @@ public:
 signals:
 
 public slots:
+
 };
 
 #define PMF_id "ru.indigosystem.cars.pluginfactory"
