@@ -44,9 +44,6 @@ HEADERS  += mainwindow.h \
     indigologger.h \
     socket.h \
     subscribedispatcher.h \
-    Subscriber.hpp \
-    Publisher.hpp \
-    SampleBase.hpp \
     zeromqpublisher.h \
     zeromqsubscriber.h \
     context.h \

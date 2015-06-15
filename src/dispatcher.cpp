@@ -123,9 +123,7 @@ void Dispatcher::initializeAll(QString configurationFilePath)
         }
 
         new_instance = factory->createModule(this);
-
         new_instance->configure(configuration,this);
-
         moduleInstances.insert(instanceName, new_instance);
     }
 }
