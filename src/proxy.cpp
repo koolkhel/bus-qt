@@ -1,17 +1,14 @@
 #include "proxy.h"
 
 
-
-Proxy::Proxy()
+Proxy::Proxy(nzmqt::ZMQContext *context)
 {
-    context = nzmqt::createDefaultContext();
     this->xPublisher = context->createSocket(nzmqt::ZMQSocket::TYP_XPUB);
     this->xSubscriber = context->createSocket(nzmqt::ZMQSocket::TYP_XSUB);
 }
 
-Proxy::Proxy(QString hostPublisher, QString hostSubscriber)
+Proxy::Proxy(nzmqt::ZMQContext *context,QString hostPublisher, QString hostSubscriber)
 {
-    context = nzmqt::createDefaultContext();
     this->xPublisher = context->createSocket(nzmqt::ZMQSocket::TYP_XPUB);
     this->xSubscriber = context->createSocket(nzmqt::ZMQSocket::TYP_XSUB);
     this->xPublisher->bindTo(hostPublisher);

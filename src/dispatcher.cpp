@@ -22,7 +22,7 @@ Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 
     QThread *proxyThread = new QThread(this);
     // запустить zmq_proxy в отдельном потоке, выделить ему адреса, публиковать и подписываться только на zmq_proxy
-    proxy = new Proxy();
+    proxy = new Proxy(context);
     proxy->moveToThread(proxyThread);
     proxy->start();
 }

@@ -7,6 +7,7 @@ class TestModule: public Module
 public:
     TestModule();
     void test_step();
+
 };
 
 #endif // TESTMODULE_H

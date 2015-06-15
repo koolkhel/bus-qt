@@ -3,9 +3,17 @@
 #include <sstream>
 #include <QDebug>
 #include "zmq.hpp"
+#include "zeromqpublisher.h"
+#include "zeromqsubscriber.h"
 
 testclass::testclass(QObject* parent) : QObject(parent)
 {
+    nzmqt::ZMQContext* context = nzmqt::createDefaultContext();
+
+    publisher = new ZeroMQPublisher(context,"127.0.0.1");
+    subscriber = new ZeroMQSubscriber(context);
+
+
    /* nzmqt::ZMQContext* context = nzmqt::createDefaultContext();
     subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_SUB);
     pusher = context->createSocket(nzmqt::ZMQSocket::TYP_PUSH);

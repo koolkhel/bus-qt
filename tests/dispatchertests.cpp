@@ -28,7 +28,7 @@ TEST(disptest, sanity) {
    // QSignalSpy spy(test_module, SIGNAL(messageReceived(QByteArray)));
 
     // gps, мы здеся
-    //module->start_simulation(5.0, 6.0); // async
+    //module->stxxxxxxx<art_simulation(5.0, 6.0); // async
     // поработай
     //test_module->test_step(); // sync
 
