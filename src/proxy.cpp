@@ -9,6 +9,7 @@ Proxy::Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber)
 
 void Proxy::run()
 {
+
     nzmqt::ZMQSocket::proxyFromTo(xPublisher, xSubscriber);
 }
 

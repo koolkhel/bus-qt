@@ -210,7 +210,7 @@ TEST(ZMQ, PROXY)
     QSignalSpy spyPublisherMessageSent(publisher, SIGNAL(messageSend(QByteArray)));
     QSignalSpy spySubscriberMessageRecieved(subscriber,SIGNAL(recieved()));
 
-    nzmqt::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber());
+    nzmqt::ZMQSocket::proxyFromTo(publisher->getPublisher(), subscriber->getSubscriber());
 
     usleep(100 * 1000);
     context->start();

@@ -32,7 +32,8 @@ SOURCES += gpsdpositionsource.cpp \
     module.cpp \
     modulep.cpp \
     topic.cpp \
-    pluginmodulefactory.cpp
+    pluginmodulefactory.cpp \
+     proxy.cpp
 
 HEADERS  += mainwindow.h \
             backend.h \
@@ -53,7 +54,8 @@ HEADERS  += mainwindow.h \
     module.h \
     modulep.h \
     topic.h \
-    pluginmodulefactory.h
+    pluginmodulefactory.h \
+    proxy.h
 
 FORMS    += mainwindow.ui
 

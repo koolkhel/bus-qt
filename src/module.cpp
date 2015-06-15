@@ -46,6 +46,7 @@ void Module::subscribe(QString topicName)
 {
     dispatcher->subscribe(this, topicName);
 }
+
 QString Module::getName() const
 {
     return name;

@@ -222,7 +222,7 @@ namespace nzmqt
         // Receives a message or a message part.
         bool receiveMessage(ZMQMessage* msg_, ReceiveFlags flags_ = RCV_NOBLOCK);
 
-        void proxyFromTo(ZMQSocket *publisher, ZMQSocket *subsctiber);
+        static void proxyFromTo(ZMQSocket *publisher, ZMQSocket *subsctiber);
 
         // Receives a message.
         // The message is represented as a list of byte arrays representing

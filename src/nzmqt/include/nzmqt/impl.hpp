@@ -262,7 +262,7 @@ NZMQT_INLINE QList< QList<QByteArray> > ZMQSocket::receiveMessages()
 
     return ret;
 }
-NZMQT_INLINE void proxyFromTo(ZMQSocket *publisher, ZMQSocket *subscriber)
+NZMQT_INLINE void ZMQSocket::proxyFromTo(ZMQSocket *publisher, ZMQSocket *subscriber)
 {
     zmq::proxy(publisher,subscriber, NULL);
 }
