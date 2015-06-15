@@ -8,6 +8,7 @@ class Proxy: public QThread
     Q_OBJECT
 
 public:
+    Proxy();
     Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber);
     void run();
 private:

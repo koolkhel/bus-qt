@@ -10,6 +10,7 @@
 #include "module.h"
 #include "pluginmodulefactory.h"
 #include "modulep.h"
+#include "proxy.h"
 
 
 Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
@@ -21,6 +22,9 @@ Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 
     QThread *proxyThread = new QThread(this);
     // запустить zmq_proxy в отдельном потоке, выделить ему адреса, публиковать и подписываться только на zmq_proxy
+    Proxy *proxy = new Proxy();
+    proxy->moveToThread(proxyThread);
+    proxy->start();
 
 
 }
