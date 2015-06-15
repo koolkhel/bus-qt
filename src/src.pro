@@ -23,7 +23,6 @@ SOURCES += gpsdpositionsource.cpp \
     testclass.cpp \
     support_unix.cpp \
     indigologger.cpp \
-    socket.cpp \
     subscribedispatcher.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
@@ -42,7 +41,6 @@ HEADERS  += mainwindow.h \
             gpsdsatellitesource.h \
     testclass.h \
     indigologger.h \
-    socket.h \
     subscribedispatcher.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \

@@ -25,8 +25,6 @@ Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
     proxy = new Proxy();
     proxy->moveToThread(proxyThread);
     proxy->start();
-
-
 }
 
 Dispatcher::~Dispatcher()
