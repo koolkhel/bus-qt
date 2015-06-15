@@ -34,6 +34,12 @@ void Proxy::run()
 
 }
 
+void Proxy::subscribeTo(QString host)
+{
+    this->xPublisher->bindTo(host);
+    this->xSubscriber->bindTo(host);
+}
+
 
 
 

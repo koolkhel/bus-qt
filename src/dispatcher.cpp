@@ -22,7 +22,7 @@ Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 
     QThread *proxyThread = new QThread(this);
     // запустить zmq_proxy в отдельном потоке, выделить ему адреса, публиковать и подписываться только на zmq_proxy
-    Proxy *proxy = new Proxy();
+    proxy = new Proxy();
     proxy->moveToThread(proxyThread);
     proxy->start();
 
@@ -76,8 +76,8 @@ void Dispatcher::startAll()
         QString endPoint = getFreePublisherEndpoint();
         mod_p->setPublisher(new ZeroMQPublisher(context, endPoint));
 
-        // TODO подписать прокси на endPoint
-
+        // подписал прокси на endPoint
+        proxy->subscribeTo(endPoint);
         ZeroMQSubscriber *sub = new ZeroMQSubscriber(context);
         mod_p->setSubscriber(sub);
 
@@ -112,7 +112,11 @@ void Dispatcher::initializeAll(QString configurationFilePath)
         readConfiguration(iniFile, instanceName, configuration);
 
         Module *new_instance = NULL;
-        PluginModuleFactory *factory = pluginFactories[moduleName];
+        PluginModuleFactory *factory = NULL;
+        QMap<QString, PluginModuleFactory *>::const_iterator i = pluginFactories.find(moduleName);
+        while (i != pluginFactories.end() && i.key() == moduleName) {
+            factory = i.value();
+        }
         if (factory == NULL) {
             // FIXME
             throw "cannot create module";

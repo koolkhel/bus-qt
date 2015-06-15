@@ -12,6 +12,7 @@ public:
     Proxy(QString host, QString pub);
     Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber);
     void run();
+    void subscribeTo(QString host);
 private:
     nzmqt::ZMQContext *context;
     nzmqt::ZMQSocket *xPublisher;
