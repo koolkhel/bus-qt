@@ -105,7 +105,9 @@ void Dispatcher::initializeAll(QString configurationFilePath)
     iniFile.endGroup();
 
     foreach (QString key, modules) {
+        iniFile.beginGroup("modules");
         QVariant value = iniFile.value(key);
+        iniFile.endGroup();
 
         QString moduleName = value.toString();
         QString instanceName = key;
@@ -118,6 +120,7 @@ void Dispatcher::initializeAll(QString configurationFilePath)
         QMap<QString, PluginModuleFactory *>::const_iterator i = pluginFactories.find(moduleName);
         while (i != pluginFactories.end() && i.key() == moduleName) {
             factory = i.value();
+            i++;
         }
         if (factory == NULL) {
             // FIXME

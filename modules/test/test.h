@@ -21,7 +21,6 @@ public:
 
     virtual QStringList getPubTopics();
 
-    QString getName() const;
 public slots:
     virtual void respond(::indigo::pb::internal_msg &message);
 };

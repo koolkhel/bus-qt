@@ -12,6 +12,8 @@ TestModule::TestModule(QObject *parent)
 
     ::indigo::pb::skel_message skel;
 
+    this->name = "test_instance";
+
     qCDebug(TESTC, "hello,world");
 }
 
@@ -29,12 +31,6 @@ QStringList TestModule::getPubTopics()
 {
     QStringList topics;
     topics << "hello1";
-}
-
-QString TestModule::getName() const
-{
-    // FIXME заполнять поле "имя" согласно инишнику
-    return "test_instance";
 }
 
 void TestModule::respond(::indigo::pb::internal_msg &message)

@@ -30,7 +30,7 @@ public:
 
     virtual QStringList getPubTopics() = 0;
 
-    QString getName() const;
+    virtual QString getName() const;
 
 public slots:
     void messageReceived(QList<QByteArray> &data);
