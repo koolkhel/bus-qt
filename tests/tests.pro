@@ -33,9 +33,6 @@ HEADERS += \
     loggertester.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
-    Publisher.hpp \
-    Subscriber.hpp \
-    SampleBase.hpp \
     zhelpers.h \
     gpsmodule.h \
     testmodule.h \
