@@ -1,5 +1,7 @@
 #include "testmodule.h"
 
+#include <unistd.h>
+
 TestModule::TestModule()
 {
     QThread *contextThead = new QThread;

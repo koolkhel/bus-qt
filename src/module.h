@@ -40,9 +40,9 @@ protected:
     void publish();
     void subscribe(QString topicName);
 
+    QString name;
 private:
     ModuleP *mod_p;
-    QString name;
     Dispatcher *dispatcher;
 
     QMap<QString, QVariant> configuration;
