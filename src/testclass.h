@@ -6,11 +6,13 @@
 
 class testclass : public QObject
 {
-    ZeroMQSubscriber* subscriber;
-    ZeroMQPublisher* publisher;
-public:
-    testclass(QObject *parent=0);
-    bool test();
+    public:
+        testclass(QObject *parent=0);
+        bool test();
+
+    private:
+        ZeroMQSubscriber* subscriber;
+        ZeroMQPublisher* publisher;
 };
 
 #endif // TESTCLASS_H

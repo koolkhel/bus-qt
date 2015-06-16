@@ -12,7 +12,7 @@ Proxy::Proxy(nzmqt::ZMQContext *context,QString hostPublisher, QString hostSubsc
     this->xPublisher = context->createSocket(nzmqt::ZMQSocket::TYP_XPUB);
     this->xSubscriber = context->createSocket(nzmqt::ZMQSocket::TYP_XSUB);
     this->xPublisher->bindTo(hostPublisher);
-    this->xSubscriber->bindTo(hostSubscriber);
+    this->xSubscriber->connectTo(hostSubscriber);
 }
 
 Proxy::Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber)

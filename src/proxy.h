@@ -6,7 +6,6 @@
 class Proxy: public QThread
 {
     Q_OBJECT
-
 public:
     Proxy(nzmqt::ZMQContext* context);
     Proxy(nzmqt::ZMQContext* context,QString host, QString pub);
@@ -14,7 +13,6 @@ public:
     void run();
     void subscribeTo(QString host);
 private:
-
     nzmqt::ZMQSocket *xPublisher;
     nzmqt::ZMQSocket *xSubscriber;
  signals:

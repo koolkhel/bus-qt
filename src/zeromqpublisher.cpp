@@ -11,7 +11,11 @@ ZeroMQPublisher::ZeroMQPublisher(nzmqt::ZMQContext* context,const QString addres
 {
     this->address = address;
     publisher = context->createSocket(nzmqt::ZMQSocket::TYP_XPUB);
-    publisher->connectTo(address);
+    publisher->bindTo(address);
+    publisher->bindTo("ipc://weather.ipc");
+
+
+   // publisher->connectTo(address);
     connect(this,SIGNAL(messageSend(QByteArray)),this,SLOT(messageSended(QByteArray)));
 }
 

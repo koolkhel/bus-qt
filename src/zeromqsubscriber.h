@@ -11,9 +11,9 @@ class ZeroMQSubscriber: public QObject
     nzmqt::ZMQSocket *subscriber;
 public:
     ZeroMQSubscriber(nzmqt::ZMQContext*);
-    void subscribeTo(QString,QString);
+    void subscribeTo(QString address,QString subscriberFilter);
     nzmqt::ZMQSocket *getSubscriber() const;
-
+    bool recieve(nzmqt::ZMQMessage *message);
     void close();
 signals:
     void recieved();

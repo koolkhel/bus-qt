@@ -4,9 +4,9 @@
 
 ZeroMQSubscriber::ZeroMQSubscriber(nzmqt::ZMQContext* context)
 {
-   subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_XSUB);
+   subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_SUB);
 
-   connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SIGNAL(recieved()));
+   //connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SIGNAL(recieved()));
    connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SLOT(messageRecieved(const QList<QByteArray>&)));
 }
 
@@ -19,6 +19,19 @@ void ZeroMQSubscriber::subscribeTo(QString address,QString subscriberFilter)
 nzmqt::ZMQSocket *ZeroMQSubscriber::getSubscriber() const
 {
     return subscriber;
+}
+
+bool ZeroMQSubscriber::recieve(nzmqt::ZMQMessage *message)
+{
+    subscriber->receiveMessage(message);
+    if(message->size() > 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void ZeroMQSubscriber::close()
