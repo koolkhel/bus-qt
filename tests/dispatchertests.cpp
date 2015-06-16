@@ -10,7 +10,9 @@
 
 TEST(disptest, sanity) {
     // запуск контекстов и т.д.
-    //Dispatcher *dispatcher = new Dispatcher();
+    Dispatcher *dispatcher = new Dispatcher();
+    dispatcher->initializeAll("testconfig.ini");
+
     // class GPSModule : protected Module
     //GPSModule *module = new GPSModule(simulation);
     //GPSModule *module = new GPSModule();

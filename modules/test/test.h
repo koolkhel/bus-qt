@@ -5,13 +5,25 @@
 #include <QLoggingCategory>
 #include <QDebug>
 
+#include "module.h"
+
 Q_DECLARE_LOGGING_CATEGORY(TESTC)
 
-class Test : public QObject {
+class TestModule : public Module {
 	Q_OBJECT
-	public:
-	Test(QObject *parent = 0);
-	~Test() {};
+
+public:
+    TestModule(QObject *parent = 0);
+    ~TestModule() {};
+
+    virtual void start();
+    virtual void stop();
+
+    virtual QStringList getPubTopics();
+
+    QString getName() const;
+public slots:
+    virtual void respond(::indigo::pb::internal_msg &message);
 };
 
 #endif // TEST_H

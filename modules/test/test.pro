@@ -1,8 +1,18 @@
 include(../../defaults.pri)
 
+include(../plugins.pri)
+
 TARGET = test
 TEMPLATE = lib
 
-SOURCES += test.cpp
+QT -= gui
 
-HEADERS += test.h
+SOURCES += test.cpp \
+    testpluginfactory.cpp
+
+HEADERS += test.h \
+    testpluginfactory.h
+
+DISTFILES += \
+    test.json \
+    proto/test_message.proto
