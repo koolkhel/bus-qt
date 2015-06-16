@@ -8,14 +8,26 @@ class Proxy: public QThread
     Q_OBJECT
 public:
     Proxy(nzmqt::ZMQContext* context);
-    Proxy(nzmqt::ZMQContext* context,QString host, QString pub);
-    Proxy(nzmqt::ZMQSocket *publisher, nzmqt::ZMQSocket *subscriber);
-    void run();
-    void subscribeTo(QString host);
+    Proxy(nzmqt::ZMQContext* context, QString hostPublisher, QString hostSubscriber);
+
+    virtual void run();
+
+    // прокси подписывается, модуль публикует
+    // xsub -> connectTo -> pub
+    void subscribeTo(QString zmqBindAddress, QString topic);
+
+    // модуль подписываетcя, прокси публикует
+    // sub -> connectTo -> xpub
+    void registerPublisher(nzmqt::ZMQSocket *moduleSubscriber);
+
 private:
     nzmqt::ZMQSocket *xPublisher;
     nzmqt::ZMQSocket *xSubscriber;
- signals:
+    QString hostPublisher;
+    QString hostSubscriber;
+    nzmqt::ZMQContext* context;
+
+signals:
     void resultReady(const QString &s);
 };
 

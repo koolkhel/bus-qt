@@ -22,7 +22,7 @@ Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 
     QThread *proxyThread = new QThread(this);
     // запустить zmq_proxy в отдельном потоке, выделить ему адреса, публиковать и подписываться только на zmq_proxy
-    proxy = new Proxy(context);
+    proxy = new Proxy(context, "tcp://127.0.0.1:5000", "tcp://127.0.0.1:5001");
     proxy->moveToThread(proxyThread);
     proxy->start();
 }
@@ -75,9 +75,13 @@ void Dispatcher::startAll()
         mod_p->setPublisher(new ZeroMQPublisher(context, endPoint));
 
         // подписал прокси на endPoint
-        proxy->subscribeTo(endPoint);
+        //proxy->subscribeTo(endPoint);
         ZeroMQSubscriber *sub = new ZeroMQSubscriber(context);
         mod_p->setSubscriber(sub);
+
+        foreach (QString pubTopic, module->getPubTopics()) {
+            proxy->subscribeTo(endPoint, pubTopic);
+        }
 
         module->start();
     }
