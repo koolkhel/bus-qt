@@ -24,6 +24,7 @@ public:
     virtual ~Dispatcher();
 
     void initializeAll(QString configurationFilePath);
+    void initializeAll(QStringList configurationStrings);
 
     void startAll();
 
@@ -31,6 +32,8 @@ public:
     //void publish(Module *mod, QByteArray Data, QString Topic);
 
     void subscribe(Module *module, QString topicName);
+
+    QMap<QString, Module *> getModuleInstances() { return moduleInstances; }
 private:
     nzmqt::ZMQContext *context;
 

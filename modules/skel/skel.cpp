@@ -39,11 +39,15 @@ void Skel::respond(indigo::pb::internal_msg &message)
     if (message.HasExtension(::indigo::pb::skel_message2::skel_message_2_in)) {
         qCWarning(SKELETON, "got my message2!");
     }
+
+    if (message.HasExtension(::indigo::pb::test_message::test_message_in)) {
+        qCWarning(SKELETON, "WTF!");
+    }
 }
 
 void Skel::start()
 {
-
+    subscribe("test");
 }
 
 void Skel::stop()

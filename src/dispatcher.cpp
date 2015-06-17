@@ -2,6 +2,8 @@
 #include <QSettings>
 #include <QDir>
 #include <QPluginLoader>
+#include <QFile>
+#include <QTextStream>
 
 #include "dispatcher.h"
 #include "modulep.h"
@@ -92,6 +94,19 @@ void Dispatcher::subscribe(Module *module, QString topicName)
     module->subscribe(topicName);
    // ModuleP *mod_p = module->mod_p;
     //mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
+}
+
+// для тестов
+void Dispatcher::initializeAll(QStringList configurationStrings)
+{
+    QFile tmpConfigFile("tmp.ini");
+    tmpConfigFile.open(QIODevice::WriteOnly);
+
+    QTextStream out(&tmpConfigFile);
+    out << configurationStrings.join("\n");
+    tmpConfigFile.close();
+
+    initializeAll("tmp.ini");
 }
 
 void Dispatcher::initializeAll(QString configurationFilePath)

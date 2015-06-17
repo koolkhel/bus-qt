@@ -21,6 +21,8 @@ public:
 
     virtual QStringList getPubTopics();
 
+    void sendTestMessage();
+
 public slots:
     virtual void respond(::indigo::pb::internal_msg &message);
 };

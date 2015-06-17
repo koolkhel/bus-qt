@@ -19,7 +19,6 @@ TestModule::TestModule(QObject *parent)
 
 void TestModule::start()
 {
-
 }
 
 void TestModule::stop()
@@ -36,4 +35,9 @@ QStringList TestModule::getPubTopics()
 void TestModule::respond(::indigo::pb::internal_msg &message)
 {
     // TODO
+}
+
+void TestModule::sendTestMessage()
+{
+    publish();
 }

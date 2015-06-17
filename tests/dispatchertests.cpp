@@ -11,7 +11,23 @@
 TEST(disptest, sanity) {
     // запуск контекстов и т.д.
     Dispatcher *dispatcher = new Dispatcher();
-    dispatcher->initializeAll("testconfig.ini");
+    QStringList c;
+    c << "[modules]"
+      << "test_instance=test_module"
+      << "skel_instance=skel"
+      << "[test_instance]"
+      << "[skel_instance]";
+
+    dispatcher->initializeAll(c);
+
+    TestModule *testModule = reinterpret_cast<TestModule *>(
+                dispatcher->getModuleInstances().value("test_instance"));
+
+    ASSERT_TRUE(testModule != NULL);
+
+    Module *skelModule = dispatcher->getModuleInstances().value("skel_instance");
+
+    ASSERT_TRUE(skelModule != NULL);
 
     // class GPSModule : protected Module
     //GPSModule *module = new GPSModule(simulation);
