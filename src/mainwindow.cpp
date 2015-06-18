@@ -13,13 +13,8 @@
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
 #include "testclass.h"
-#include "bus.h"
-#include "guiwindowgraphicsobject.h"
 #include <zmq.hpp>
 #include <sstream>
-
-#define within(num) (int) ((float) num * random () / (RAND_MAX + 1.0))
-
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -54,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //pict->setY(0);
 
     //connect(this, SIGNAL(usXChanged(int)), SLOT(usUpdate()));
-
+/*
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
 
     scene = new QGraphicsScene(QRect(0, 0, 680, 100));
@@ -71,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus);
     ui->graphicsView->scene()->addItem(object);
-
+*/
 
     //scene->addItem(pict);
 

@@ -33,9 +33,7 @@ SOURCES += gpsdpositionsource.cpp \
     topic.cpp \
     pluginmodulefactory.cpp \
      proxy.cpp \
-    guiwindowgraphicsobject.cpp \
-    bus.cpp \
-    currentbus.cpp
+
 
 
 HEADERS  += mainwindow.h \
@@ -55,8 +53,7 @@ HEADERS  += mainwindow.h \
     topic.h \
     pluginmodulefactory.h \
     proxy.h \
-    guiwindowgraphicsobject.h \
-    bus.h \
+
     currentbus.h
 FORMS    += mainwindow.ui
 

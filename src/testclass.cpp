@@ -10,7 +10,7 @@
 
 testclass::testclass(QObject* parent) : QObject(parent)
 {
-    QThread *contextThead = new QThread;
+   /* QThread *contextThead = new QThread;
     QThread *pubThread = new QThread;
     QThread *subThread = new QThread;
 
@@ -36,15 +36,15 @@ testclass::testclass(QObject* parent) : QObject(parent)
 
     subscriber->subscribeTo("tcp://localhost:5556","");
 
-    usleep(100 * 10000);
+    usleep(100 * 10000);*/
 
 }
 
 bool testclass::test()
 {
-    publisher->sendMessage("Move");
+    //publisher->sendMessage("Move");
 
-    usleep(100 * 10000);
+    //usleep(100 * 10000);
 
     //nzmqt::ZMQMessage *message;
 
