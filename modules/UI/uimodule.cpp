@@ -3,6 +3,7 @@
 
 UiModule::UiModule(QObject *parent)
 {
+    this->name = "ui_instance";
 
 }
 

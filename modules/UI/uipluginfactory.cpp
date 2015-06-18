@@ -6,9 +6,9 @@ UiPluginFactory::UiPluginFactory()
 
 }
 
-Module *UiPluginFactory::createModule(QObject *parent)
+Module* UiPluginFactory::createModule(QObject *parent)
 {
-    return new UiModule();
+    //return new UiModule(parent);
 }
 
 QString UiPluginFactory::getModuleType()

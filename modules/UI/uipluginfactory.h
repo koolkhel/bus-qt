@@ -1,6 +1,7 @@
 #ifndef UIPLUGINFACTORY_H
 #define UIPLUGINFACTORY_H
 #include "module.h"
+#include "pluginmodulefactory.h"
 #include <QString>
 
 class UiPluginFactory : public PluginModuleFactory
