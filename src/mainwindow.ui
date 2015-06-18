@@ -31,7 +31,7 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,5">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="5">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -48,38 +48,12 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QLabel" name="label">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="5,1">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="5">
       <property name="spacing">
        <number>0</number>
       </property>
       <item>
        <widget class="QGraphicsView" name="graphicsView"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>PushButton</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </item>
@@ -88,24 +62,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButton_2</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>buttonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>691</x>
-     <y>317</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>650</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>buttonClicked()</slot>
  </slots>

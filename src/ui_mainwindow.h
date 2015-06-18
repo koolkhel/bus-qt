@@ -16,9 +16,7 @@
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -29,10 +27,8 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
-    QLabel *label;
     QHBoxLayout *horizontalLayout;
     QGraphicsView *graphicsView;
-    QPushButton *pushButton_2;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -55,16 +51,6 @@ public:
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy1);
-
-        verticalLayout->addWidget(label);
-
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(0);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
@@ -73,27 +59,14 @@ public:
 
         horizontalLayout->addWidget(graphicsView);
 
-        pushButton_2 = new QPushButton(centralWidget);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Expanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(pushButton_2->sizePolicy().hasHeightForWidth());
-        pushButton_2->setSizePolicy(sizePolicy2);
-
-        horizontalLayout->addWidget(pushButton_2);
-
         horizontalLayout->setStretch(0, 5);
-        horizontalLayout->setStretch(1, 1);
 
         verticalLayout->addLayout(horizontalLayout);
 
-        verticalLayout->setStretch(0, 1);
-        verticalLayout->setStretch(1, 5);
+        verticalLayout->setStretch(0, 5);
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
-        QObject::connect(pushButton_2, SIGNAL(clicked()), MainWindow, SLOT(buttonClicked()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -101,8 +74,6 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-        label->setText(QApplication::translate("MainWindow", "TextLabel", 0));
-        pushButton_2->setText(QApplication::translate("MainWindow", "PushButton", 0));
     } // retranslateUi
 
 };

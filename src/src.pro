@@ -32,7 +32,11 @@ SOURCES += gpsdpositionsource.cpp \
     modulep.cpp \
     topic.cpp \
     pluginmodulefactory.cpp \
-     proxy.cpp
+     proxy.cpp \
+    guiwindowgraphicsobject.cpp \
+    bus.cpp \
+    currentbus.cpp
+
 
 HEADERS  += mainwindow.h \
             backend.h \
@@ -50,8 +54,10 @@ HEADERS  += mainwindow.h \
     modulep.h \
     topic.h \
     pluginmodulefactory.h \
-    proxy.h
-
+    proxy.h \
+    guiwindowgraphicsobject.h \
+    bus.h \
+    currentbus.h
 FORMS    += mainwindow.ui
 
 INCLUDEPATH += ../modules/protos/include

@@ -13,6 +13,8 @@
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
 #include "testclass.h"
+#include "bus.h"
+#include "guiwindowgraphicsobject.h"
 #include <zmq.hpp>
 #include <sstream>
 
@@ -32,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(backend, SIGNAL(newSatellitesUsed(int)), SLOT(satellitesInUseUpdated(int)));
 
-    int _dpi = 170;
+    /*int _dpi = 170;
     QScreen *screen = QApplication::screens().at(0);
     int _width = qMin(screen->size().width(), 800);
     int _height = qMin(screen->size().height(), 480);
@@ -41,27 +43,42 @@ MainWindow::MainWindow(QWidget *parent) :
     _dpi = (int) sqrt(_width*_width + _height*_height) / 5; // average screen size
     qDebug() << "calculated DPI:" << _dpi;
     setDPI(_dpi);
-
+*/
     backend->reconnect();
 
-    pict = new QGraphicsPixmapItem();
+    //pict = new QGraphicsPixmapItem();
 
-    QPixmap image(":/images/us-marker.png");
-    pict->setPixmap(image);
-    pict->setX(0);
-    pict->setY(0);
+    //QPixmap image(":/images/us-marker.png");
+    //pict->setPixmap(image);
+   // pict->setX(0);
+    //pict->setY(0);
 
-    connect(this, SIGNAL(usXChanged(int)), SLOT(usUpdate()));
+    //connect(this, SIGNAL(usXChanged(int)), SLOT(usUpdate()));
 
-    scene = new QGraphicsScene(QRect(0, 0, 800, 480));
+    ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+
+    scene = new QGraphicsScene(QRect(0, 0, 680, 100));
     ui->graphicsView->setScene(scene);
+    Bus *leftBus = new Bus;
+    leftBus->setImage(":/images/night next bus top.png");
+    leftBus->setLabel("M285OM");
+    leftBus->setTime("07:28");
 
-    scene->addItem(pict);
+    Bus *rightBus = new Bus;
+    rightBus->setImage(":/images/night prev bus top.png");
+    rightBus->setLabel("Y210OY");
+    rightBus->setTime("02:58");
+
+    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus);
+    ui->graphicsView->scene()->addItem(object);
+
+
+    //scene->addItem(pict);
 
     //ui->graphicsView->horizontalScrollBar()->setStyleSheet("QScrollBar {height:0px;}");
     //ui->graphicsView->verticalScrollBar()->setStyleSheet("QScrollBar {width:0px;}");
 
-    ui->graphicsView->move(0, 0);
+   /* ui->graphicsView->move(0, 0);
     ui->graphicsView->ensureVisible(pict);
 
     QPropertyAnimation *anim = new QPropertyAnimation(this, "usX");
@@ -78,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(anim, SIGNAL(finished()), anim_2, SLOT(start()));
     connect(anim_2, SIGNAL(finished()), anim, SLOT(start()));
 
-    anim->start();
+    anim->start();*/
 }
 
 void MainWindow::usUpdate()
@@ -107,9 +124,9 @@ void MainWindow::buttonClicked()
 
 void MainWindow::timeUpdate()
 {
-    QDateTime dateTime = QDateTime::currentDateTime();
-    QString text = dateTime.time().toString("hh:mm:ss");
-    ui->label->setText(text);
+    //QDateTime dateTime = QDateTime::currentDateTime();
+    //QString text = dateTime.time().toString("hh:mm:ss");
+    //ui->label->setText(text);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
@@ -146,7 +163,7 @@ void MainWindow::positionUpdated(const QGeoPositionInfo &update)
 
 void MainWindow::satellitesInUseUpdated(int count)
 {
-    ui->label->setText(QString("%1").arg(count));
+    //ui->label->setText(QString("%1").arg(count));
 }
 
 void MainWindow::on_pushButton_2_clicked()
