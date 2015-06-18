@@ -2,9 +2,7 @@
 #include "bus.h"
 #include <QPainter>
 #include <QTextOption>
-#include <QTimer>
 #include <QTime>
-#include <QPropertyAnimation>
 
 GuiWindowGraphicsObject::GuiWindowGraphicsObject(QGraphicsItem *parent,Bus *previous, Bus *next) : QGraphicsObject(parent)
 {

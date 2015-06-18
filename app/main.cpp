@@ -35,11 +35,9 @@ int main(int argc, char *argv[])
 
     qApp->setPalette(palette);
 */
-    MainWindow w;
+    //MainWindow w;
 //    w.setPalette(palette);
-    w.show();
-    testclass cl;
-    cl.test();
+    //w.show();
 
     return a.exec();
 }
