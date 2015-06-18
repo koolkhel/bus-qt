@@ -8,3 +8,6 @@ CONFIG += app_bundle
 QT += core widgets network sql positioning
 SOURCES += main.cpp
 
+DISTFILES += \
+    testconfig.ini
+
