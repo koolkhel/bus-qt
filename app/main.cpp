@@ -16,17 +16,20 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     Dispatcher *dispatcher = new Dispatcher();
-    QStringList c;
+    /*QStringList c;
     c << "[modules]"
       << "test_instance=test_module"
       << "skel_instance=skel"
       << "[test_instance]"
-      << "[skel_instance]";
+      << "[skel_instance]"
+      << "[ui_instance]";
 
-    dispatcher->initializeAll(c);
+    dispatcher->initializeAll(c);*/
+    dispatcher->initializeAll("testconfig.ini");
 
 
-    Module *skelModule = dispatcher->getModuleInstances().value("skel_instance");
+
+    Module *uiModule = dispatcher->getModuleInstances().value("ui_instance");
 
 
 

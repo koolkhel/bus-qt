@@ -3,6 +3,9 @@
 # Project created by QtCreator 2015-06-18T16:44:09
 #
 #-------------------------------------------------
+include(../../defaults.pri)
+
+include(../plugins.pri)
 
 QT       += core gui
 
@@ -12,15 +15,21 @@ TARGET = UI
 TEMPLATE = lib
 
 
-SOURCES += main.cpp\
+SOURCES +=\
         mainwindow.cpp \
         guiwindowgraphicsobject.cpp \
         bus.cpp \
-        currentbus.cpp
+        currentbus.cpp \
+    uimodule.cpp \
+    uipluginfactory.cpp
 
 HEADERS  += mainwindow.h \
         guiwindowgraphicsobject.h \
         bus.h \
-        currentbus.h
+        currentbus.h \
+    uimodule.h \
+    uipluginfactory.h
 
 FORMS    += mainwindow.ui
+
+LIBS += -L../../src/ -lprotobuf-lite -lindigo -ltest_message -lskel_message -lskel_message2
