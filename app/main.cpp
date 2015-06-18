@@ -4,6 +4,7 @@
 #include <QFontDatabase>
 #include <QLabel>
 #include <QDebug>
+#include "dispatcher.h"
 
 #include "testclass.h"
 
@@ -13,6 +14,21 @@ int main(int argc, char *argv[])
 {
     enableSignalHandling();
     QApplication a(argc, argv);
+
+    Dispatcher *dispatcher = new Dispatcher();
+    QStringList c;
+    c << "[modules]"
+      << "test_instance=test_module"
+      << "skel_instance=skel"
+      << "[test_instance]"
+      << "[skel_instance]";
+
+    dispatcher->initializeAll(c);
+
+
+    Module *skelModule = dispatcher->getModuleInstances().value("skel_instance");
+
+
 
     //QResource::registerResource("/home/yury/work/QTFinal/indigo.qcc");
 /*
