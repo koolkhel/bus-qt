@@ -73,5 +73,4 @@ linux-arm-indigo-g++ {
 target.path = /opt/Qt-arm
 INSTALLS += target
 
-RESOURCES += \
-    indigo.qrc
+RESOURCES +=
