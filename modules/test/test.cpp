@@ -32,13 +32,13 @@ QStringList TestModule::getPubTopics()
 void TestModule::respond(QString topic, ::indigo::pb::internal_msg &message)
 {
     // TODO
-    qDebug() << "received a message of topic " << topic;
+    qCDebug(TESTC) << "received a message of topic " << topic;
     emit messageReceivedSignal();
 
     if (message.HasExtension(::indigo::pb::skel_message::skel_message_in)) {
         ::indigo::pb::skel_message msg = message.GetExtension(::indigo::pb::skel_message::skel_message_in);
 
-        qDebug() << "data is: " << msg.data();
+        qCDebug(TESTC) << "data is: " << msg.data();
     }
 }
 
@@ -49,6 +49,6 @@ void TestModule::sendTestMessage()
 
 void TestModule::subscribeTopic(QString topic)
 {
-    qDebug() << "test module subscribe: " << topic;
+    qCDebug(TESTC) << "test module subscribe: " << topic;
     subscribe(topic);
 }
