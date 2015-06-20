@@ -9,6 +9,10 @@
 #include "modulep.h"
 #include "dispatcher.h"
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(MODULE)
+
 class Dispatcher;
 
 class Module : public QObject
@@ -33,11 +37,11 @@ public:
     virtual QString getName() const;
 
 public slots:
-    void messageReceived(QList<QByteArray> &data);
+    void messageReceived(const QList<QByteArray> &data);
 
-    virtual void respond(::indigo::pb::internal_msg &message) = 0;
+    virtual void respond(QString topic, ::indigo::pb::internal_msg &message) = 0;
 protected:
-    void publish();
+    void publish(::google::protobuf::MessageLite &msg, QString topic);
     void subscribe(QString topicName);
 
     QString name;

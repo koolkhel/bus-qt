@@ -9,7 +9,7 @@ option optimize_for = LITE_RUNTIME;
 
 message skel_message2 {
 	extend indigo_msg {
-                repeated skel_message2 skel_message_2_out = 201;
+                optional skel_message2 skel_message_2_out = 201;
 	}
 
 	extend internal_msg {

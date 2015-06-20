@@ -1,5 +1,9 @@
 #include "module.h"
 
+#include <QDebug>
+
+Q_LOGGING_CATEGORY(MODULE, "module")
+
 Module::Module()
 {
     this->name = "";
@@ -37,9 +41,11 @@ void Module::stop()
 
 }
 
-void Module::publish()
+void Module::publish(::google::protobuf::MessageLite &msg, QString topic)
 {
-
+    qCDebug(MODULE) << "publishing to topic: " << topic;
+    QByteArray result = QByteArray::fromStdString(msg.SerializeAsString());
+    dispatcher->publish(mod_p, result, topic);
 }
 
 void Module::subscribe(QString topicName)
@@ -53,13 +59,16 @@ QString Module::getName() const
 }
 
 
-void Module::messageReceived(QList<QByteArray> &data)
+void Module::messageReceived(const QList<QByteArray> &data)
 {
-    // assert data.size() > 0
     ::indigo::pb::internal_msg msg;
 
-    QByteArray messageBytes = data.at(0);
+    QByteArray messageBytes = data.at(1);
+    QString topic = QString::fromLocal8Bit(data.at(0));
     msg.ParseFromArray(messageBytes.data(), messageBytes.size());
 
-    respond(msg);
+
+    qCDebug(MODULE) << "data received, topic: " << topic;
+
+    respond(topic, msg);
 }

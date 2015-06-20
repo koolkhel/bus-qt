@@ -11,12 +11,15 @@ class ZeroMQSubscriber: public QObject
     nzmqt::ZMQSocket *subscriber;
 public:
     ZeroMQSubscriber(nzmqt::ZMQContext*);
+    virtual ~ZeroMQSubscriber() {}
+
     void subscribeTo(QString address,QString subscriberFilter);
     nzmqt::ZMQSocket *getSubscriber() const;
     bool recieve(nzmqt::ZMQMessage *message);
     void close();
 signals:
     void recieved();
+    void message(const QList<QByteArray>&);
 public slots:
     void messageRecieved(const QList<QByteArray>&);
 };

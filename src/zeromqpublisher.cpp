@@ -1,22 +1,21 @@
 #include "zeromqpublisher.h"
 #include <QDebug>
-
+#include <QList>
 
 nzmqt::ZMQSocket *ZeroMQPublisher::getPublisher() const
 {
     return publisher;
 }
 
-ZeroMQPublisher::ZeroMQPublisher(nzmqt::ZMQContext* context,const QString address)
+ZeroMQPublisher::ZeroMQPublisher(nzmqt::ZMQContext* context,const QString bindAddress)
 {
-    this->address = address;
-    publisher = context->createSocket(nzmqt::ZMQSocket::TYP_XPUB);
-    publisher->bindTo(address);
-    publisher->bindTo("ipc://weather.ipc");
+    this->address = bindAddress;
+    publisher = context->createSocket(nzmqt::ZMQSocket::TYP_PUB);
+    publisher->bindTo(bindAddress);
+    assert(publisher != NULL);
 
-
-   // publisher->connectTo(address);
-    connect(this,SIGNAL(messageSend(QByteArray)),this,SLOT(messageSended(QByteArray)));
+    connect(this, SIGNAL(messageSend(QList<QByteArray>)),
+            this, SLOT(messageSended(QList<QByteArray>)));
 }
 
 void ZeroMQPublisher::close()
@@ -26,31 +25,51 @@ void ZeroMQPublisher::close()
 
 void ZeroMQPublisher::sendMessage(const QString msg)
 {
-    publisher->sendMessage(msg.toLocal8Bit());
-    emit messageSend(msg.toLocal8Bit());
+    QList<QByteArray> toSend;
+
+    toSend.append(QString("").toLocal8Bit());
+    toSend.append(msg.toLocal8Bit());
+
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message)
 {
-    publisher->sendMessage(message->toByteArray());
-    emit messageSend(message->toByteArray());
+    QList<QByteArray> toSend;
+
+    toSend.append(QString("").toLocal8Bit());
+    toSend.append(message->toByteArray());
+
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message, const QString filter)
 {
-    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
-    publisher->sendMessage(message->toByteArray());
-    emit messageSend(message->toByteArray());
+    //publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    QList<QByteArray> toSend;
+
+    toSend.append(filter.toLocal8Bit());
+    toSend.append(message->toByteArray());
+
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 void ZeroMQPublisher::sendMessage(const QByteArray message, const QString filter)
 {
-    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
-    publisher->sendMessage(message);
-    emit messageSend(message);
+    //publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    QList<QByteArray> toSend;
 
+    toSend.append(filter.toLocal8Bit());
+    toSend.append(message);
+
+    assert(publisher != NULL);
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 
-void ZeroMQPublisher::messageSended(const QByteArray sended)
+void ZeroMQPublisher::messageSended(const QList<QByteArray> sended)
 {
-    qDebug()<<"Sended: "<<sended;
+    qCDebug(ZMQ)<<"Sent: "<< sended.at(0) << " " << sended.at(1);
 }
 
 QString ZeroMQPublisher::getAddress() const

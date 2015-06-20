@@ -1,21 +1,29 @@
 #ifndef MODULEP_H
 #define MODULEP_H
 
+#include <QObject>
+
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
 
-class ModuleP
+class ModuleP : public QObject
 {
+    Q_OBJECT
+    friend class Dispatcher;
 
 public:
     ModuleP(QString &name);
+    virtual ~ModuleP() {}
+
     void printDebug();
 
     QString getDebugInfo() const;
     QString getName() const;
 
     void setDebugInfo(const QString &value);
-    friend class Dispatcher;
+
+signals:
+    void messageReceived(const QList<QByteArray> &);
 private:
     // только диспетчеру
     ZeroMQPublisher *getPublisher() const;

@@ -34,6 +34,9 @@ public:
     void subscribe(Module *module, QString topicName);
 
     QMap<QString, Module *> getModuleInstances() { return moduleInstances; }
+
+    void publish(ModuleP *modP, QByteArray data, QString topic);
+
 private:
     nzmqt::ZMQContext *context;
 

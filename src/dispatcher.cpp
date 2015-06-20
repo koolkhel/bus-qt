@@ -25,6 +25,7 @@ Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
     QThread *proxyThread = new QThread(this);
     // запустить zmq_proxy в отдельном потоке, выделить ему адреса, публиковать и подписываться только на zmq_proxy
     proxy = new Proxy(context, "tcp://127.0.0.1:5000", "tcp://127.0.0.1:5001");
+    //proxy = new Proxy(context, "inproc://xpub", "inproc://xsub");
     proxy->moveToThread(proxyThread);
     proxy->start();
 }
@@ -34,32 +35,13 @@ Dispatcher::~Dispatcher()
     context->stop();
 }
 
-#if 0
-void Dispatcher::publish(QByteArray data, QString topic)
+
+void Dispatcher::publish(ModuleP *modP, QByteArray data, QString topic)
 {
-    Module *module = modules[topic];
-    if (module) {
-        ZeroMQPublisher *publisher = module->getMod_p()->getPublisher();
-        QThread *publisherThread = new QThread;
-        publisher->moveToThread(publisherThread);
-        publisherThread->start();
-
-        publisher->sendMessage(data);
-    }
-
+    assert(modP != NULL);
+    assert(modP->getPublisher() != NULL);
+    modP->getPublisher()->sendMessage(data, topic);
 }
-
-Module *Dispatcher::addModule(Module *module, QString name)
-{
-    ModuleP *mod_p = module->getMod_p();
-
-    //module->d = this; // хз как ссылку передать, не указатель
-
-    connect(mod_p->subscriber, SIGNAL(newMessage(QByteArray)), module, SLOT(dispatchModule()));
-
-    modules.insert(name,module);
-}
-#endif
 
 QString Dispatcher::getFreePublisherEndpoint()
 {
@@ -81,9 +63,16 @@ void Dispatcher::startAll()
         ZeroMQSubscriber *sub = new ZeroMQSubscriber(context);
         mod_p->setSubscriber(sub);
 
-        foreach (QString pubTopic, module->getPubTopics()) {
-            proxy->subscribeTo(endPoint, pubTopic);
-        }
+        // publisher (модуль) -> connectTo -> xsub (проксик) <->
+        // xpub (проксик) <- connectTo <- subscriber (модуль)
+
+        proxy->registerPublisher(mod_p->getPublisher()->getPublisher());
+        proxy->registerSubscriber(mod_p->getSubscriber()->getSubscriber());
+
+        module->mod_p = mod_p;
+
+        connect(mod_p, SIGNAL(messageReceived(const QList<QByteArray> &)),
+                module, SLOT(messageReceived(const QList<QByteArray>&)));
 
         module->start();
     }
@@ -91,9 +80,8 @@ void Dispatcher::startAll()
 
 void Dispatcher::subscribe(Module *module, QString topicName)
 {
-    module->subscribe(topicName);
-   // ModuleP *mod_p = module->mod_p;
-    //mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
+    ModuleP *mod_p = module->mod_p;
+    mod_p->getSubscriber()->getSubscriber()->subscribeTo(topicName);
 }
 
 // для тестов

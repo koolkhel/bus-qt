@@ -4,14 +4,11 @@
 
 #include "test_message.pb.h"
 
-Q_LOGGING_CATEGORY(TESTC, "test_module");
+Q_LOGGING_CATEGORY(TESTC, "test_module")
 
 TestModule::TestModule(QObject *parent)
 {
-    ::indigo::pb::test_message test;
-
-    ::indigo::pb::skel_message skel;
-
+    setParent(parent);
     this->name = "test_instance";
 
     qCDebug(TESTC, "hello,world");
@@ -33,12 +30,26 @@ QStringList TestModule::getPubTopics()
     topics << "hello1";
 }
 
-void TestModule::respond(::indigo::pb::internal_msg &message)
+void TestModule::respond(QString topic, ::indigo::pb::internal_msg &message)
 {
     // TODO
+    qCDebug(TESTC) << "received a message of topic " << topic;
+    emit messageReceivedSignal();
+
+    if (message.HasExtension(::indigo::pb::skel_message::skel_message_in)) {
+        ::indigo::pb::skel_message msg = message.GetExtension(::indigo::pb::skel_message::skel_message_in);
+
+        qCDebug(TESTC) << "data is: " << msg.data();
+    }
 }
 
 void TestModule::sendTestMessage()
 {
-    publish();
+    //publish("");
+}
+
+void TestModule::subscribeTopic(QString topic)
+{
+    qCDebug(TESTC) << "test module subscribe: " << topic;
+    subscribe(topic);
 }

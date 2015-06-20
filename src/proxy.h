@@ -13,12 +13,12 @@ public:
     virtual void run();
 
     // прокси подписывается, модуль публикует
-    // xsub -> connectTo -> pub
-    void subscribeTo(QString zmqBindAddress, QString topic);
+    // xsub <- connectTo <- pub
+    void registerSubscriber(nzmqt::ZMQSocket *moduleSubscriber);
 
     // модуль подписываетcя, прокси публикует
     // sub -> connectTo -> xpub
-    void registerPublisher(nzmqt::ZMQSocket *moduleSubscriber);
+    void registerPublisher(nzmqt::ZMQSocket *modulePublisher);
 
 private:
     nzmqt::ZMQSocket *xPublisher;

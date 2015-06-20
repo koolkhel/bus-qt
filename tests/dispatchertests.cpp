@@ -3,14 +3,19 @@
 #include "indigologger.h"
 #include "dispatcher.h"
 #include "gpsmodule.h"
-#include "testmodule.h"
+#include "modules/test/test.h"
 #include <QDebug>
 #include <QTest>
 #include <QSignalSpy>
 
+#include <unistd.h>
+
 TEST(disptest, sanity) {
     // запуск контекстов и т.д.
     Dispatcher *dispatcher = new Dispatcher();
+
+    usleep(1000 * 1000);
+
     QStringList c;
     c << "[modules]"
       << "test_instance=test_module"
@@ -28,6 +33,28 @@ TEST(disptest, sanity) {
     Module *skelModule = dispatcher->getModuleInstances().value("skel_instance");
 
     ASSERT_TRUE(skelModule != NULL);
+
+    dispatcher->startAll();
+
+    QSignalSpy mySpy(testModule, SIGNAL(messageReceivedSignal()));
+
+    testModule->subscribeTopic("skel");
+
+
+    usleep(1000 * 1000);
+
+    qApp->processEvents();
+    qApp->processEvents();
+    qApp->processEvents();
+    qApp->processEvents();
+
+    usleep(1000);
+
+    for (int i = 0; i < 10000; i++) {
+        skelModule->start();
+        qApp->processEvents();
+        qApp->processEvents();
+    }
 
     // class GPSModule : protected Module
     //GPSModule *module = new GPSModule(simulation);

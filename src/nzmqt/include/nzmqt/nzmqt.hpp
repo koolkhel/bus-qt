@@ -40,6 +40,10 @@
 #include <QRunnable>
 #include <QVector>
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(ZMQ)
+
 // Define default context implementation to be used.
 #ifndef NZMQT_DEFAULT_ZMQCONTEXT_IMPLEMENTATION
     #define NZMQT_DEFAULT_ZMQCONTEXT_IMPLEMENTATION PollingZMQContext
