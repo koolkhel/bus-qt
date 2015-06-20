@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS += skel test
+SUBDIRS += skel test \
+    UI
