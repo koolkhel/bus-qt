@@ -3,7 +3,7 @@
 #include "indigologger.h"
 #include "dispatcher.h"
 #include "gpsmodule.h"
-#include "testmodule.h"
+#include "modules/test/test.h"
 #include <QDebug>
 #include <QTest>
 #include <QSignalSpy>
@@ -33,7 +33,17 @@ TEST(disptest, sanity) {
 
     dispatcher->startAll();
 
+    testModule->subscribeTopic("skel");
+
     usleep(100);
+
+    skelModule->start();
+
+    usleep(100);
+
+    QSignalSpy mySpy(testModule, SIGNAL(messageReceivedSignal()));
+
+    mySpy.wait(5000);
 
     delete dispatcher;
 

@@ -12,7 +12,8 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-LIBS += -L../src -L../modules/protos/bin -lindigo -lindigo_message -lgeo_message -levents_message -lgtest -lprotobuf-lite
+LIBS += -L../src -L../modules/protos/bin -L../modules/bin -ltest -ltest_message -lskel_message -lskel_message2 \
+    -lindigo -lindigo_message -lgeo_message -levents_message -lgtest -lprotobuf-lite
 
 INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
@@ -22,15 +23,13 @@ SOURCES += main.cpp \
     dispatchertests.cpp \
     protobuftests.cpp \
     gpsmodule.cpp \
-    testmodule.cpp \
     plugintests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     loggertester.h \
     zhelpers.h \
-    gpsmodule.h \
-    testmodule.h
+    gpsmodule.h
 
 OTHER_FILES += testconfig.ini
 

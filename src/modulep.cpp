@@ -36,6 +36,7 @@ ZeroMQSubscriber *ModuleP::getSubscriber() const
 void ModuleP::setSubscriber(ZeroMQSubscriber *value)
 {
     subscriber = value;
+    connect(subscriber, SIGNAL(message(const QList<QByteArray> &)), SIGNAL(messageReceived(const QList<QByteArray>&)));
 }
 
 void ModuleP::printDebug()

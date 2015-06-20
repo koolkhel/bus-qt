@@ -1,5 +1,7 @@
 #include "module.h"
 
+#include <QDebug>
+
 Module::Module()
 {
     this->name = "";
@@ -39,6 +41,7 @@ void Module::stop()
 
 void Module::publish(::google::protobuf::MessageLite &msg, QString topic)
 {
+    qDebug() << "publishing to topic: " << topic;
     QByteArray result = QByteArray::fromStdString(msg.SerializeAsString());
     dispatcher->publish(mod_p, result, topic);
 }
@@ -54,7 +57,7 @@ QString Module::getName() const
 }
 
 
-void Module::messageReceived(QList<QByteArray> &data)
+void Module::messageReceived(const QList<QByteArray> &data)
 {
     // assert data.size() > 0
     ::indigo::pb::internal_msg msg;

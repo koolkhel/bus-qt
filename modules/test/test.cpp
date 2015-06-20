@@ -4,7 +4,7 @@
 
 #include "test_message.pb.h"
 
-Q_LOGGING_CATEGORY(TESTC, "test_module");
+Q_LOGGING_CATEGORY(TESTC, "test_module")
 
 TestModule::TestModule(QObject *parent)
 {
@@ -35,9 +35,17 @@ QStringList TestModule::getPubTopics()
 void TestModule::respond(QString topic, ::indigo::pb::internal_msg &message)
 {
     // TODO
+    qDebug() << "received a message of topic " << topic;
+    emit messageReceivedSignal();
 }
 
 void TestModule::sendTestMessage()
 {
     //publish("");
+}
+
+void TestModule::subscribeTopic(QString topic)
+{
+    qDebug() << "test module subscribe: " << topic;
+    subscribe(topic);
 }

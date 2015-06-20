@@ -19,6 +19,7 @@ public:
     void close();
 signals:
     void recieved();
+    void message(const QList<QByteArray>&);
 public slots:
     void messageRecieved(const QList<QByteArray>&);
 };

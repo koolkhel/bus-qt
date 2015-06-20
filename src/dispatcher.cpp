@@ -70,6 +70,9 @@ void Dispatcher::startAll()
 
         module->mod_p = mod_p;
 
+        connect(mod_p, SIGNAL(messageReceived(const QList<QByteArray> &)),
+                module, SLOT(messageReceived(const QList<QByteArray>&)));
+
         module->start();
     }
 }

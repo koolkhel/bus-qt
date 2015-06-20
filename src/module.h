@@ -33,7 +33,7 @@ public:
     virtual QString getName() const;
 
 public slots:
-    void messageReceived(QList<QByteArray> &data);
+    void messageReceived(const QList<QByteArray> &data);
 
     virtual void respond(QString topic, ::indigo::pb::internal_msg &message) = 0;
 protected:
