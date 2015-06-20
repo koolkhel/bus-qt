@@ -37,6 +37,8 @@ Dispatcher::~Dispatcher()
 
 void Dispatcher::publish(ModuleP *modP, QByteArray data, QString topic)
 {
+    assert(modP != NULL);
+    assert(modP->getPublisher() != NULL);
     modP->getPublisher()->sendMessage(data, topic);
 }
 
@@ -60,9 +62,13 @@ void Dispatcher::startAll()
         ZeroMQSubscriber *sub = new ZeroMQSubscriber(context);
         mod_p->setSubscriber(sub);
 
-        foreach (QString pubTopic, module->getPubTopics()) {
-            proxy->subscribeTo(endPoint, pubTopic);
-        }
+        // publisher (модуль) -> connectTo -> xsub (проксик) <->
+        // xpub (проксик) <- connectTo <- subscriber (модуль)
+
+        proxy->registerPublisher(mod_p->getPublisher()->getPublisher());
+        proxy->registerSubscriber(mod_p->getSubscriber()->getSubscriber());
+
+        module->mod_p = mod_p;
 
         module->start();
     }

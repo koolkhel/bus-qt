@@ -8,7 +8,7 @@ Proxy::Proxy(nzmqt::ZMQContext *context)
     this->hostSubscriber = "tcp://127.0.0.1:4001";
 }
 
-Proxy::Proxy(nzmqt::ZMQContext *context,QString hostPublisher, QString hostSubscriber)
+Proxy::Proxy(nzmqt::ZMQContext *context, QString hostPublisher, QString hostSubscriber)
 {
     this->context = context;
     this->hostPublisher = hostPublisher;
@@ -24,27 +24,21 @@ void Proxy::run()
     this->xSubscriber->bindTo(hostSubscriber);
 
     if(xPublisher && xSubscriber) {
-        nzmqt::ZMQSocket::proxyFromTo(xPublisher, xSubscriber);
+        nzmqt::ZMQSocket::proxyFromTo(xSubscriber, xPublisher);
     }
 
 }
 
 // прокси подписывается, модуль публикует
-// xsub -> connectTo -> pub
-void Proxy::subscribeTo(QString zmqBindAddress, QString topic)
+// sub -> connectTo -> xpub
+void Proxy::registerSubscriber(nzmqt::ZMQSocket *moduleSubscriber)
 {
-    this->xSubscriber->connectTo(zmqBindAddress);
-    this->xSubscriber->subscribeTo(topic);
+    moduleSubscriber->connectTo(hostPublisher);
 }
 
 // модуль подписываетcя, прокси публикует
-// sub -> connectTo -> xpub
-void Proxy::registerPublisher(nzmqt::ZMQSocket *moduleSubscriber)
+// xsub <- connectTo <- pub
+void Proxy::registerPublisher(nzmqt::ZMQSocket *modulePublisher)
 {
-    moduleSubscriber->connectTo(this->hostPublisher);
+    modulePublisher->connectTo(this->hostSubscriber);
 }
-
-
-
-
-

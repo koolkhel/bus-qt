@@ -17,26 +17,20 @@ LIBS += -L../src -L../modules/protos/bin -lindigo -lindigo_message -lgeo_message
 INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
     loggertester.cpp \
-    zeromqpublisher.cpp \
-    zeromqsubscriber.cpp \
     loggertests.cpp \
     zeromqtests.cpp \
     dispatchertests.cpp \
     protobuftests.cpp \
     gpsmodule.cpp \
     testmodule.cpp \
-    proxy.cpp \
     plugintests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     loggertester.h \
-    zeromqpublisher.h \
-    zeromqsubscriber.h \
     zhelpers.h \
     gpsmodule.h \
-    testmodule.h \
-    proxy.h
+    testmodule.h
 
 OTHER_FILES += testconfig.ini
 
