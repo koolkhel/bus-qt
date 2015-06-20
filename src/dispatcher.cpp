@@ -81,7 +81,7 @@ void Dispatcher::startAll()
 void Dispatcher::subscribe(Module *module, QString topicName)
 {
     ModuleP *mod_p = module->mod_p;
-    mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
+    mod_p->getSubscriber()->getSubscriber()->subscribeTo(topicName);
 }
 
 // для тестов

@@ -24,7 +24,7 @@ nzmqt::ZMQSocket *ZeroMQSubscriber::getSubscriber() const
 
 bool ZeroMQSubscriber::recieve(nzmqt::ZMQMessage *message)
 {
-    qCDebug(ZMQ) << "receive";
+    qCDebug(ZMQ) << "receive not should be";
     subscriber->receiveMessage(message);
     if (message->size() > 0)
     {
