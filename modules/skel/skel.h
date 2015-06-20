@@ -22,7 +22,7 @@ public:
 
     virtual QStringList getPubTopics();
 
-    virtual void respond(indigo::pb::internal_msg &message);
+    virtual void respond(QString topic, indigo::pb::internal_msg &message);
 };
 
 #endif // SKEL_H

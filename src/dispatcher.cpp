@@ -34,32 +34,11 @@ Dispatcher::~Dispatcher()
     context->stop();
 }
 
-#if 0
-void Dispatcher::publish(QByteArray data, QString topic)
+
+void Dispatcher::publish(ModuleP *modP, QByteArray data, QString topic)
 {
-    Module *module = modules[topic];
-    if (module) {
-        ZeroMQPublisher *publisher = module->getMod_p()->getPublisher();
-        QThread *publisherThread = new QThread;
-        publisher->moveToThread(publisherThread);
-        publisherThread->start();
-
-        publisher->sendMessage(data);
-    }
-
+    modP->getPublisher()->sendMessage(data, topic);
 }
-
-Module *Dispatcher::addModule(Module *module, QString name)
-{
-    ModuleP *mod_p = module->getMod_p();
-
-    //module->d = this; // хз как ссылку передать, не указатель
-
-    connect(mod_p->subscriber, SIGNAL(newMessage(QByteArray)), module, SLOT(dispatchModule()));
-
-    modules.insert(name,module);
-}
-#endif
 
 QString Dispatcher::getFreePublisherEndpoint()
 {
@@ -91,9 +70,8 @@ void Dispatcher::startAll()
 
 void Dispatcher::subscribe(Module *module, QString topicName)
 {
-    module->subscribe(topicName);
-   // ModuleP *mod_p = module->mod_p;
-    //mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
+    ModuleP *mod_p = module->mod_p;
+    mod_p->getSubscriber()->subscribeTo(proxyXPub, topicName);
 }
 
 // для тестов

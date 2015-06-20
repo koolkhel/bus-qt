@@ -8,6 +8,8 @@
 #include <QTest>
 #include <QSignalSpy>
 
+#include <unistd.h>
+
 TEST(disptest, sanity) {
     // запуск контекстов и т.д.
     Dispatcher *dispatcher = new Dispatcher();
@@ -28,6 +30,12 @@ TEST(disptest, sanity) {
     Module *skelModule = dispatcher->getModuleInstances().value("skel_instance");
 
     ASSERT_TRUE(skelModule != NULL);
+
+    dispatcher->startAll();
+
+    usleep(100);
+
+    delete dispatcher;
 
     // class GPSModule : protected Module
     //GPSModule *module = new GPSModule(simulation);

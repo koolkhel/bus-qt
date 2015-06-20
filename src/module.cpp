@@ -37,9 +37,10 @@ void Module::stop()
 
 }
 
-void Module::publish()
+void Module::publish(::google::protobuf::MessageLite &msg, QString topic)
 {
-
+    QByteArray result = QByteArray::fromStdString(msg.SerializeAsString());
+    dispatcher->publish(mod_p, result, topic);
 }
 
 void Module::subscribe(QString topicName)
@@ -58,8 +59,9 @@ void Module::messageReceived(QList<QByteArray> &data)
     // assert data.size() > 0
     ::indigo::pb::internal_msg msg;
 
-    QByteArray messageBytes = data.at(0);
+    QByteArray messageBytes = data.at(1);
+    QString topic = QString::fromLocal8Bit(data.at(0));
     msg.ParseFromArray(messageBytes.data(), messageBytes.size());
 
-    respond(msg);
+    respond(topic, msg);
 }

@@ -32,12 +32,12 @@ QStringList TestModule::getPubTopics()
     topics << "hello1";
 }
 
-void TestModule::respond(::indigo::pb::internal_msg &message)
+void TestModule::respond(QString topic, ::indigo::pb::internal_msg &message)
 {
     // TODO
 }
 
 void TestModule::sendTestMessage()
 {
-    publish();
+    //publish("");
 }

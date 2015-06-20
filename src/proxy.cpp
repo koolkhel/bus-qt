@@ -4,10 +4,13 @@
 Proxy::Proxy(nzmqt::ZMQContext *context)
 {
     this->context = context;
+    this->hostPublisher = "tcp://127.0.0.1:4000";
+    this->hostSubscriber = "tcp://127.0.0.1:4001";
 }
 
 Proxy::Proxy(nzmqt::ZMQContext *context,QString hostPublisher, QString hostSubscriber)
 {
+    this->context = context;
     this->hostPublisher = hostPublisher;
     this->hostSubscriber = hostSubscriber;
 }

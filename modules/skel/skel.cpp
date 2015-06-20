@@ -30,7 +30,7 @@ QStringList Skel::getPubTopics()
     return topics;
 }
 
-void Skel::respond(indigo::pb::internal_msg &message)
+void Skel::respond(QString topic, indigo::pb::internal_msg &message)
 {
     if (message.HasExtension(::indigo::pb::skel_message::skel_message_in)) {
         qCWarning(SKELETON, "got my message!");
@@ -47,7 +47,12 @@ void Skel::respond(indigo::pb::internal_msg &message)
 
 void Skel::start()
 {
-    subscribe("test");
+    ::indigo::pb::internal_msg msg;
+    ::indigo::pb::skel_message *my_msg = msg.MutableExtension(::indigo::pb::skel_message::skel_message_in);
+
+    my_msg->set_data(555);
+
+    publish(msg, "skel");
 }
 
 void Skel::stop()

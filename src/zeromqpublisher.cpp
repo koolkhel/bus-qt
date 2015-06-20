@@ -1,5 +1,6 @@
 #include "zeromqpublisher.h"
 #include <QDebug>
+#include <QList>
 
 
 nzmqt::ZMQSocket *ZeroMQPublisher::getPublisher() const
@@ -26,31 +27,50 @@ void ZeroMQPublisher::close()
 
 void ZeroMQPublisher::sendMessage(const QString msg)
 {
-    publisher->sendMessage(msg.toLocal8Bit());
-    emit messageSend(msg.toLocal8Bit());
+    QList<QByteArray> toSend;
+
+    toSend.append(QString("").toLocal8Bit());
+    toSend.append(msg.toLocal8Bit());
+
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message)
 {
-    publisher->sendMessage(message->toByteArray());
-    emit messageSend(message->toByteArray());
+    QList<QByteArray> toSend;
+
+    toSend.append(QString("").toLocal8Bit());
+    toSend.append(message->toByteArray());
+
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 void ZeroMQPublisher::sendMessage(nzmqt::ZMQMessage *message, const QString filter)
 {
-    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
-    publisher->sendMessage(message->toByteArray());
-    emit messageSend(message->toByteArray());
+    //publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    QList<QByteArray> toSend;
+
+    toSend.append(filter.toLocal8Bit());
+    toSend.append(message->toByteArray());
+
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 void ZeroMQPublisher::sendMessage(const QByteArray message, const QString filter)
 {
-    publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
-    publisher->sendMessage(message);
-    emit messageSend(message);
+    //publisher->setOption(nzmqt::ZMQSocket::OPT_SUBSCRIBE,filter.toStdString().c_str());
+    QList<QByteArray> toSend;
 
+    toSend.append(filter.toLocal8Bit());
+    toSend.append(message);
+
+    publisher->sendMessage(toSend);
+    emit messageSend(toSend);
 }
 
-void ZeroMQPublisher::messageSended(const QByteArray sended)
+void ZeroMQPublisher::messageSended(const QList<QByteArray> sended)
 {
-    qDebug()<<"Sended: "<<sended;
+    qDebug()<<"Sended: "<< sended.at(0) << " " << sended.at(1);
 }
 
 QString ZeroMQPublisher::getAddress() const
