@@ -52,7 +52,8 @@ void Skel::start()
     ::indigo::pb::internal_msg msg;
     ::indigo::pb::skel_message *my_msg = msg.MutableExtension(::indigo::pb::skel_message::skel_message_in);
 
-    my_msg->set_data(555);
+    static int counter = 0;
+    my_msg->set_data(counter++);
 
     publish(msg, "skel");
 }

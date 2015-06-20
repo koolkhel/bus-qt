@@ -13,6 +13,9 @@
 TEST(disptest, sanity) {
     // запуск контекстов и т.д.
     Dispatcher *dispatcher = new Dispatcher();
+
+    usleep(1000 * 1000);
+
     QStringList c;
     c << "[modules]"
       << "test_instance=test_module"
@@ -37,17 +40,21 @@ TEST(disptest, sanity) {
 
     testModule->subscribeTopic("skel");
 
-    usleep(100);
+
+    usleep(1000 * 1000);
+
+    qApp->processEvents();
+    qApp->processEvents();
+    qApp->processEvents();
+    qApp->processEvents();
+
+    usleep(1000);
 
     for (int i = 0; i < 10000; i++) {
         skelModule->start();
         qApp->processEvents();
+        qApp->processEvents();
     }
-
-
-
-
-    delete dispatcher;
 
     // class GPSModule : protected Module
     //GPSModule *module = new GPSModule(simulation);
