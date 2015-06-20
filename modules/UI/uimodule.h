@@ -7,11 +7,15 @@ class UiModule: public Module
     Q_OBJECT
 public:
     UiModule(QObject *parent = 0);
-    ~UiModule();
+    virtual ~UiModule() {};
 
-    virtual void start();
-    virtual void stop();
+    void start();
+    void stop();
     void show();
+    virtual QStringList getPubTopics();
+
+public slots:
+    virtual void respond(indigo::pb::internal_msg &message);
 };
 
 #endif // UIMODULE_H

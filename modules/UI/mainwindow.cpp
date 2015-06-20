@@ -13,8 +13,6 @@
 #include <sstream>
 
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -26,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene = new QGraphicsScene(QRect(0, 0, 680, 100));
     ui->graphicsView->setScene(scene);
+
     Bus *leftBus = new Bus;
     leftBus->setImage(":/images/night next bus top.png");
     leftBus->setLabel("M285OM");
@@ -38,7 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus);
     ui->graphicsView->scene()->addItem(object);
-
 }
 
 MainWindow::~MainWindow()

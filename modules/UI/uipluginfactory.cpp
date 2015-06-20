@@ -1,4 +1,5 @@
 #include "uipluginfactory.h"
+
 #include "uimodule.h"
 
 UiPluginFactory::UiPluginFactory()
@@ -6,13 +7,15 @@ UiPluginFactory::UiPluginFactory()
 
 }
 
-Module* UiPluginFactory::createModule(QObject *parent)
-{
-    //return new UiModule(parent);
-}
-
 QString UiPluginFactory::getModuleType()
 {
     return "UI";
 }
+
+Module* UiPluginFactory::createModule(QObject *parent)
+{
+    return new UiModule();
+}
+
+
 

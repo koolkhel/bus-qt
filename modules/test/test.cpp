@@ -19,6 +19,7 @@ TestModule::TestModule(QObject *parent)
 
 void TestModule::start()
 {
+
 }
 
 void TestModule::stop()

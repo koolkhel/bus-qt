@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     Module *uiModule = dispatcher->getModuleInstances().value("ui_instance");
 
-
+    uiModule->start();
 
     //QResource::registerResource("/home/yury/work/QTFinal/indigo.qcc");
 /*
