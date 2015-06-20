@@ -2,7 +2,6 @@
 #include <QDebug>
 #include <QList>
 
-
 nzmqt::ZMQSocket *ZeroMQPublisher::getPublisher() const
 {
     return publisher;
@@ -70,7 +69,7 @@ void ZeroMQPublisher::sendMessage(const QByteArray message, const QString filter
 
 void ZeroMQPublisher::messageSended(const QList<QByteArray> sended)
 {
-    qDebug()<<"Sended: "<< sended.at(0) << " " << sended.at(1);
+    qCDebug(ZMQ)<<"Sent: "<< sended.at(0) << " " << sended.at(1);
 }
 
 QString ZeroMQPublisher::getAddress() const

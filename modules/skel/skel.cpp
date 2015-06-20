@@ -8,6 +8,8 @@ Q_LOGGING_CATEGORY(SKELETON, "skel");
 
 Skel::Skel(QObject *parent)
 {
+    setParent(parent);
+
     this->name = "skel works";
     ::indigo::pb::test_message test2;
 

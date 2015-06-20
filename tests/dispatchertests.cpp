@@ -33,17 +33,19 @@ TEST(disptest, sanity) {
 
     dispatcher->startAll();
 
+    QSignalSpy mySpy(testModule, SIGNAL(messageReceivedSignal()));
+
     testModule->subscribeTopic("skel");
 
     usleep(100);
 
-    skelModule->start();
+    for (int i = 0; i < 10000; i++) {
+        skelModule->start();
+        qApp->processEvents();
+    }
 
-    usleep(100);
 
-    QSignalSpy mySpy(testModule, SIGNAL(messageReceivedSignal()));
 
-    mySpy.wait(5000);
 
     delete dispatcher;
 

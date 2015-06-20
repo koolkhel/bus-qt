@@ -9,6 +9,10 @@
 #include "modulep.h"
 #include "dispatcher.h"
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(MODULE)
+
 class Dispatcher;
 
 class Module : public QObject

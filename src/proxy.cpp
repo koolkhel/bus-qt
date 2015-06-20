@@ -24,7 +24,8 @@ void Proxy::run()
     this->xSubscriber->bindTo(hostSubscriber);
 
     if(xPublisher && xSubscriber) {
-        nzmqt::ZMQSocket::proxyFromTo(xSubscriber, xPublisher);
+        //nzmqt::ZMQSocket::proxyFromTo(xSubscriber, xPublisher);
+        nzmqt::ZMQSocket::proxyFromTo(xPublisher, xSubscriber);
     }
 
 }
