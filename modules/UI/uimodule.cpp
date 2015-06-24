@@ -7,6 +7,8 @@ UiModule::UiModule(QObject *parent)
 
 }
 
+UiModule::~UiModule() {}
+
 
 void UiModule::start()
 {
@@ -20,16 +22,17 @@ void UiModule::stop()
 
 }
 
-void UiModule::show()
-{
-    MainWindow w;
-    w.show();
-}
 
 QStringList UiModule::getPubTopics()
 {
     QStringList topics;
     topics << "hello2";
+    return topics;
+}
+
+QString UiModule::getName() const
+{
+    return name;
 }
 
 void UiModule::respond(indigo::pb::internal_msg &message)

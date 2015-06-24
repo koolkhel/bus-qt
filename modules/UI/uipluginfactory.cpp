@@ -1,6 +1,7 @@
 #include "uipluginfactory.h"
 
 #include "uimodule.h"
+#include <QString>
 
 UiPluginFactory::UiPluginFactory()
 {
@@ -16,6 +17,7 @@ Module* UiPluginFactory::createModule(QObject *parent)
 {
     return new UiModule();
 }
+
 
 
 
