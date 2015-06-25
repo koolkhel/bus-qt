@@ -11,6 +11,8 @@
 #include "bus.h"
 #include "guiwindowgraphicsobject.h"
 #include <sstream>
+#include <QResource>
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -18,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QResource::registerResource("ui.rcc");
     setFocusPolicy(Qt::StrongFocus);
 
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
