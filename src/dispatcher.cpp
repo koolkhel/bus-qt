@@ -154,7 +154,8 @@ void Dispatcher::readConfiguration(QSettings &settings, QString moduleInstanceNa
      pluginDir.setNameFilters(pluginsFilter);
 
      foreach (QString pluginFilePath, pluginDir.entryList()) {
-         QPluginLoader loader(pluginFilePath);
+         QString dir = pluginDir.absoluteFilePath(pluginFilePath);
+         QPluginLoader loader(dir);
          QJsonObject metadata = loader.metaData();
          //printf("%s\n", qPrintable(metadata.keys().join(",")));
          //printf("%s\n", qPrintable(metadata.value("IID").toString()));

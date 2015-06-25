@@ -1,6 +1,9 @@
 #include "uimodule.h"
 #include "skel_message.pb.h"
 #include "test_message.pb.h"
+#include "mainwindow.h"
+
+#include <QApplication>
 
 
 Q_LOGGING_CATEGORY(UIMODULE, "ui_module")
@@ -8,14 +11,16 @@ Q_LOGGING_CATEGORY(UIMODULE, "ui_module")
 
 UIModule::UIModule(QObject *parent)
 {
-    setParent(parent);
+    //setParent(parent);
     this->name = "ui_instance";
     qCDebug(UIMODULE, "hello,world");
 }
 
 void UIModule::start()
 {
-
+    QApplication a();
+    MainWindow w;
+    w.show();
 }
 
 void UIModule::stop()

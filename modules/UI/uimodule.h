@@ -9,7 +9,7 @@
 
 Q_DECLARE_LOGGING_CATEGORY(UI_MODULE)
 
-class UIModule :public Module
+class UIModule : public Module
 {
     Q_OBJECT
 public:

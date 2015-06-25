@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
       << "[ui_instance]";
 
     dispatcher->initializeAll(c);*/
-    dispatcher->initializeAll("testconfig.ini");
+   dispatcher->initializeAll("testconfig.ini");
 
 
 
