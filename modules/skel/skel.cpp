@@ -4,7 +4,7 @@
 #include <skel_message.pb.h>
 #include <skel_message2.pb.h>
 
-Q_LOGGING_CATEGORY(SKELETON, "skel");
+Q_LOGGING_CATEGORY(SKELETON, "skel")
 
 Skel::Skel(QObject *parent)
 {

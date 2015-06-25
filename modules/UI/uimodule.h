@@ -1,21 +1,32 @@
 #ifndef UIMODULE_H
 #define UIMODULE_H
+
+#include <QObject>
+#include <QLoggingCategory>
+#include <QDebug>
+
 #include "module.h"
 
-class UiModule: public Module
+Q_DECLARE_LOGGING_CATEGORY(UI_MODULE)
+
+class UIModule :public Module
 {
     Q_OBJECT
 public:
-    UiModule(QObject *parent = 0);
-    virtual ~UiModule();
-
-    void start();
-    void stop();
+    UIModule(QObject *parent = 0);
+    virtual ~UIModule() {}
+    virtual void start();
+    virtual void stop();
     virtual QStringList getPubTopics();
-    virtual QString getName() const;
+    virtual void respond(QString topic, ::indigo::pb::internal_msg &message);
 
-public slots:
-    virtual void respond(indigo::pb::internal_msg &message);
+    void show();
+    void getElements();
+
+    void sendTestMessage();
+    void subscribeTopic(QString topic);
+
+    Q_SIGNAL void messageReceivedSignal();
 };
 
 #endif // UIMODULE_H

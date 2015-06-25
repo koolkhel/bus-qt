@@ -1,7 +1,5 @@
 #include "test.h"
-
 #include "skel_message.pb.h"
-
 #include "test_message.pb.h"
 
 Q_LOGGING_CATEGORY(TESTC, "test_module")
@@ -10,7 +8,6 @@ TestModule::TestModule(QObject *parent)
 {
     setParent(parent);
     this->name = "test_instance";
-
     qCDebug(TESTC, "hello,world");
 }
 

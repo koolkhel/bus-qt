@@ -1,7 +1,7 @@
 #include "uipluginfactory.h"
-
 #include "uimodule.h"
 #include <QString>
+
 
 UiPluginFactory::UiPluginFactory()
 {
@@ -15,7 +15,7 @@ QString UiPluginFactory::getModuleType()
 
 Module* UiPluginFactory::createModule(QObject *parent)
 {
-    return new UiModule();
+    return new UIModule();
 }
 
 

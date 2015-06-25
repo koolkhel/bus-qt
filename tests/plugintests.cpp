@@ -61,3 +61,24 @@ TEST(PLUGINS, test_module)
     QString moduleName = module->getName();
     ASSERT_STREQ(qPrintable(moduleName), "test_instance");
 }
+
+TEST(PLUGINS, ui_module)
+{
+    QPluginLoader loader("../modules/bin/libUI.so");
+    QJsonObject metadata = loader.metaData();
+    printf("%s\n", qPrintable(metadata.keys().join(",")));
+    printf("%s\n", qPrintable(metadata.value("IID").toString()));
+
+    bool result = loader.load();
+    ASSERT_TRUE(result);
+    //printf("%s\n", qPrintable(loader.errorString()));
+
+    QObject *obj = loader.instance();
+    ASSERT_TRUE(obj != NULL);
+
+    PluginModuleFactory *factory = qobject_cast<PluginModuleFactory *>(obj);
+    Module *module = factory->createModule();
+
+    QString moduleName = module->getName();
+    ASSERT_STREQ(qPrintable(moduleName), "ui_instance");
+}

@@ -9,13 +9,12 @@
 
 Q_DECLARE_LOGGING_CATEGORY(TESTC)
 
-class TestModule : public Module {
+class TestModule : public Module
+{
 	Q_OBJECT
-
 public:
     TestModule(QObject *parent = 0);
     virtual ~TestModule() {}
-
     virtual void start();
     virtual void stop();
 
