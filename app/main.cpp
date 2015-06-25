@@ -33,6 +33,10 @@ int main(int argc, char *argv[])
 
     uiModule->start();
 
+    Module *testModule = dispatcher->getModuleInstances().value("test_instance");
+
+    testModule->start();
+
     //QResource::registerResource("/home/yury/work/QTFinal/indigo.qcc");
 /*
     qApp->setStyle(QStyleFactory::create("Fusion"));
