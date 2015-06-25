@@ -55,7 +55,7 @@ void TestModule::sendTestMessage()
 
     message.AddExtension(::indigo::pb::indigo_geo::geo_coords)->CopyFrom(geo);
 
-    publish(message,"UI");
+    publish(message,name);
 
 }
 

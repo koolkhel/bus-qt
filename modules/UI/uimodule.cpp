@@ -21,6 +21,8 @@ void UIModule::start()
     QApplication a();
     MainWindow w;
     w.show();
+
+    subscribe("test_instance");
 }
 
 void UIModule::stop()
