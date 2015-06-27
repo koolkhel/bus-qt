@@ -15,5 +15,4 @@ HEADERS += module.h \
 
 DISTFILES += \
     module.json \
-    proto/module_message.proto \
-    proto/module_message2.proto
+    proto/module_message.proto
