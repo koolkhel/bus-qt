@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     dispatchertests.cpp \
     protobuftests.cpp \
     gpsmodule.cpp \
-    plugintests.cpp
+    plugintests.cpp \
+    gpstests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
