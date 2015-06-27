@@ -25,17 +25,11 @@ int main(int argc, char *argv[])
       << "[ui_instance]";
 
     dispatcher->initializeAll(c);*/
-   dispatcher->initializeAll("testconfig.ini");
+    QStringList c;
+    c << "[modules]" << "ui_instance=UI" << "test_instance=test_module";
+   dispatcher->initializeAll(c);
 
-
-
-    Module *uiModule = dispatcher->getModuleInstances().value("ui_instance");
-
-    uiModule->start();
-
-    Module *testModule = dispatcher->getModuleInstances().value("test_instance");
-
-    testModule->start();
+    dispatcher->startAll();
 
     //QResource::registerResource("/home/yury/work/QTFinal/indigo.qcc");
 /*
