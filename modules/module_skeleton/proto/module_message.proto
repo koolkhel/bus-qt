@@ -1,0 +1,24 @@
+package indigo.pb;
+
+import "indigo_message.proto";
+
+option java_package = "ru.indigosystem.serv.pb";
+
+option java_outer_classname = "IndigoPB";
+option optimize_for = LITE_RUNTIME;
+
+message module_message {
+
+	/*
+	extend indigo_msg {
+                optional skel_message skel_message_out = 200;
+	}
+
+	extend internal_msg {
+		optional skel_message skel_message_in = 200;
+	}
+
+	optional int32 data = 2 [ default = 2 ];
+	*/
+}
+
