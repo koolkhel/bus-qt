@@ -36,29 +36,28 @@ void GPSMODULE::respond(QString topic, indigo::pb::internal_msg &message)
 void GPSMODULE::start()
 {
     //positionSource = new QNmeaPositionInfoSource(QNmeaPositionInfoSource::RealTimeMode, this);
-    qDebug() << "QGeoPositionInfoSource";
+    qCDebug(GPSMODULEC) << "QGeoPositionInfoSource";
     QStringList sources = QGeoPositionInfoSource::availableSources();
     foreach (QString source, sources) {
-        qDebug() << "gps source: " << source;
+        qCDebug(GPSMODULEC) << "gps source: " << source;
     }
 
-    qDebug() << "QGeoSatelliteInfoSource";
+    qCDebug(GPSMODULEC) << "QGeoSatelliteInfoSource";
     QStringList satSources = QGeoSatelliteInfoSource::availableSources();
     foreach (QString source, satSources) {
-        qDebug() << "satellite source: " << source;
+        qCDebug(GPSMODULEC) << "satellite source: " << source;
     }
 
     QThread *nav_thread = new QThread(this);
 
-    QGeoSatelliteInfoSource *satSource  = new GpsdSatelliteSource(this);
+    QGeoSatelliteInfoSource *satSource  = new GpsdSatelliteSource();
     if (satSource) {
         satSource->moveToThread(nav_thread);
         connect(satSource, SIGNAL(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)), SLOT(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)));
         satSource->startUpdates();
     }
 
-    GpsdPositionSource *positionSource = new GpsdPositionSource(this);
-    //positionSource = QGeoPositionInfoSource::createDefaultSource(nav_thread);
+    GpsdPositionSource *positionSource = new GpsdPositionSource();
     if (positionSource) {
         positionSource->moveToThread(nav_thread);
         connect(positionSource, SIGNAL(positionUpdated(const QGeoPositionInfo &)), SLOT(positionUpdated(const QGeoPositionInfo &)));
@@ -67,7 +66,7 @@ void GPSMODULE::start()
         positionSource->setUpdateInterval(5000);
         positionSource->startUpdates();
     } else {
-        qDebug() << "no GPS available!";
+        qCDebug(GPSMODULEC) << "no GPS available!";
     }
 
     nav_thread->start();

@@ -41,6 +41,12 @@ void TestModule::respond(QString topic, ::indigo::pb::internal_msg &message)
 
         qCDebug(TESTC) << "data is: " << msg.data();
     }
+
+    if (message.HasExtension(::indigo::pb::indigo_geo::geo_coords_in)) {
+        ::indigo::pb::indigo_geo msg = message.GetExtension(::indigo::pb::indigo_geo::geo_coords_in);
+
+        qCDebug(TESTC) << "got geo message: " << msg.latitude() << " " << msg.longitude();
+    }
 }
 
 void TestModule::sendTestMessage()

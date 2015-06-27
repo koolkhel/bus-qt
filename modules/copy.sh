@@ -1,6 +1,6 @@
 files="module.cpp module.h module.pro module.json modulepluginfactory.cpp modulepluginfactory.h proto/module_message.proto"
-TARGET=skel123
-TARGET_CAPS=SKEL123
+TARGET=$1
+TARGET_CAPS=`echo $TARGET | tr a-z A-Z`
 SOURCE=module_skeleton
 
 mkdir -p $TARGET/proto

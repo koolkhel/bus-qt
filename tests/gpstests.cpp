@@ -13,6 +13,22 @@ TEST(GPS, loading) {
 
     QStringList c;
 
-    c << "[modules]" << "gps_instance=gpsmodule";
+    c << "[modules]" << "gps_instance=gpsmodule" << "test_instance=test_module";
     dispatcher->initializeAll(c);
+
+    TestModule *testModule = reinterpret_cast<TestModule *>(
+                dispatcher->getModuleInstances().value("test_instance"));
+
+
+    dispatcher->startAll();
+
+    testModule->subscribeTopic("raw_gps");
+
+
+
+    for (int i = 0; i < 5000; i++) {
+        QSignalSpy spy(testModule, SIGNAL(messageReceivedSignal()));
+        spy.wait(20);
+        qApp->processEvents();
+    }
 }

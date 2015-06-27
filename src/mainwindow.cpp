@@ -25,9 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setFocusPolicy(Qt::StrongFocus);
 
-    backend = new Backend(this);
+    //backend = new Backend(this);
 
-    connect(backend, SIGNAL(newSatellitesUsed(int)), SLOT(satellitesInUseUpdated(int)));
+    //connect(backend, SIGNAL(newSatellitesUsed(int)), SLOT(satellitesInUseUpdated(int)));
 
     /*int _dpi = 170;
     QScreen *screen = QApplication::screens().at(0);
@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << "calculated DPI:" << _dpi;
     setDPI(_dpi);
 */
-    backend->reconnect();
+    //backend->reconnect();
 
     //pict = new QGraphicsPixmapItem();
 
