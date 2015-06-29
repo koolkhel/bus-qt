@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "module.h"
+#include <QSqlDatabase>
 
 Q_DECLARE_LOGGING_CATEGORY(BLACKBOXC)
 
@@ -20,6 +21,22 @@ public:
     void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
+
+private:
+    QSqlDatabase db;
+
+    void initializeDB();
+    void executeDDL(QString queryText);
+    void copyFromRAMtoNAND();
+
+    void collectStatistics();
+
+    void criticalCheck(bool result);
+
+    int _ramRecordCount;
+    int _nandRecordCount;
+    int _sentRecordCount;
+    int _confirmedRecordCount;
 };
 
 #endif // SKEL_H

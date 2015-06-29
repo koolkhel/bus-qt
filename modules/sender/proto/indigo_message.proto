@@ -13,6 +13,8 @@ message indigo_msg {
 }
 
 message internal_msg {
+	optional int32 id = 1 [ default = 0 ];
+
 	extensions 100 to max;
 }
 

@@ -72,3 +72,8 @@ void Module::messageReceived(const QList<QByteArray> &data)
 
     respond(topic, msg);
 }
+
+QVariant Module::getConfigurationParameter(const QString name, const QVariant &defaultValue = QVariant()) const
+{
+    return configuration.value(name, defaultValue);
+}

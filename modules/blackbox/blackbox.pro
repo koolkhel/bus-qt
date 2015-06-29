@@ -5,6 +5,7 @@ include(../plugins.pri)
 TARGET = blackbox
 TEMPLATE = lib
 QT -= gui
+QT += sql
 
 SOURCES += blackbox.cpp \
     blackboxpluginfactory.cpp
