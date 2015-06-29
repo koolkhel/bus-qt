@@ -5,7 +5,7 @@ include(../defaults.pri)
 #
 #-------------------------------------------------
 
-QT       += network testlib
+QT       += network testlib sql
 
 TARGET = tests
 CONFIG   -= app_bundle
@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     protobuftests.cpp \
     gpsmodule.cpp \
     plugintests.cpp \
-    gpstests.cpp
+    gpstests.cpp \
+    bboxtests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
