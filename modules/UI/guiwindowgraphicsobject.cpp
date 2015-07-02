@@ -1,17 +1,18 @@
 #include "guiwindowgraphicsobject.h"
 #include "bus.h"
+#include "currentbus.h"
 #include <QPainter>
 #include <QTextOption>
 #include <QTime>
 
-GuiWindowGraphicsObject::GuiWindowGraphicsObject(QGraphicsItem *parent,Bus *previous, Bus *next) : QGraphicsObject(parent)
+GuiWindowGraphicsObject::GuiWindowGraphicsObject(QGraphicsItem *parent,Bus *previous, Bus *next, CurrentBus *me) : QGraphicsObject(parent)
 {
     leftBus = previous;
     rightBus = next;
-    previousStationTime = "02:50";
-    currentRouteTime = "00:00:43";
-    nextStationTimeTable = "02:02";
-    nextStationForecasting = "02:00";
+    previousStationTime = me->getPreviousStationTime();
+    currentRouteTime = me->getCurrentRouteTime();
+    nextStationTimeTable = me->getNextStationTimeTable();
+    nextStationForecasting = me->getNextStationForecasting();
 }
 
 GuiWindowGraphicsObject::~GuiWindowGraphicsObject()
@@ -27,6 +28,7 @@ QRectF GuiWindowGraphicsObject::boundingRect() const
 void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setFont(QFont("Times",22, QFont::Bold));
+
     const int leftBusLeft = 10;
     const int leftBusTop = -135;
     const int rightBusLeft = 355;
@@ -34,15 +36,12 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
     const int heightText = 100;
     const int rightBlockLevel = 570;
 
-
-
     QImage currMarker(":/images/night our marker.png");
     painter->setRenderHint(QPainter::Antialiasing);
 
     //Статичные картинки
     painter->drawImage(-55, -215,QImage(":/images/night top static block.png"));
     painter->drawImage(470, -215, QImage(":/images/night right static block.png"));
-
 
     //Левый автобус
     painter->setPen(QPen(Qt::red, 1));
@@ -56,7 +55,6 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
     painter->drawImage(rightBusLeft, leftBusTop,QImage(rightBus->getImage()));
     painter->drawText(QRect(rightBusLeft, -185,widthText,heightText),rightBus->getTime());
     painter->drawText(QRect(rightBusLeft, -115,widthText,heightText),rightBus->getLabel());
-
     painter->setPen(QPen(Qt::gray,1));
 
     QTime time = QTime::currentTime();

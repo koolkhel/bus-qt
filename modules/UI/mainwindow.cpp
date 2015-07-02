@@ -1,19 +1,17 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-
 #include <QDebug>
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QGraphicsPixmapItem>
 #include <QScrollBar>
-
-#include <qdatetime.h>
-#include "bus.h"
-#include "guiwindowgraphicsobject.h"
 #include <sstream>
 #include <QResource>
+#include <QDateTime>
 
-
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "bus.h"
+#include "guiwindowgraphicsobject.h"
+#include "currentbus.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -38,9 +36,17 @@ MainWindow::MainWindow(QWidget *parent) :
     rightBus->setLabel("Y210OY");
     rightBus->setTime("02:58");
 
-    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus);
+    CurrentBus *me = new CurrentBus;
+    me->setNextStationForecasting("02:00");
+    me->setNextStationTimeTable("02:02");
+    me->setPreviousStationTime("02:50");
+    me->setCurrentRouteTime("00:00:43");
+
+    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus, me);
     ui->graphicsView->scene()->addItem(object);
 }
+
+
 
 MainWindow::~MainWindow()
 {

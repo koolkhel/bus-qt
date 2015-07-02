@@ -2,6 +2,7 @@
 #include "skel_message.pb.h"
 #include "test_message.pb.h"
 #include "mainwindow.h"
+#include "ui_message.pb.h"
 
 #include <QApplication>
 
@@ -18,10 +19,8 @@ UIModule::UIModule(QObject *parent)
 
 void UIModule::start()
 {
-    QApplication a();
     MainWindow w;
     w.show();
-
     subscribe("test_instance");
 }
 
@@ -62,10 +61,8 @@ void UIModule::respond(QString topic, indigo::pb::internal_msg &message)
 {
     emit messageReceivedSignal();
 
-    if (message.HasExtension(::indigo::pb::skel_message::skel_message_in)) {
-        ::indigo::pb::skel_message msg = message.GetExtension(::indigo::pb::skel_message::skel_message_in);
-
-        qCDebug(UIMODULE) << "data is: " << msg.data();
+    if(message.HasExtension(::indigo::pb::ui_message::ui_message_in)) {
+        ::indigo::pb::ui_message msg = message.GetExtension(::indigo::pb::ui_message::ui_message_in);
     }
 }
 
