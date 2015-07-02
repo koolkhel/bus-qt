@@ -10,6 +10,8 @@
 
 Q_DECLARE_LOGGING_CATEGORY(BLACKBOXC)
 
+class QTimer;
+
 class BLACKBOX : public Module
 {
 	Q_OBJECT
@@ -22,12 +24,17 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
+private slots:
+    void doBlackboxJob();
+
 private:
     QSqlDatabase db;
 
     void initializeDB();
     void executeDDL(QString queryText);
     void copyFromRAMtoNAND();
+    void store(int id, QByteArray data);
+    void handleConfirmedMessages(::indigo::pb::internal_msg &message);
 
     void collectStatistics();
 
@@ -37,6 +44,8 @@ private:
     int _nandRecordCount;
     int _sentRecordCount;
     int _confirmedRecordCount;
+
+    QTimer *bbTimer;
 };
 
 #endif // SKEL_H

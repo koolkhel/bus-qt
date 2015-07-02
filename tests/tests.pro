@@ -12,7 +12,7 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-LIBS += -L../src -L../modules/protos/bin -L../modules/bin -ltest -ltest_message -lskel_message -lskel_message2 \
+LIBS += -L../src -L../modules/protos/bin -L../modules/bin -ltest -ltest_message -lskel_message -lskel_message2 -lblackbox_message \
     -lindigo -lindigo_message -lgeo_message -levents_message -lgtest -lprotobuf-lite
 
 INCLUDEPATH += /usr/local/include

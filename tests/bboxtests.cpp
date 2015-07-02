@@ -13,6 +13,7 @@
 
 #include "indigo_message.pb.h"
 #include "geo_message.pb.h"
+#include "blackbox_message.pb.h"
 
 TEST(BBOX, sqlite) {
     QSqlDatabase sdb = QSqlDatabase::addDatabase("QSQLITE");
@@ -72,14 +73,16 @@ TEST(BBOX, DISABLED_zeromq_version) {
     ASSERT_EQ(minor, 0);
 }
 
-TEST(BBOX, fill) {
+TEST(BBOX, DISABLED_overflowHandling) {
     QStringList c;
     c << "[modules]"
       << "bbox_instance=blackbox"
       << "test_instance=test_module"
       << "[bbox_instance]"
       << "nandDB=/opt/nanddb.sqlite"
-      << "inputTopics=raw_gps";
+      << "inputTopics=raw_gps"
+       << "maxRamPages=10"
+       << "ramPageSize=1024";
 
     Dispatcher *dispatcher = new Dispatcher();
     dispatcher->initializeAll(c);
@@ -92,7 +95,7 @@ TEST(BBOX, fill) {
 
     ASSERT_TRUE(testModule != NULL);
 
-    for (int i = 0; i < 20000; i++) {
+    for (int i = 0; i < 400; i++) {
         ::indigo::pb::internal_msg positionMessage;
         ::indigo::pb::indigo_geo *geo = positionMessage.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
 
@@ -107,7 +110,74 @@ TEST(BBOX, fill) {
         qApp->processEvents();
     }
 
+    usleep(100 * 1000);
+
     for (int i = 0; i < 50000; i++) {
         qApp->processEvents();
+    }
+}
+
+TEST(BBOX, sendingConfirmed) {
+    QStringList c;
+    c << "[modules]"
+      << "bbox_instance=blackbox"
+      << "test_instance=test_module"
+      << "[bbox_instance]"
+      << "nandDB=/opt/nanddb.sqlite"
+      << "inputTopics=raw_gps"
+       << "maxRamPages=10"
+       << "ramPageSize=1024";
+
+    Dispatcher *dispatcher = new Dispatcher();
+    dispatcher->initializeAll(c);
+    dispatcher->startAll();
+
+    ASSERT_TRUE(dispatcher->getModuleInstances().value("bbox_instance") != NULL);
+
+    TestModule *testModule = reinterpret_cast<TestModule *>(
+                dispatcher->getModuleInstances().value("test_instance"));
+
+    ASSERT_TRUE(testModule != NULL);
+
+    testModule->subscribeTopic("to_send");
+
+    for (int i = 0; i < 400; i++) {
+        ::indigo::pb::internal_msg positionMessage;
+        ::indigo::pb::indigo_geo *geo = positionMessage.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
+
+        positionMessage.set_id(i);
+
+        geo->set_longitude(35.5);
+        geo->set_latitude(36.6);
+        geo->set_unixtime(QDateTime::currentMSecsSinceEpoch() / 1000);
+        geo->set_satellites_used(10);
+
+        testModule->sendMessage(positionMessage, "raw_gps");
+        qApp->processEvents();
+    }
+
+    for (int steps = 0; steps < 5; steps++) {
+        usleep(1 * 1000 * 1000);
+
+        for (int i = 0; i < 50000; i++) {
+            qApp->processEvents();
+        }
+    }
+
+    for (int i = 0; i < 30; i++) {
+        ::indigo::pb::internal_msg message;
+        ::indigo::pb::confirmed_messages *msg = message.MutableExtension(::indigo::pb::confirmed_messages::confirmed_messages_in);
+
+        msg->add_message_ids(i);
+
+        testModule->sendMessage(message, "confirmed_messages");
+    }
+
+    for (int steps = 0; steps < 5; steps++) {
+        usleep(1 * 1000 * 1000);
+
+        for (int i = 0; i < 50000; i++) {
+            qApp->processEvents();
+        }
     }
 }

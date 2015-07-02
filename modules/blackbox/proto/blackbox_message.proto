@@ -1,0 +1,45 @@
+package indigo.pb;
+
+import "indigo_message.proto";
+
+option java_package = "ru.indigosystem.serv.pb";
+
+option java_outer_classname = "IndigoPB";
+option optimize_for = LITE_RUNTIME;
+
+message blackbox_message {
+
+	/*
+	extend indigo_msg {
+                optional skel_message skel_message_out = 200;
+	}
+
+	extend internal_msg {
+		optional skel_message skel_message_in = 200;
+	}
+
+	optional int32 data = 2 [ default = 2 ];
+	*/
+}
+
+message confirmed_messages {
+    repeated int32 message_ids = 1;
+
+        extend indigo_msg {
+                optional confirmed_messages confirmed_messages_out = 204;
+        }
+
+        extend internal_msg {
+                optional confirmed_messages confirmed_messages_in = 204;
+        }
+}
+
+message to_send {
+    optional int32 id = 1 [ default = 0 ];
+    optional bytes data = 2;
+
+        extend internal_msg {
+                optional to_send to_send_in = 205;
+        }
+
+}

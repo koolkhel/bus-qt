@@ -1,6 +1,8 @@
 #include "blackbox.h"
 #include <QtSql>
 
+#include "blackbox_message.pb.h"
+
 Q_LOGGING_CATEGORY(BLACKBOXC, "blackbox")
 
 
@@ -31,21 +33,106 @@ QStringList BLACKBOX::getPubTopics()
     return topics;
 }
 
+void BLACKBOX::handleConfirmedMessages(indigo::pb::internal_msg &message)
+{
+    QString insertConfirmedText = "insert into ram.confirmed_data (confirmed_id) values (:id)";
+    QSqlQuery insertConfirmedQuery(db);
+    insertConfirmedQuery.prepare(insertConfirmedText);
+
+    ::indigo::pb::confirmed_messages cm = message.GetExtension(::indigo::pb::confirmed_messages::confirmed_messages_in);
+
+    int count = cm.message_ids_size();
+    db.transaction();
+    for (int i = 0; i < count; i++) {
+        int id = cm.message_ids(i);
+        qCDebug(BLACKBOXC) << "confirming message " << id;
+        insertConfirmedQuery.bindValue(":id", id);
+
+        // FIXME безопасно ли это делать? если кончится память, хорошо не будет
+        criticalCheck(insertConfirmedQuery.exec());
+    }
+
+    db.commit();
+}
+
 void BLACKBOX::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    QByteArray data = QByteArray::fromStdString(message.SerializeAsString());
+    if (topic == "confirmed_messages") {
+        handleConfirmedMessages(message);
+    } else {
+        QByteArray data = QByteArray::fromStdString(message.SerializeAsString());
+        store(message.id(), data);
+    }
+}
 
+void BLACKBOX::doBlackboxJob()
+{
+    // 1. выяснить обстановку
+
+    collectStatistics();
+    // 2. если что-то надо еще отдать в отправленное, делаем
+    int maxRecordCount = getConfigurationParameter("maxRecordCount", 30).toInt();
+
+    if (_sentRecordCount < maxRecordCount) {
+        int toSend = maxRecordCount - _sentRecordCount;
+
+        QString selectString = "SELECT id, data, storage FROM stored_data ORDER BY id ASC LIMIT :limit";
+        QSqlQuery selectQuery(db);
+        criticalCheck(selectQuery.prepare(selectString));
+
+        selectQuery.bindValue(":limit", toSend);
+
+        bool result = selectQuery.exec();
+        if (!result) {
+            qCCritical(BLACKBOXC) << "cannot select from DB: " << db.lastError().text();
+        }
+
+        while (selectQuery.next()) {
+            int id = selectQuery.value("id").toInt();
+            QByteArray data = selectQuery.value("data").toByteArray();
+            QString storage = selectQuery.value("storage").toString();
+
+            ::indigo::pb::internal_msg message;
+            message.set_id(id);
+            ::indigo::pb::to_send *to_send = message.MutableExtension(::indigo::pb::to_send::to_send_in);
+            to_send->set_id(id);
+            to_send->set_data(data.constData(), data.size());
+
+            qCDebug(BLACKBOXC) << "publishing data from storage: " << storage << " with id: " << id << " bytes: " << data.toHex();
+            // выдаем все модулю передачи
+            publish(message, "to_send");
+
+            QString insertIntoSentQuery = "insert into ram.sent_data (sent_id) values (:id)";
+            QSqlQuery insertIntoSent(db);
+            criticalCheck(insertIntoSent.prepare(insertIntoSentQuery));
+
+            qCDebug(BLACKBOXC) << "issuing " << insertIntoSentQuery << " with id " << id;
+            insertIntoSent.bindValue(":id", id);
+            criticalCheck(insertIntoSent.exec());
+        }
+    } else {
+        qCDebug(BLACKBOXC) << "not ready to send anything";
+    }
+}
+
+void BLACKBOX::store(int id, QByteArray data)
+{
     QSqlQuery insertQuery(db);
     criticalCheck(insertQuery.prepare("insert into ram_data (id, data) values (:id, :data)"));
 
-    insertQuery.bindValue(":id", message.id());
+    insertQuery.bindValue(":id", id);
     insertQuery.bindValue(":data", data);
 
     bool result = insertQuery.exec();
     if (result) {
-        qCDebug(BLACKBOXC) << "inserting record #" << message.id();
+        qCDebug(BLACKBOXC) << "inserting record #" << id;
     } else {
-        qCDebug(BLACKBOXC) << "failure inserting: " << db.lastError().text();
+        // SQLITE_FULL
+        if (db.lastError().number() == -1) {
+            qCDebug(BLACKBOXC) << "failure inserting: " << db.lastError().number() << "; performing copy to NAND";
+            copyFromRAMtoNAND();
+        }
+
     }
 }
 
@@ -67,18 +154,33 @@ void BLACKBOX::start()
     foreach (QString topic, topics) {
         subscribe(topic);
     }
+
+    subscribe("confirmed_messages");
+
+    bbTimer = new QTimer(this);
+    bbTimer->setInterval(1000);
+    bbTimer->setSingleShot(false);
+
+    connect(bbTimer, SIGNAL(timeout()), SLOT(doBlackboxJob()));
+
+    bbTimer->start();
 }
 
 void BLACKBOX::stop()
 {
+    bbTimer->stop();
 }
 
 void BLACKBOX::initializeDB()
 {
     executeDDL("ATTACH DATABASE ':memory:' AS 'ram'");
     // 1M хранимых данных
-    executeDDL("PRAGMA ram.PAGE_SIZE = 4096");
-    executeDDL("PRAGMA ram.MAX_PAGE_COUNT = 256");
+    //executeDDL("PRAGMA ram.PAGE_SIZE = 4096");
+    //executeDDL("PRAGMA ram.MAX_PAGE_COUNT = 256");
+    executeDDL(QString("PRAGMA ram.PAGE_SIZE = %1")
+               .arg(getConfigurationParameter("ramPageSize", 4096).toInt()));
+    executeDDL(QString("PRAGMA ram.MAX_PAGE_COUNT = %1")
+               .arg(getConfigurationParameter("maxRamPages", 256).toInt()));
 
     // хранилище в ПЗУ
     executeDDL("DROP TABLE IF EXISTS main.nand_data");
@@ -161,11 +263,15 @@ void BLACKBOX::copyFromRAMtoNAND()
     db.transaction();
 
     QSqlQuery selectInto(db);
-    result &= selectInto.exec("INSERT INTO nand_data (id, data) SELECT id, data FROM ram_data;");
+    QString selectIntoText = "INSERT INTO nand_data (id, data) SELECT id, data FROM ram_data;";
+    result &= selectInto.exec(selectIntoText);
+    qCDebug(BLACKBOXC) << selectIntoText;
     selectInto.finish();
 
     QSqlQuery deleteFrom(db);
-    result &= deleteFrom.exec("DELETE FROM ram_data");
+    QString deleteFromText = "DELETE FROM ram_data";
+    result &= deleteFrom.exec(deleteFromText);
+    qCDebug(BLACKBOXC) << deleteFromText;
     deleteFrom.finish();
 
     db.commit();
