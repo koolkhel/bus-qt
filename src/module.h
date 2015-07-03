@@ -5,7 +5,7 @@
 #include <QString>
 #include <QMap>
 
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 #include "modulep.h"
 #include "dispatcher.h"
 

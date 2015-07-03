@@ -11,7 +11,7 @@
 
 #include <QtSql>
 
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 #include "geo_message.pb.h"
 #include "blackbox_message.pb.h"
 

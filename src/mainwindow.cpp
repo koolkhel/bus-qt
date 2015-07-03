@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 #include <QDebug>
 #include <QScreen>

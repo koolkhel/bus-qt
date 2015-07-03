@@ -3,7 +3,7 @@
 #include <QtCore/QQueue>
 #include <QtCore/QByteArray>
 
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 /**
 	* Класс нужен для того, чтобы относительно дёшево и удобно держать очередь с необработанными

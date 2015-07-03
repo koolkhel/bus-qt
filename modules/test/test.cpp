@@ -2,7 +2,7 @@
 #include "skel_message.pb.h"
 #include "test_message.pb.h"
 #include "geo_message.pb.h"
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 
 Q_LOGGING_CATEGORY(TESTC, "test_module")

@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS += skel test UI gpsmodule blackbox
+SUBDIRS += skel test UI gpsmodule blackbox sender

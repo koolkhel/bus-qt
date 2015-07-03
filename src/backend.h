@@ -9,7 +9,7 @@
 
 #include <google/protobuf/text_format.h>
 
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 #include "events_message.pb.h"
 #include "geo_message.pb.h"
 

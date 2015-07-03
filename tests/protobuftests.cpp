@@ -14,7 +14,7 @@
 
 #include "events_message.pb.h"
 #include "geo_message.pb.h"
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 TEST(protobuf, workWithExtensions) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;

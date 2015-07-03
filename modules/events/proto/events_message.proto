@@ -1,6 +1,6 @@
 package indigo.pb;
 
-import "indigo_message.proto";
+import "sender_message.proto";
 
 option optimize_for = LITE_RUNTIME;
 
