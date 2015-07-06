@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include "currentbus.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,8 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
 
+public slots:
+    void update(CurrentBus*);
 };
 
 #endif // MAINWINDOW_H

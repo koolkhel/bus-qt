@@ -53,3 +53,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::update(CurrentBus *me)
+{
+    Bus *leftBus = new Bus;
+    leftBus->setImage(":/images/night next bus top.png");
+    leftBus->setLabel("M285OM");
+    leftBus->setTime("07:28");
+
+    Bus *rightBus = new Bus;
+    rightBus->setImage(":/images/night prev bus top.png");
+    rightBus->setLabel("Y210OY");
+    rightBus->setTime("02:58");
+
+    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus, me);
+    ui->graphicsView->scene()->addItem(object);
+
+    ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+
+    scene = new QGraphicsScene(QRect(0, 0, 680, 100));
+    ui->graphicsView->setScene(scene);
+
+}
+

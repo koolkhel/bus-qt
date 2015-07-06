@@ -9,6 +9,15 @@ CurrentBus::CurrentBus()
     nextStationForecasting = "";
 }
 
+CurrentBus::CurrentBus(QString currentRouteTime, QString previousStationTime, QString nextStationTimeTable, QString nextStationForecasting)
+{
+    this->currentRouteTime = currentRouteTime;
+    this->previousStationTime = previousStationTime;
+    this->nextStationTimeTable = nextStationTimeTable;
+    this->nextStationForecasting = nextStationForecasting;
+}
+
+
 QString CurrentBus::getPreviousStationTime() const
 {
     return previousStationTime;

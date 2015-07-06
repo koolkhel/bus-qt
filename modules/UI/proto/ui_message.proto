@@ -9,9 +9,10 @@ option optimize_for = LITE_RUNTIME;
 
 message ui_message {
 
-	optional string time = 7;
-	optional string timeOfDelay = 8;
-	optional string forecasting = 9;
+	optional string currentRouteTime = 7;
+	optional string previousStationTime = 8;
+	optional string nextStationTimeTable = 9;
+	optional string nextStationForecasting = 10;
 	extend indigo_msg {
                 optional ui_message ui_message_out = 200;
 	}

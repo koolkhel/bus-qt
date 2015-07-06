@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "module.h"
+#include "currentbus.h"
 
 Q_DECLARE_LOGGING_CATEGORY(UI_MODULE)
 
@@ -24,7 +25,7 @@ public:
     void sendTestMessage();
     void subscribeTopic(QString topic);
 
-    Q_SIGNAL void messageReceivedSignal();
+    Q_SIGNAL void messageReceivedSignal(CurrentBus*);
 };
 
 #endif // UIMODULE_H

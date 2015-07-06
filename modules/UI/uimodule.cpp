@@ -3,11 +3,12 @@
 #include "test_message.pb.h"
 #include "mainwindow.h"
 #include "ui_message.pb.h"
+#include "currentbus.h"
 
 #include <QApplication>
 
 
-Q_LOGGING_CATEGORY(UIMODULE, "ui_module")
+Q_LOGGING_CATEGORY(UIMODULE, "UI")
 
 
 UIModule::UIModule(QObject *parent)
@@ -59,10 +60,9 @@ void UIModule::subscribeTopic(QString topic)
 
 void UIModule::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    emit messageReceivedSignal();
+    ::indigo::pb::ui_message msg = message.GetExtension(::indigo::pb::ui_message::ui_message_in);
+    CurrentBus *bus = new CurrentBus(QString::fromStdString(msg.currentroutetime()), QString::fromStdString(msg.previousstationtime()), QString::fromStdString(msg.nextstationtimetable()), QString::fromStdString(msg.nextstationforecasting()));
+    emit messageReceivedSignal(bus);
 
-    if(message.HasExtension(::indigo::pb::ui_message::ui_message_in)) {
-        ::indigo::pb::ui_message msg = message.GetExtension(::indigo::pb::ui_message::ui_message_in);
-    }
 }
 

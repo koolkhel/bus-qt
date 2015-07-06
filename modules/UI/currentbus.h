@@ -7,6 +7,8 @@ class CurrentBus : public Bus
 {
 public:
     CurrentBus();
+    CurrentBus(QString currentRouteTime, QString previousStationTime, QString nextStationTimeTable, QString nextStationForecasting);
+
     QString getPreviousStationTime() const;
     void setPreviousStationTime(const QString &value);
 
