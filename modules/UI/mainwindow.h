@@ -13,16 +13,16 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    public:
+        explicit MainWindow(QWidget *parent = 0);
+        ~MainWindow();
 
-private:
-    Ui::MainWindow *ui;
-    QGraphicsScene *scene;
+    private:
+        Ui::MainWindow *ui;
+        QGraphicsScene *scene;
 
-public slots:
-    void update(CurrentBus*);
+    public slots:
+        void update(CurrentBus*);
 };
 
 #endif // MAINWINDOW_H

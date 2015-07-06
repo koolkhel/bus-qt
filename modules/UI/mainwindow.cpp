@@ -55,6 +55,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::update(CurrentBus *me)
 {
+    scene = new QGraphicsScene(QRect(0, 0, 680, 100));
+    ui->graphicsView->setScene(scene);
+
     Bus *leftBus = new Bus;
     leftBus->setImage(":/images/night next bus top.png");
     leftBus->setLabel("M285OM");
@@ -68,10 +71,7 @@ void MainWindow::update(CurrentBus *me)
     GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus, me);
     ui->graphicsView->scene()->addItem(object);
 
-    ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
 
-    scene = new QGraphicsScene(QRect(0, 0, 680, 100));
-    ui->graphicsView->setScene(scene);
 
 }
 

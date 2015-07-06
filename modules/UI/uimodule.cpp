@@ -37,22 +37,6 @@ QStringList UIModule::getPubTopics()
     return topics;
 }
 
-
-void UIModule::show()
-{
-
-}
-
-void UIModule::getElements()
-{
-
-}
-
-void UIModule::sendTestMessage()
-{
-
-}
-
 void UIModule::subscribeTopic(QString topic)
 {
 

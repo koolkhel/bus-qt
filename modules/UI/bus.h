@@ -3,22 +3,24 @@
 #include <QString>
 
 class Bus
-{
-public:
-    Bus();
-    QString getTime() const;
-    void setTime(const QString &value);
+{    
+    public:
+        Bus();
+        Bus(QString& time, QString& label, QString& image);
 
-    QString getLabel() const;
-    void setLabel(const QString &value);
+        QString getTime() const;
+        void setTime(const QString &value);
 
-    QString getImage() const;
-    void setImage(const QString &value);
+        QString getLabel() const;
+        void setLabel(const QString &value);
 
-private:
-    QString time;
-    QString label;
-    QString image;
+        QString getImage() const;
+        void setImage(const QString &value);
+
+    private:
+        QString time;
+        QString label;
+        QString image;
 };
 
 #endif // BUS_H

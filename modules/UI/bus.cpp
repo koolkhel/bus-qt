@@ -6,6 +6,14 @@ Bus::Bus()
     label = "";
     image = "";
 }
+
+Bus::Bus(QString& time, QString& label, QString& image)
+{
+    this->time = time;
+    this->label = label;
+    this->image = image;
+}
+
 QString Bus::getTime() const
 {
     return time;
