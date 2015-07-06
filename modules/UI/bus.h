@@ -6,7 +6,7 @@ class Bus
 {    
     public:
         Bus();
-        Bus(QString& time, QString& label, QString& image);
+        Bus(QString time, QString label, QString image);
 
         QString getTime() const;
         void setTime(const QString &value);

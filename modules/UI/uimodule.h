@@ -20,8 +20,7 @@ class UIModule : public Module
         void stop();
         QStringList getPubTopics();
         void respond(QString topic, ::indigo::pb::internal_msg &message);
-        void subscribeTopic(QString topic);
-        Q_SIGNAL void messageReceivedSignal(CurrentBus*);
+        Q_SIGNAL void messageReceivedSignal(Bus*, Bus*, CurrentBus*);
 };
 
 #endif // UIMODULE_H

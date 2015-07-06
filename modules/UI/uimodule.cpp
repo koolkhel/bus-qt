@@ -37,16 +37,13 @@ QStringList UIModule::getPubTopics()
     return topics;
 }
 
-void UIModule::subscribeTopic(QString topic)
-{
-
-}
-
 void UIModule::respond(QString topic, indigo::pb::internal_msg &message)
 {
     ::indigo::pb::ui_message msg = message.GetExtension(::indigo::pb::ui_message::ui_message_in);
-    CurrentBus *bus = new CurrentBus(QString::fromStdString(msg.currentroutetime()), QString::fromStdString(msg.previousstationtime()), QString::fromStdString(msg.nextstationtimetable()), QString::fromStdString(msg.nextstationforecasting()));
-    emit messageReceivedSignal(bus);
+    Bus *leftBus = new Bus(QString::fromStdString(msg.previousbustime()),QString::fromStdString(msg.previousbuslabel()),QString::fromStdString(msg.previousbusimage()));
+    Bus *rightBus = new Bus(QString::fromStdString(msg.secondbustime()),QString::fromStdString(msg.secondbuslabel()),QString::fromStdString(msg.secondbusimage()));
+    CurrentBus *currentBus = new CurrentBus(QString::fromStdString(msg.currentroutetime()), QString::fromStdString(msg.previousstationtime()), QString::fromStdString(msg.nextstationtimetable()), QString::fromStdString(msg.nextstationforecasting()));
+    emit messageReceivedSignal(leftBus,rightBus,currentBus);
 
 }
 

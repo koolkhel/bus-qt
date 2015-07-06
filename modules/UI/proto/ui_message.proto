@@ -9,10 +9,16 @@ option optimize_for = LITE_RUNTIME;
 
 message ui_message {
 
-	optional string currentRouteTime = 7;
-	optional string previousStationTime = 8;
-	optional string nextStationTimeTable = 9;
-	optional string nextStationForecasting = 10;
+	optional string previousBusTime = 3;
+	optional string previousBusLabel = 4;
+	optional string previousBusImage = 5;
+	optional string secondBusTime = 6;
+	optional string secondBusLabel = 7;
+	optional string secondBusImage = 8;
+	optional string currentRouteTime = 9;
+	optional string previousStationTime = 10;
+	optional string nextStationTimeTable = 11;
+	optional string nextStationForecasting = 12;
 	extend indigo_msg {
                 optional ui_message ui_message_out = 200;
 	}

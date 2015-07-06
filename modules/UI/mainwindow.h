@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow
         QGraphicsScene *scene;
 
     public slots:
-        void update(CurrentBus*);
+        void update(Bus*, Bus*, CurrentBus*);
 };
 
 #endif // MAINWINDOW_H

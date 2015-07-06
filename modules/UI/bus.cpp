@@ -7,7 +7,7 @@ Bus::Bus()
     image = "";
 }
 
-Bus::Bus(QString& time, QString& label, QString& image)
+Bus::Bus(QString time, QString label, QString image)
 {
     this->time = time;
     this->label = label;
