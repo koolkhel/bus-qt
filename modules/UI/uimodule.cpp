@@ -44,6 +44,4 @@ void UIModule::respond(QString topic, indigo::pb::internal_msg &message)
     Bus *rightBus = new Bus(QString::fromStdString(msg.secondbustime()),QString::fromStdString(msg.secondbuslabel()),QString::fromStdString(msg.secondbusimage()));
     CurrentBus *currentBus = new CurrentBus(QString::fromStdString(msg.currentroutetime()), QString::fromStdString(msg.previousstationtime()), QString::fromStdString(msg.nextstationtimetable()), QString::fromStdString(msg.nextstationforecasting()));
     emit messageReceivedSignal(leftBus,rightBus,currentBus);
-
 }
-

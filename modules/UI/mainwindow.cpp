@@ -46,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->scene()->addItem(object);
 }
 
-
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -55,13 +53,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::update(Bus *prevBus, Bus *secBus,CurrentBus *me)
 {
+    qDebug()<<"WOOOOW I HAVE UPDATEEEE!";
     scene = new QGraphicsScene(QRect(0, 0, 680, 100));
     ui->graphicsView->setScene(scene);
 
     GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, prevBus, secBus, me);
     ui->graphicsView->scene()->addItem(object);
-
-
-
 }
 
