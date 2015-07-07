@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     gpsmodule.cpp \
     plugintests.cpp \
     gpstests.cpp \
-    bboxtests.cpp
+    bboxtests.cpp \
+    sendertests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \

@@ -58,16 +58,13 @@ void TestModule::sendTestMessage()
 {
     //publish("");
 
-    ::indigo::pb::indigo_msg message;
-    ::indigo::pb::indigo_geo geo;
-    geo.set_latitude(5.0);
-    geo.set_longitude(6.0);
-    geo.set_unixtime(555);
+    ::indigo::pb::internal_msg message;
+    ::indigo::pb::indigo_geo *geo = message.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
+    geo->set_latitude(5.0);
+    geo->set_longitude(6.0);
+    geo->set_unixtime(555);
 
-    message.AddExtension(::indigo::pb::indigo_geo::geo_coords)->CopyFrom(geo);
-
-    publish(message,name);
-
+    publish(message, name);
 }
 
 void TestModule::subscribeTopic(QString topic)

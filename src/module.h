@@ -35,7 +35,7 @@ public slots:
     void messageReceived(const QList<QByteArray> &data);
     virtual void respond(QString topic, ::indigo::pb::internal_msg &message) = 0;
 protected:
-    void publish(::google::protobuf::MessageLite &msg, QString topic);
+    void publish(::indigo::pb::internal_msg &msg, QString topic);
     void subscribe(QString topicName);
     QString name;
 private:
