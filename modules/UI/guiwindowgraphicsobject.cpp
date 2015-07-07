@@ -5,7 +5,7 @@
 #include <QTextOption>
 #include <QTime>
 
-GuiWindowGraphicsObject::GuiWindowGraphicsObject(QGraphicsItem *parent,Bus *previous, Bus *next, CurrentBus *me) : QGraphicsObject(parent)
+GuiWindowGraphicsObject::GuiWindowGraphicsObject(Bus *previous, Bus *next, CurrentBus *me)
 {
     leftBus = previous;
     rightBus = next;
@@ -63,7 +63,6 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
     painter->drawText(QRect(rightBlockLevel,40,widthText,heightText), currentRouteTime);
     painter->drawText(QRect(rightBlockLevel,120,widthText,heightText),nextStationTimeTable);
     painter->drawText(QRect(rightBlockLevel,200,widthText,heightText),nextStationForecasting);
-
     painter->drawImage(leftBusLeft - 30, 70,currMarker);
 
     for(int i=0; i< 2; i++)

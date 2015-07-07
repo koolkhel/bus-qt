@@ -19,12 +19,10 @@ message ui_message {
 	optional string previousStationTime = 10;
 	optional string nextStationTimeTable = 11;
 	optional string nextStationForecasting = 12;
-	extend indigo_msg {
-                optional ui_message ui_message_out = 200;
-	}
+
 
 	extend internal_msg {
-		optional ui_message ui_message_in = 200;
+		optional ui_message ui_message_in = 300;
 	}
 
 	optional int32 data = 2 [ default = 2 ];

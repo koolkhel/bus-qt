@@ -32,7 +32,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-LIBS += -L../../src/ -lprotobuf-lite -lindigo -ltest_message -lskel_message -lskel_message2
+LIBS += -L../../src/ -lprotobuf-lite -lindigo -ltest_message -lskel_message -lskel_message2 -lui_message
 
 DISTFILES += \
     ui.json \

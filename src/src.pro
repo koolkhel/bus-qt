@@ -58,7 +58,7 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 INCLUDEPATH += ../modules/protos/include
-LIBS += -L../modules/protos/bin -lindigo_message -levents_message -lgeo_message
+LIBS += -L../modules/protos/bin -lindigo_message -levents_message -lgeo_message -lui_message
 
 linux-g++ {
     INCLUDEPATH += /usr/local/include

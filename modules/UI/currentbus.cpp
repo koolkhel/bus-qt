@@ -17,7 +17,6 @@ CurrentBus::CurrentBus(QString currentRouteTime, QString previousStationTime, QS
     this->nextStationForecasting = nextStationForecasting;
 }
 
-
 QString CurrentBus::getPreviousStationTime() const
 {
     return previousStationTime;

@@ -28,21 +28,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Bus *leftBus = new Bus;
     leftBus->setImage(":/images/night next bus top.png");
-    leftBus->setLabel("M285OM");
-    leftBus->setTime("07:28");
+    leftBus->setLabel("N/A");
+    leftBus->setTime("N/A");
 
     Bus *rightBus = new Bus;
     rightBus->setImage(":/images/night prev bus top.png");
-    rightBus->setLabel("Y210OY");
-    rightBus->setTime("02:58");
+    rightBus->setLabel("N/A");
+    rightBus->setTime("N/A");
 
     CurrentBus *me = new CurrentBus;
-    me->setNextStationForecasting("02:00");
-    me->setNextStationTimeTable("02:02");
-    me->setPreviousStationTime("02:50");
-    me->setCurrentRouteTime("00:00:43");
+    me->setNextStationForecasting("N/A");
+    me->setNextStationTimeTable("N/A");
+    me->setPreviousStationTime("N/A");
+    me->setCurrentRouteTime("N/A");
 
-    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, leftBus, rightBus, me);
+    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject (leftBus, rightBus, me);
     ui->graphicsView->scene()->addItem(object);
 }
 
@@ -53,11 +53,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::update(Bus *prevBus, Bus *secBus,CurrentBus *me)
 {
-    qDebug()<<"WOOOOW I HAVE UPDATEEEE!";
     scene = new QGraphicsScene(QRect(0, 0, 680, 100));
     ui->graphicsView->setScene(scene);
 
-    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(NULL, prevBus, secBus, me);
+    GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject(prevBus, secBus, me);
     ui->graphicsView->scene()->addItem(object);
 }
 
