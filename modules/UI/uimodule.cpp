@@ -20,8 +20,9 @@ UIModule::UIModule(QObject *parent)
 
 void UIModule::start()
 {
-
-    show();
+    MainWindow *w = new MainWindow();
+    w->show();
+    //show();
 
     subscribe("test_instance");
 }
@@ -56,13 +57,4 @@ void UIModule::respond(QString topic, indigo::pb::internal_msg &message)
     emit messageReceivedSignal(leftBus,rightBus,currentBus);
 }
 
-int UIModule::show()
-{
 
-    int argc = 2;
-    char *argv[2];
-    QApplication a(argc,argv);
-    MainWindow *w = new MainWindow();
-    w->show();
-    return a.exec();
-}
