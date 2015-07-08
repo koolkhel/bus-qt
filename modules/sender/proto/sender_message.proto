@@ -2,7 +2,7 @@ package indigo.pb;
 
 option java_package = "ru.indigosystem.serv.pb";
 
-option java_outer_classname = "IndigoPB";
+option java_outer_classname = "DeviceData";
 option optimize_for = LITE_RUNTIME;
 
 message indigo_msg {
