@@ -22,7 +22,6 @@ SOURCES += main.cpp \
     zeromqtests.cpp \
     dispatchertests.cpp \
     protobuftests.cpp \
-    gpsmodule.cpp \
     plugintests.cpp \
     gpstests.cpp \
     bboxtests.cpp \
@@ -31,8 +30,7 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     loggertester.h \
-    zhelpers.h \
-    gpsmodule.h
+    zhelpers.h
 
 OTHER_FILES += testconfig.ini
 

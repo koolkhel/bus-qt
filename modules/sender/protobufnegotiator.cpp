@@ -68,8 +68,10 @@ void ProtobufNegotiator::start()
     connect(socket, SIGNAL(readyRead()), SLOT(readyRead()), Qt::QueuedConnection);
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(disconnected()));
     connect(socket, SIGNAL(connected()), SLOT(connected()));
-    connect(socket, SIGNAL(connected()), SLOT(flushOrderEvents()));
+    //connect(socket, SIGNAL(connected()), SLOT(flushOrderEvents()));
     connect(socket, SIGNAL(disconnected()), SLOT(disconnected()));
+
+    reconnect();
 }
 
 void ProtobufNegotiator::stop()
@@ -78,8 +80,19 @@ void ProtobufNegotiator::stop()
     socket->deleteLater();
 }
 
+void ProtobufNegotiator::readyRead()
+{
+    int bytes_avail = socket->bytesAvailable();
+    qCDebug(SENDERC) << "ready read" << bytes_avail << "bytes";
+
+    QByteArray data = socket->read(bytes_avail);
+    receiveBuffer.pushAll(data);
+    consumeSocketData();
+}
+
 void ProtobufNegotiator::connected()
 {
+    qCDebug(SENDERC) << "socket state " << socket->state();
     if (socket->state() == QAbstractSocket::ConnectedState) {
         qCDebug(SENDERC) << "connected";
         emit connectedToServer(true);
@@ -102,6 +115,7 @@ void ProtobufNegotiator::error(QAbstractSocket::SocketError &error)
 
 void ProtobufNegotiator::reconnect()
 {
+    qCDebug(SENDERC) << QString("connecting to %1 port %2").arg(_serverAddress).arg(_serverPort);
     socket->connectToHost(_serverAddress, _serverPort);
 }
 
@@ -111,9 +125,9 @@ void ProtobufNegotiator::stamp_uuid(::indigo::pb::indigo_msg &var)
 }
 
 // сообщение не будет доставлено, если нет связи
-void ProtobufNegotiator::queueMessage(int id, ::indigo::pb::indigo_msg &var)
+void ProtobufNegotiator::queueMessage(::indigo::pb::indigo_msg &var)
 {
-    char buffer[1024];
+    char buffer[8192];
     google::protobuf::io::ArrayOutputStream arr(buffer, sizeof(buffer));
     google::protobuf::io::CodedOutputStream output(&arr);
 
@@ -123,13 +137,13 @@ void ProtobufNegotiator::queueMessage(int id, ::indigo::pb::indigo_msg &var)
     var.SerializeToCodedStream(&output);
 
     if (socket->state() == QTcpSocket::ConnectedState) {
-        //socketMutex.lock();
         if (socket->write(buffer, output.ByteCount()) == -1) {
             socket->disconnect();
         }
-        //qDebug() << "send unsafe: " << output.ByteCount() << "bytes";
         socket->flush();
-        //socketMutex.unlock();
+        qCDebug(SENDERC) << "seems to send ok";
+    } else {
+        qCWarning(SENDERC) << "socket not connected, exiting";
     }
 }
 

@@ -6,8 +6,6 @@
 #include <QDebug>
 #include "dispatcher.h"
 
-#include "testclass.h"
-
 void enableSignalHandling();
 
 int main(int argc, char *argv[])

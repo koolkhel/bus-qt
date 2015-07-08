@@ -24,7 +24,7 @@ signals:
     void connectedToServer(bool connected);
 
 public slots:
-    void queueMessage(int id, ::indigo::pb::indigo_msg &message);
+    void queueMessage(::indigo::pb::indigo_msg &message);
 
 private slots:
     void readyRead();

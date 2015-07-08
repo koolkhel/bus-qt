@@ -11,7 +11,6 @@
 
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
-#include "testclass.h"
 #include "context.h"
 #include "zhelpers.h"
 #include "proxy.h"
