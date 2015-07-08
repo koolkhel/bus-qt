@@ -18,7 +18,6 @@ include(nzmqt/nzmqt.pri)
 SOURCES += indigoqueue.cpp \
         mainwindow.cpp \
     support_unix.cpp \
-    indigologger.cpp \
     subscribedispatcher.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
@@ -33,7 +32,6 @@ SOURCES += indigoqueue.cpp \
 
 HEADERS  += mainwindow.h \
             indigoqueue.h \
-    indigologger.h \
     subscribedispatcher.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \

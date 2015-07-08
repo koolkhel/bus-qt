@@ -30,6 +30,7 @@ public:
     virtual QStringList getPubTopics() = 0;
     virtual QString getName() const;
     virtual QVariant getConfigurationParameter(const QString name, const QVariant &defaultValue) const;
+    virtual QMap<QString, QVariant>& getAllConfiguration() { return configuration; }
 
 public slots:
     void messageReceived(const QList<QByteArray> &data);

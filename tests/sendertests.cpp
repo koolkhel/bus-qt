@@ -37,7 +37,13 @@ TEST(SENDER, connect) {
     QStringList c;
     c << "[modules]"
       << "sender_instance=sender"
+       << "logs_instance=logs"
        << "test_instance=test_module"
+       << "[logs_instance]"
+       << "console=true"
+       << "module=false"
+        << "sender=false"
+       << "zmq=false"
       << "[sender_instance]"
       << "serverAddress=127.0.0.1"
       << "serverPort=9909"

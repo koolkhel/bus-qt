@@ -52,6 +52,7 @@ void SENDER::respond(QString topic, indigo::pb::internal_msg &message)
 
 void SENDER::start()
 {
+    qCDebug(SENDERC) << "starting sender";
     readKey();
 
     currentMessage = new OutgoingMessage(this);

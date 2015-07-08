@@ -14,6 +14,9 @@
 #include "modulep.h"
 #include "proxy.h"
 
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(ZMQ, "zmq")
 
 Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 {

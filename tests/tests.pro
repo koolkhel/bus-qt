@@ -17,8 +17,6 @@ LIBS += -L../src -L../modules/protos/bin -L../modules/bin -ltest -ltest_message 
 
 INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
-    loggertester.cpp \
-    loggertests.cpp \
     zeromqtests.cpp \
     dispatchertests.cpp \
     protobuftests.cpp \
@@ -26,6 +24,10 @@ SOURCES += main.cpp \
     gpstests.cpp \
     bboxtests.cpp \
     sendertests.cpp
+
+#
+#    loggertester.cpp \
+ #   loggertests.cpp \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \

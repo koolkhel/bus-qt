@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "indigologger.h"
-#include "loggertester.h"
 #include <QtNetwork/QTcpSocket>
 
 #include <QDebug>
