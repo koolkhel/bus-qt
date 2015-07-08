@@ -45,8 +45,8 @@ TEST(SENDER, connect) {
         << "sender=true"
        << "zmq=false"
       << "[sender_instance]"
-      << "serverAddress=127.0.0.1"
-      << "serverPort=9909"
+      << "serverAddress=192.168.91.1"
+      << "serverPort=9100"
       << "uuid=c8d1d4dc-f845-11e2-b1b2-000c29d2c11e";
 
     Dispatcher *dispatcher = new Dispatcher();

@@ -122,6 +122,8 @@ void SENDER::readKey()
 
     qCDebug(SENDERC) << "using id " << key;
 
+    key = key.remove("-");
+
     bool ok = false;
     u_int64_t least = key.mid(0, 16).toULongLong(&ok, 16);
     u_int64_t most = key.mid(16, 16).toULongLong(&ok, 16);
@@ -131,6 +133,8 @@ void SENDER::readKey()
     if (ok) {
         deviceId.set_least_significant_bits(least);
         deviceId.set_most_significant_bits(most);
+    } else {
+        qFatal(qPrintable("could not read key"));
     }
 }
 
