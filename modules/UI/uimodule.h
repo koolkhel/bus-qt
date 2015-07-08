@@ -21,6 +21,7 @@ class UIModule : public Module
         QStringList getPubTopics();
         void respond(QString topic, ::indigo::pb::internal_msg &message);
         Q_SIGNAL void messageReceivedSignal(Bus*, Bus*, CurrentBus*);
+        int show();
 };
 
 #endif // UIMODULE_H
