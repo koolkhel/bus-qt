@@ -13,7 +13,6 @@ static LOGS *instance = NULL;
 static const QString logPattern =
         QString("%{time yyyy.MM.dd h:mm:ss.zzz} %{appname}: %{type} %{category} t:%{threadid} -- %{file}:%{line} -- %{message} %{if-fatal}%{backtrace depth=10}%{endif}\n");
 
-
 void indigoMessageHandler(QtMsgType type,
    const QMessageLogContext &context,
    const QString &message)
@@ -73,15 +72,17 @@ void LOGS::start()
 
     // применяем правила логгирования по модулю
     QMap<QString, QVariant> &configuration = getAllConfiguration();
+    QString rules;
     foreach (QString key, configuration.keys()) {
         QString value = configuration.value(key).toString();
         if (value == "true" || value == "false") {
             QString rule = QString("%1=%2").arg(key).arg(value);
             fprintf(stderr, qPrintable(rule + "\n"));
-            QLoggingCategory::setFilterRules(rule);
+            rules += rule + QStringLiteral("\n");
         }
     }
 
+    QLoggingCategory::setFilterRules(rules);
     qSetMessagePattern(logPattern);
     qInstallMessageHandler(indigoMessageHandler);
 }
