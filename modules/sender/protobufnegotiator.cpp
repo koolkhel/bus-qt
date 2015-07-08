@@ -57,7 +57,11 @@ ProtobufNegotiator::ProtobufNegotiator(QString serverAddress, int serverPort, ::
     _deviceId(uuid),
     QObject(parent)
 {
-
+    receive_state = NOTHING;
+    index = 0;
+    message_length = 0;
+    message_start = 0;
+    remainder = 0;
 }
 
 void ProtobufNegotiator::start()

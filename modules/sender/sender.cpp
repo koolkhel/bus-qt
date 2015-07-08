@@ -62,7 +62,8 @@ void SENDER::start()
                 getConfigurationParameter("serverPort", 9909).toInt(),
                 deviceId,
                 this);
-
+    //qRegisterMetaType< ::indigo::pb::indigo_msg&>();
+    connect(network, SIGNAL(messageReceived(::indigo::pb::indigo_msg&)), SLOT(serverMessageReceived(::indigo::pb::indigo_msg&)));
     network->start();
 
     subscribe(getConfigurationParameter("sendTopic", "tosend").toString());
@@ -93,7 +94,9 @@ void SENDER::performSend()
     currentMessage->setId(id);
 
     // отправляем (с потерями)
-    qCDebug(SENDERC) << "queuing message server id " << id;
+    qCDebug(SENDERC) << QString("queuing server message id %1 with %2 messages")
+                        .arg(currentMessage->id())
+                        .arg(currentMessage->sampleIds().count());
     network->queueMessage(currentMessage->msg());
 
     // ждем обратно
@@ -128,7 +131,7 @@ void SENDER::readKey()
     u_int64_t least = key.mid(0, 16).toULongLong(&ok, 16);
     u_int64_t most = key.mid(16, 16).toULongLong(&ok, 16);
 
-    qCDebug(SENDERC) << QString("%1 %2").arg(least, 0, 16).arg(most, 0, 16);
+    qCDebug(SENDERC) << QString("sender uses key: %1 %2").arg(least, 0, 16).arg(most, 0, 16);
 
     if (ok) {
         deviceId.set_least_significant_bits(least);
@@ -146,39 +149,41 @@ void SENDER::readKey()
              qCWarning(SENDERC) << "confirmation received, but no messages sent yet";
          }
 
+         ::indigo::pb::confirmed_messages serverConfirmed = message.GetExtension(
+                      ::indigo::pb::confirmed_messages::confirmed_messages_out);
+         if (serverConfirmed.message_ids_size() != 1) {
+             qCWarning(SENDERC) << "got more confirmations than it should be: " << serverConfirmed.message_ids_size();
+         }
+
+        if (serverConfirmed.message_ids(0) != sentMessage->id()) {
+            qCWarning(SENDERC) << QString("got wrong confirmation: %1 but expected %2")
+                                  .arg(serverConfirmed.message_ids(0))
+                                  .arg(sentMessage->id());
+            return;
+        }
+
          // готовимся публиковать ответ
          ::indigo::pb::internal_msg msg;
 
-        ::indigo::pb::confirmed_messages serverConfirmed = msg.GetExtension(
+        ::indigo::pb::confirmed_messages blackboxConfirmed = msg.GetExtension(
                      ::indigo::pb::confirmed_messages::confirmed_messages_in);
 
          // по всем подтвержденным идшникам
-         if (serverConfirmed.message_ids_size() != 1)
-             qCWarning(SENDERC) << "got more confirmations than it should be";
+        qCDebug(SENDERC) << "confirming server message " << sentMessage->id() << " with " << sentMessage->sampleIds().count() << " samples";
 
-         for (int i = 0; i < serverConfirmed.message_ids_size(); i++) {
-             int confirmedId = serverConfirmed.message_ids(i);
 
-             // нашли подтверждение конкретно того, что отправляли
-             if (confirmedId == sentMessage->id()) {
-                 qCDebug(SENDERC) << "confirming server message " << confirmedId;
-                 foreach (int sampleId, sentMessage->sampleIds())  {
-                    serverConfirmed.add_message_ids(sampleId);
-                 }
+        foreach (int sampleId, sentMessage->sampleIds())  {
+            blackboxConfirmed.add_message_ids(sampleId);
+        }
 
-                 // пусть черный ящик успокоится
-                 publish(msg, "confirmed_messages");
+        // пусть черный ящик успокоится
+        publish(msg, "confirmed_messages");
 
-                 sentMessageTimeoutTimer->stop();
-                 sentMessage->deleteLater();
-                 sentMessage = NULL;
-             }
-         }
-     }
+        sentMessageTimeoutTimer->stop();
+        sentMessage->deleteLater();
+        sentMessage = NULL;
+     } // confirmation handling
 
-     if (message.HasExtension(::indigo::pb::indigo_geo::geo_coords)) {
-
-    }
  }
 
  void SENDER::sentMessageTimeout()

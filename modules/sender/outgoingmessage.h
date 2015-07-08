@@ -17,7 +17,7 @@ public:
     ::indigo::pb::indigo_msg& msg() { return _msg; }
     QVector<int>& sampleIds() { return _iHaveTheseIds; }
     int id() { return _myId; }
-    void setId(int id) { _myId = id; }
+    void setId(int id) { _myId = id; _msg.set_id(id); }
 
 signals:
 

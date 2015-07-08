@@ -53,6 +53,12 @@ TEST(SENDER, connect) {
     dispatcher->initializeAll(c);
     dispatcher->startAll();
 
+    qApp->processEvents();
+    usleep(1000 * 1000);
+    qApp->processEvents();
+    usleep(1000 * 1000);
+    qApp->processEvents();
+
     Module *module = dispatcher->getModuleInstances().value("sender_instance");
     ASSERT_TRUE(module != NULL);
 

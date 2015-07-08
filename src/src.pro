@@ -16,7 +16,6 @@ TEMPLATE = lib
 include(nzmqt/nzmqt.pri)
 
 SOURCES += indigoqueue.cpp \
-        mainwindow.cpp \
     support_unix.cpp \
     subscribedispatcher.cpp \
     zeromqpublisher.cpp \
@@ -30,8 +29,7 @@ SOURCES += indigoqueue.cpp \
 
 
 
-HEADERS  += mainwindow.h \
-            indigoqueue.h \
+HEADERS  += indigoqueue.h \
     subscribedispatcher.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
@@ -41,9 +39,6 @@ HEADERS  += mainwindow.h \
     modulep.h \
     pluginmodulefactory.h \
     proxy.h \
-
-    currentbus.h
-FORMS    += mainwindow.ui
 
 INCLUDEPATH += ../modules/protos/include
 LIBS += -L../modules/protos/bin -lsender_message -levents_message -lgeo_message
