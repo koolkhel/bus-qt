@@ -22,8 +22,6 @@ void UIModule::start()
 {
     MainWindow *w = new MainWindow();
     w->show();
-    //show();
-
     subscribe("test_instance");
 }
 
