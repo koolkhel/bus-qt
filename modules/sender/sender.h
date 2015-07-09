@@ -37,6 +37,7 @@ private slots:
     void performSend();
     void sentMessageTimeout();
 private:
+    void handleServerConfirmation(::indigo::pb::indigo_msg &message);
     void readKey();
 
     ::indigo::pb::indigo_UUID deviceId;

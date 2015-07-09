@@ -69,7 +69,7 @@ void SENDER::start()
     subscribe(getConfigurationParameter("sendTopic", "tosend").toString());
 
     senderTimer = new QTimer(this);
-    senderTimer->setInterval(getConfigurationParameter("sendInterval", 5000).toInt());
+    senderTimer->setInterval(getConfigurationParameter("sendInterval", 5 * 1000).toInt());
     senderTimer->setSingleShot(false);
     connect(senderTimer, SIGNAL(timeout()), SLOT(performSend()));
     senderTimer->start();
@@ -87,7 +87,14 @@ void SENDER::performSend()
 
     // еще не отправилось, а мы следующее шлем
     if (sentMessage != NULL)
-        return;
+        return;\
+
+    sentMessage = currentMessage;
+
+    // новые данные идут уже в новый класс
+    currentMessage = new OutgoingMessage(this);
+
+    locker.unlock();
 
     // уходящее сообщение штампуем
     int id = outgoingMessageId++;
@@ -101,10 +108,6 @@ void SENDER::performSend()
 
     // ждем обратно
     sentMessageTimeoutTimer->start();
-    sentMessage = currentMessage;
-
-    // новые данные идут уже в новый класс
-    currentMessage = new OutgoingMessage(this);
 }
 
 void SENDER::stop()
@@ -114,6 +117,16 @@ void SENDER::stop()
 
     network->stop();
     network->deleteLater();
+
+    if (sentMessage) {
+        sentMessage->deleteLater();
+        sentMessage = NULL;
+    }
+
+    if (currentMessage) {
+        currentMessage->deleteLater();
+        currentMessage = NULL;
+    }
 }
 
 void SENDER::readKey()
@@ -141,58 +154,63 @@ void SENDER::readKey()
     }
 }
 
- void SENDER::serverMessageReceived(::indigo::pb::indigo_msg &message)
- {
-     // пришли подтверждения с сервера
-     if (message.HasExtension(::indigo::pb::confirmed_messages::confirmed_messages_out)) {
-         if (sentMessage == NULL) {
-             qCWarning(SENDERC) << "confirmation received, but no messages sent yet";
-         }
+void SENDER::handleServerConfirmation(indigo::pb::indigo_msg &message)
+{
+    ::indigo::pb::confirmed_messages serverConfirmed = message.GetExtension(
+                ::indigo::pb::confirmed_messages::confirmed_messages_out);
+    if (serverConfirmed.message_ids_size() != 1) {
+        qCWarning(SENDERC) << "got more confirmations than it should be: " << serverConfirmed.message_ids_size();
+    }
 
-         ::indigo::pb::confirmed_messages serverConfirmed = message.GetExtension(
-                      ::indigo::pb::confirmed_messages::confirmed_messages_out);
-         if (serverConfirmed.message_ids_size() != 1) {
-             qCWarning(SENDERC) << "got more confirmations than it should be: " << serverConfirmed.message_ids_size();
-         }
+    if (serverConfirmed.message_ids(0) != sentMessage->id()) {
+        qCWarning(SENDERC) << QString("got wrong confirmation: %1 but expected %2")
+                              .arg(serverConfirmed.message_ids(0))
+                              .arg(sentMessage->id());
+        return;
+    }
 
-        if (serverConfirmed.message_ids(0) != sentMessage->id()) {
-            qCWarning(SENDERC) << QString("got wrong confirmation: %1 but expected %2")
-                                  .arg(serverConfirmed.message_ids(0))
-                                  .arg(sentMessage->id());
-            return;
+    // готовимся публиковать ответ
+    ::indigo::pb::internal_msg msg;
+
+    ::indigo::pb::confirmed_messages blackboxConfirmed = msg.GetExtension(
+                ::indigo::pb::confirmed_messages::confirmed_messages_in);
+
+    // по всем подтвержденным идшникам
+    qCDebug(SENDERC) << "confirming server message " << sentMessage->id() << " with " << sentMessage->sampleIds().count() << " samples";
+
+
+    foreach (int sampleId, sentMessage->sampleIds())  {
+        blackboxConfirmed.add_message_ids(sampleId);
+    }
+
+    // пусть черный ящик успокоится
+    publish(msg, "confirmed_messages");
+
+    sentMessageTimeoutTimer->stop();
+    sentMessage->deleteLater();
+    sentMessage = NULL;
+}
+
+void SENDER::serverMessageReceived(::indigo::pb::indigo_msg &message)
+{
+    // пришли подтверждения с сервера
+    if (message.HasExtension(::indigo::pb::confirmed_messages::confirmed_messages_out)) {
+        if (sentMessage == NULL) {
+            qCWarning(SENDERC) << "confirmation received, but no messages sent yet";
         }
 
-         // готовимся публиковать ответ
-         ::indigo::pb::internal_msg msg;
+        handleServerConfirmation(message);
+    } // confirmation handling
 
-        ::indigo::pb::confirmed_messages blackboxConfirmed = msg.GetExtension(
-                     ::indigo::pb::confirmed_messages::confirmed_messages_in);
+}
 
-         // по всем подтвержденным идшникам
-        qCDebug(SENDERC) << "confirming server message " << sentMessage->id() << " with " << sentMessage->sampleIds().count() << " samples";
+void SENDER::sentMessageTimeout()
+{
+    qCWarning(SENDERC) << "send message timeout, retrying id " << sentMessage->id();
 
+    // отправляем (с потерями)
+    network->queueMessage(sentMessage->msg());
 
-        foreach (int sampleId, sentMessage->sampleIds())  {
-            blackboxConfirmed.add_message_ids(sampleId);
-        }
-
-        // пусть черный ящик успокоится
-        publish(msg, "confirmed_messages");
-
-        sentMessageTimeoutTimer->stop();
-        sentMessage->deleteLater();
-        sentMessage = NULL;
-     } // confirmation handling
-
- }
-
- void SENDER::sentMessageTimeout()
- {
-     qCWarning(SENDERC) << "send message timeout, retrying";
-
-     // отправляем (с потерями)
-     network->queueMessage(sentMessage->msg());
-
-     // ждем обратно
-     sentMessageTimeoutTimer->start();
- }
+    // ждем обратно
+    sentMessageTimeoutTimer->start();
+}
