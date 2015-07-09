@@ -1,9 +1,9 @@
 #include "dispatcher.h"
-#include "testclass.h"
 #include "module.h"
 
 
 #include <QSignalSpy>
+
 #include <gtest/gtest.h>
 
 TEST(uitest, sanity) {
@@ -26,10 +26,6 @@ TEST(uitest, sanity) {
     ASSERT_TRUE(uiModule != NULL);
 
     dispatcher->startAll();
-
-
-
-
     usleep(1000 * 1000);
 
     qApp->processEvents();

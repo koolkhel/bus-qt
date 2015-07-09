@@ -10,7 +10,6 @@
 #include <QSettings>
 
 #include "module.h"
-#include "topic.h"
 #include "context.h"
 #include "pluginmodulefactory.h"
 #include "proxy.h"
@@ -18,6 +17,7 @@
 class Dispatcher : public QObject
 {
     Q_OBJECT
+
 public:
     Dispatcher();
 

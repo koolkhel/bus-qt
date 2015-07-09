@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
     QResource::registerResource("../modules/UI/ui.rcc");
     setFocusPolicy(Qt::StrongFocus);
 
@@ -28,22 +27,9 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(QRect(0, 0, 680, 100));
     ui->graphicsView->setScene(scene);
 
-    Bus *leftBus = new Bus;
-    leftBus->setImage(":/images/night next bus top.png");
-    leftBus->setLabel("N/A");
-    leftBus->setTime("N/A");
-
-    Bus *rightBus = new Bus;
-    rightBus->setImage(":/images/night prev bus top.png");
-    rightBus->setLabel("N/A");
-    rightBus->setTime("N/A");
-
-    CurrentBus *me = new CurrentBus;
-    me->setNextStationForecasting("N/A");
-    me->setNextStationTimeTable("N/A");
-    me->setPreviousStationTime("N/A");
-    me->setCurrentRouteTime("N/A");
-
+    Bus *leftBus = new Bus("N/A","N/A",":/images/night next bus top.png");
+    Bus *rightBus = new Bus("N/A","N/A",":/images/night prev bus top.png");
+    CurrentBus *me = new CurrentBus("N/A", "N/A","N/A","N/A");
     GuiWindowGraphicsObject *object = new GuiWindowGraphicsObject (leftBus, rightBus, me);
     ui->graphicsView->scene()->addItem(object);
 }

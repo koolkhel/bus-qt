@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QTextOption>
 #include <QTime>
+#include <QFontDatabase>
 
 GuiWindowGraphicsObject::GuiWindowGraphicsObject(Bus *previous, Bus *next, CurrentBus *me)
 {
@@ -27,7 +28,8 @@ QRectF GuiWindowGraphicsObject::boundingRect() const
 
 void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setFont(QFont("Times",22, QFont::Bold));
+    QFontDatabase::addApplicationFont("DroidSans.ttf");
+    painter->setFont(QFont("DroidSans.ttf",22, QFont::Bold));
 
     const int leftBusLeft = 10;
     const int leftBusTop = -135;

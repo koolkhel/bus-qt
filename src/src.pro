@@ -19,7 +19,6 @@ SOURCES += gpsdpositionsource.cpp \
         gpsdsatellitesource.cpp \
         backend.cpp \
         indigoqueue.cpp \
-    testclass.cpp \
     support_unix.cpp \
     indigologger.cpp \
     subscribedispatcher.cpp \
@@ -29,7 +28,6 @@ SOURCES += gpsdpositionsource.cpp \
     dispatcher.cpp \
     module.cpp \
     modulep.cpp \
-    topic.cpp \
     pluginmodulefactory.cpp \
      proxy.cpp \
 
@@ -40,7 +38,6 @@ HEADERS  += \
             indigoqueue.h \
             gpsdpositionsource.h \
             gpsdsatellitesource.h \
-    testclass.h \
     indigologger.h \
     subscribedispatcher.h \
     zeromqpublisher.h \
@@ -49,7 +46,6 @@ HEADERS  += \
     dispatcher.h \
     module.h \
     modulep.h \
-    topic.h \
     pluginmodulefactory.h \
     proxy.h \
 
