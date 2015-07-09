@@ -17,7 +17,7 @@ include(nzmqt/nzmqt.pri)
 
 SOURCES += gpsdpositionsource.cpp \
         gpsdsatellitesource.cpp \
-        backend.cpp \
+SOURCES += indigoqueue.cpp \
         indigoqueue.cpp \
     support_unix.cpp \
     indigologger.cpp \
@@ -33,8 +33,7 @@ SOURCES += gpsdpositionsource.cpp \
 
 
 
-HEADERS  += \
-            backend.h \
+HEADERS  += indigoqueue.h \
             indigoqueue.h \
             gpsdpositionsource.h \
             gpsdsatellitesource.h \
@@ -49,11 +48,8 @@ HEADERS  += \
     pluginmodulefactory.h \
     proxy.h \
 
-    currentbus.h
-FORMS    += mainwindow.ui
-
 INCLUDEPATH += ../modules/protos/include
-LIBS += -L../modules/protos/bin -lindigo_message -levents_message -lgeo_message -lui_message
+LIBS += -L../modules/protos/bin -lsender_message -lindigo_message -levents_message -lgeo_message
 
 linux-g++ {
     INCLUDEPATH += /usr/local/include

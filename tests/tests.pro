@@ -5,32 +5,34 @@ include(../defaults.pri)
 #
 #-------------------------------------------------
 
-QT       += network testlib
+QT       += network testlib sql
 
 TARGET = tests
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-LIBS += -L../src -L../modules/protos/bin -L../modules/bin -ltest -ltest_message -lskel_message -lskel_message2 \
-    -lindigo -lindigo_message -lgeo_message -levents_message -lgtest -lprotobuf-lite -lui_message
+LIBS += -L../src -L../modules/protos/bin -L../modules/bin -ltest -ltest_message -lskel_message -lskel_message2 -lblackbox_message \
+    -lindigo -lsender_message -lgeo_message -levents_message -lgtest -lprotobuf-lite
 
 INCLUDEPATH += /usr/local/include
 SOURCES += main.cpp \
-    loggertester.cpp \
-    loggertests.cpp \
     zeromqtests.cpp \
     dispatchertests.cpp \
     protobuftests.cpp \
-    gpsmodule.cpp \
     plugintests.cpp \
-    uimoduletests.cpp
+    gpstests.cpp \
+    bboxtests.cpp \
+    sendertests.cpp
+
+#
+#    loggertester.cpp \
+ #   loggertests.cpp \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     loggertester.h \
-    zhelpers.h \
-    gpsmodule.h
+    zhelpers.h
 
 OTHER_FILES += testconfig.ini
 

@@ -1,19 +1,22 @@
 package indigo.pb;
 
-option optimize_for = LITE_RUNTIME;
-
 option java_package = "ru.indigosystem.serv.pb";
 
-option java_outer_classname = "IndigoPB";
+option java_outer_classname = "DeviceData";
+option optimize_for = LITE_RUNTIME;
 
 message indigo_msg {
         optional indigo_UUID device_id = 1;
 
-	extensions 100 to max;
+        optional int32 id = 2 [ default = 0 ];
+
+        extensions 100 to max;
 }
 
 message internal_msg {
-	extensions 100 to max;
+        optional int32 id = 1 [ default = 0 ];
+
+        extensions 100 to max;
 }
 
 
@@ -22,3 +25,4 @@ message indigo_UUID {
     optional sint64 least_significant_bits = 1 [ default = 0 ];
     optional sint64 most_significant_bits = 2 [ default = 0 ];
 }
+

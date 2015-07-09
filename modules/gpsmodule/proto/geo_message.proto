@@ -1,12 +1,12 @@
 package indigo.pb;
 
-import "indigo_message.proto";
+import "sender_message.proto";
 
 option optimize_for = LITE_RUNTIME;
 
 option java_package = "ru.indigosystem.serv.pb";
 
-option java_outer_classname = "IndigoPB";
+option java_outer_classname = "GeoMessage";
 
 
 message indigo_geo {

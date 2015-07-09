@@ -2,7 +2,7 @@
 #include "skel_message.pb.h"
 #include "test_message.pb.h"
 #include "geo_message.pb.h"
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 
 Q_LOGGING_CATEGORY(TESTC, "test_module")
@@ -30,6 +30,11 @@ QStringList TestModule::getPubTopics()
     topics << "hello1";
 }
 
+void TestModule::sendMessage(indigo::pb::internal_msg &msg, QString topic)
+{
+    publish(msg, topic);
+}
+
 void TestModule::respond(QString topic, ::indigo::pb::internal_msg &message)
 {
     // TODO
@@ -41,22 +46,25 @@ void TestModule::respond(QString topic, ::indigo::pb::internal_msg &message)
 
         qCDebug(TESTC) << "data is: " << msg.data();
     }
+
+    if (message.HasExtension(::indigo::pb::indigo_geo::geo_coords_in)) {
+        ::indigo::pb::indigo_geo msg = message.GetExtension(::indigo::pb::indigo_geo::geo_coords_in);
+
+        qCDebug(TESTC) << "got geo message: " << msg.latitude() << " " << msg.longitude();
+    }
 }
 
 void TestModule::sendTestMessage()
 {
     //publish("");
 
-    ::indigo::pb::indigo_msg message;
-    ::indigo::pb::indigo_geo geo;
-    geo.set_latitude(5.0);
-    geo.set_longitude(6.0);
-    geo.set_unixtime(555);
+    ::indigo::pb::internal_msg message;
+    ::indigo::pb::indigo_geo *geo = message.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
+    geo->set_latitude(5.0);
+    geo->set_longitude(6.0);
+    geo->set_unixtime(555);
 
-    message.AddExtension(::indigo::pb::indigo_geo::geo_coords)->CopyFrom(geo);
-
-    publish(message,name);
-
+    publish(message, name);
 }
 
 void TestModule::subscribeTopic(QString topic)

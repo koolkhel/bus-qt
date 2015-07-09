@@ -14,6 +14,8 @@
 #include "pluginmodulefactory.h"
 #include "proxy.h"
 
+#include <QAtomicInt>
+
 class Dispatcher : public QObject
 {
     Q_OBJECT
@@ -35,7 +37,7 @@ public:
 
     QMap<QString, Module *> getModuleInstances() { return moduleInstances; }
 
-    void publish(ModuleP *modP, QByteArray data, QString topic);
+    void publish(ModuleP *modP, ::indigo::pb::internal_msg &msg, QString topic);
 
 private:
     nzmqt::ZMQContext *context;
@@ -60,6 +62,8 @@ private:
     QString proxyXPub;
 
     Proxy *proxy;
+
+    QAtomicInt sampleId;
 };
 
 #endif // DISPATCHER_H

@@ -463,7 +463,8 @@ namespace zmq
         socket_t (const socket_t&) ZMQ_DELETED_FUNCTION;
         void operator = (const socket_t&) ZMQ_DELETED_FUNCTION;
     };
-
+    // NO MONITORS
+#if 0
     class monitor_t
     {
     public:
@@ -577,6 +578,8 @@ namespace zmq
     private:
         void* socketPtr;
     };
+
+#endif  // NO MONITORS
 }
 
 #endif

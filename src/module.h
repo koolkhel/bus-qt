@@ -5,7 +5,7 @@
 #include <QString>
 #include <QMap>
 
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 #include "modulep.h"
 #include "dispatcher.h"
 
@@ -29,12 +29,14 @@ public:
     virtual void stop();
     virtual QStringList getPubTopics() = 0;
     virtual QString getName() const;
+    virtual QVariant getConfigurationParameter(const QString name, const QVariant &defaultValue) const;
+    virtual QMap<QString, QVariant>& getAllConfiguration() { return configuration; }
 
 public slots:
     void messageReceived(const QList<QByteArray> &data);
     virtual void respond(QString topic, ::indigo::pb::internal_msg &message) = 0;
 protected:
-    void publish(::google::protobuf::MessageLite &msg, QString topic);
+    void publish(::indigo::pb::internal_msg &msg, QString topic);
     void subscribe(QString topicName);
     QString name;
 private:

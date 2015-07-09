@@ -43,6 +43,9 @@ TEST_F(IndigoLoggingTest, testLog) {
     ASSERT_TRUE(tester.lastMessage.simplified().contains(lastStr.simplified()));
 }
 
+Q_LOGGING_CATEGORY(GSM, "gsm")
+Q_LOGGING_CATEGORY(ZMQ, "zmq")
+
 TEST_F(IndigoLoggingTest, categories) {
     qCDebug(GSM, "Gsm test");
     tester.wait();

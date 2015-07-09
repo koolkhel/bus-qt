@@ -4,7 +4,7 @@ find .. -name "*.proto" -exec cp {} . \;
 OUTPUT=bin
 mkdir -p $OUTPUT
 
-for i in indigo_message.proto *.proto; do
+for i in sender_message.proto *.proto; do
 	CLASS=`basename $i .proto`
 	DIR=lib
 	rm -rf $DIR

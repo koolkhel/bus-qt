@@ -14,9 +14,14 @@
 #include "modulep.h"
 #include "proxy.h"
 
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(ZMQ, "zmq")
 
 Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 {
+    sampleId = 1;
+
     context = nzmqt::createDefaultContext();
     context->start();
     //modules.insert("GPS","HelloGPS");
@@ -36,10 +41,14 @@ Dispatcher::~Dispatcher()
 }
 
 
-void Dispatcher::publish(ModuleP *modP, QByteArray data, QString topic)
+void Dispatcher::publish(ModuleP *modP, ::indigo::pb::internal_msg &msg, QString topic)
 {
     assert(modP != NULL);
     assert(modP->getPublisher() != NULL);
+
+    msg.set_id(sampleId++);
+    QByteArray data = QByteArray::fromStdString(msg.SerializeAsString());
+
     modP->getPublisher()->sendMessage(data, topic);
 }
 

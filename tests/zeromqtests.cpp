@@ -17,7 +17,7 @@
 
 #include "events_message.pb.h"
 #include "geo_message.pb.h"
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 
 #define ZMQ_PUB_STR "tcp://127.0.0.1:8080"

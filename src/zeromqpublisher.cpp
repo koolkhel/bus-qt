@@ -69,7 +69,7 @@ void ZeroMQPublisher::sendMessage(const QByteArray message, const QString filter
 
 void ZeroMQPublisher::messageSended(const QList<QByteArray> sended)
 {
-    qCDebug(ZMQ)<<"Sent: "<< sended.at(0) << " " << sended.at(1);
+    qCDebug(ZMQ)<<"Sent: "<< sended.at(0) << " " << sended.at(1).toHex();
 }
 
 QString ZeroMQPublisher::getAddress() const

@@ -22,6 +22,7 @@ public:
 
     // ----- test methods -------------
     void sendTestMessage();
+    void sendMessage(::indigo::pb::internal_msg &msg, QString topic);
     void subscribeTopic(QString topic);
 
     Q_SIGNAL void messageReceivedSignal();

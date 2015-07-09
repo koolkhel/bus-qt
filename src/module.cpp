@@ -41,11 +41,10 @@ void Module::stop()
 
 }
 
-void Module::publish(::google::protobuf::MessageLite &msg, QString topic)
+void Module::publish(::indigo::pb::internal_msg &msg, QString topic)
 {
     qCDebug(MODULE) << "publishing to topic: " << topic;
-    QByteArray result = QByteArray::fromStdString(msg.SerializeAsString());
-    dispatcher->publish(mod_p, result, topic);
+    dispatcher->publish(mod_p, msg, topic);
 }
 
 void Module::subscribe(QString topicName)
@@ -71,4 +70,9 @@ void Module::messageReceived(const QList<QByteArray> &data)
     qCDebug(MODULE) << "data received, topic: " << topic;
 
     respond(topic, msg);
+}
+
+QVariant Module::getConfigurationParameter(const QString name, const QVariant &defaultValue = QVariant()) const
+{
+    return configuration.value(name, defaultValue);
 }
