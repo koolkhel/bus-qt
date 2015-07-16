@@ -9,19 +9,20 @@
 #include <QSignalSpy>
 #include <unistd.h>
 
-TEST(debounce, start) {
+TEST(io, start) {
 
     Dispatcher *dispatcher = new Dispatcher();
 
-    const int test_count = 10;
-
     QStringList c;
     c << "[modules]"
-      << "debounce_instance=debounce"
+      << "io_instance=io"
       << "test_instance=test_module"
+      << "debounce_instance=debounce"
+      << "[io_instance]"
+      << "devices=/home/moka/Projects/debounce/modules/io/io.json"
+      << "[test_instance]"
       << "[debounce_instance]"
-      << "inputTopics=skel"
-      << "[test_instance]";
+      << "inputTopics=io";
 
     dispatcher->initializeAll(c);
 
@@ -29,22 +30,10 @@ TEST(debounce, start) {
                 dispatcher->getModuleInstances().value("test_instance"));
 
     dispatcher->startAll();
-
-    testModule->subscribeTopic("spam");
-    ::indigo::pb::internal_msg msg;
-
-    QSignalSpy spy(testModule, SIGNAL(messageReceivedSignal()));
-    for (int i = 0; i < test_count; i++) {
-        testModule->sendMessage(msg, "skel");
-        spy.wait(2000);
-        qApp->processEvents();
-        qApp->processEvents();
-
-    }
-
-    qDebug() << spy.count();
-
+    QSignalSpy spy(testModule,  SIGNAL(messageReceivedSignal()));
+    spy.wait(10000);
     delete dispatcher;
 
 
 }
+

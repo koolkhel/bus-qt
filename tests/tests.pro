@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     plugintests.cpp \
     gpstests.cpp \
     bboxtests.cpp \
-    debouncetests.cpp
+    debouncetests.cpp \
+    iotests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \

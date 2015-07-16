@@ -28,13 +28,14 @@ QStringList DEBOUNCE::getPubTopics()
 
 void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 {
+    qDebug() << "topic" << topic;
     if(topic.compare(LimitTopic) == 0) {
         return;
     }
 
     Item temp(QTime::currentTime(), topic);
     for(int i = 0; i != items.size(); ++i) {
-        if(items.at(i).first.secsTo(temp.first) > m_timeout) {
+        if(items.at(i).first.msecsTo(temp.first) > m_timeout) {
             items.removeAt(i--);
         } else {
             if(items.at(i).second ==  topic) {
@@ -54,6 +55,11 @@ void DEBOUNCE::setTimeout(qint64 timeout)
 
 void DEBOUNCE::start()
 {
+    QStringList topics = getConfigurationParameter("inputTopics", "").toString().split(",");
+
+    foreach (QString topic, topics) {
+        subscribe(topic);
+    }
 }
 
 void DEBOUNCE::stop()

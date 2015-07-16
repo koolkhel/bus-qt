@@ -1,0 +1,21 @@
+package indigo.pb;
+
+import "indigo_message.proto";
+
+option java_package = "ru.indigosystem.serv.pb";
+
+option java_outer_classname = "IndigoPB";
+option optimize_for = LITE_RUNTIME;
+
+message io_message {
+    optional string content_string = 4;
+
+    extend internal_msg {
+            optional io_message io_message_in = 206;
+    }
+
+    extend indigo_msg {
+            optional io_message io_message_out = 207;
+    }
+}
+
