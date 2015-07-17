@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QTimer>
-#include "resource.h"
+#include "controlledresource.h"
 #include "module.h"
 
 Q_DECLARE_LOGGING_CATEGORY(IOC)
@@ -26,7 +26,7 @@ public slots:
     void publish(QByteArray);
 private:
 
-    QVector <QPair < Resource*, QTimer *> > data;
+    QMap <QString, ControlledResource *> data;
 };
 
 #endif // SKEL_H

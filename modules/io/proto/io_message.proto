@@ -8,7 +8,8 @@ option java_outer_classname = "IndigoPB";
 option optimize_for = LITE_RUNTIME;
 
 message io_message {
-    optional string content_string = 4;
+    optional string content = 4;
+    optional string resource_name = 5;
 
     extend internal_msg {
             optional io_message io_message_in = 206;

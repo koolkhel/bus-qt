@@ -8,12 +8,15 @@ QT -= gui
 
 SOURCES += io.cpp \
     iopluginfactory.cpp \
-    resource.cpp
+    resource.cpp \
+    controlledresource.cpp
 LIBS += -L../../src/ -lprotobuf-lite -lindigo -lio_message 
 
 HEADERS += io.h \
     iopluginfactory.h \
-    resource.h
+    resource.h \
+    abstractresource.h \
+    controlledresource.h
 
 DISTFILES += \
     io.json \

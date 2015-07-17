@@ -2,7 +2,7 @@
 #include <QLoggingCategory>
 Resource::Resource(QString name, QObject *parent)
     :
-      QObject(parent),
+      AbstractResource(parent),
       resourceName(name)
 {
     file.setFileName(name);
@@ -16,15 +16,7 @@ void Resource::setName(QString name)
 
 QByteArray Resource::read()
 {
-    open();
-
-    QByteArray data = file.readAll();
-
-    if(data.size()) {
-        Q_EMIT DataReady(data);
-    }
-
-    return data;
+    return file.readAll();
 }
 
 void Resource::open()
@@ -44,5 +36,10 @@ void Resource::write(QByteArray data)
         qDebug() << "error writing resource file";
     }
     file.close();
+}
+
+QString Resource::getName()
+{
+    return "olololo";
 }
 
