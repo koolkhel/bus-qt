@@ -30,13 +30,13 @@ void IO::respond(QString topic, indigo::pb::internal_msg &message)
 {
 }
 
-void IO::publish(QByteArray data)
+void IO::publish(QByteArray data, QString name)
 {
     qDebug() << data;
 
     ::indigo::pb::io_message io;
     io.set_content(data.toStdString());
-
+    io.set_resource_name(name.toStdString());
 
     Module::publish(io, "io");
 }
@@ -51,8 +51,8 @@ void IO::start()
         QSharedPointer<AbstractResource> resource = QSharedPointer<AbstractResource>(new Resource(devices.at(i)));
         data[resource->getName()] = new ControlledResource(resource);
 
-        connect(data[resource->getName()], SIGNAL(dataReady(QByteArray)),
-                this, SLOT(publish(QByteArray)));
+        connect(data[resource->getName()], SIGNAL(dataReady(QByteArray,QString)),
+                this, SLOT(publish(QByteArray,QString));
     }
 }
 

@@ -40,6 +40,6 @@ void Resource::write(QByteArray data)
 
 QString Resource::getName()
 {
-    return "olololo";
+    return QString("file_resource_%1").arg(file.fileName());
 }
 
