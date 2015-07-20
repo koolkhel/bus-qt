@@ -11,6 +11,11 @@ IO::IO(QObject *parent)
 
     this->name = "io works";
 
+    timer.setSingleShot(false);
+    timer.setInterval(100);
+
+    connect(&timer, SIGNAL(timeout()), this, SLOT(doOutputJob()));
+
     qCDebug(IOC, "hello,world");
 }
 
@@ -30,16 +35,16 @@ void IO::respond(QString topic, indigo::pb::internal_msg &message)
 {
 }
 
-void IO::publish(QByteArray data, QString name)
+void IO::doOutputJob()
 {
-    qDebug() << data;
-
+    uint64_t content = 0ll;
+    for(int i = 0; i < resources.size(); ++i) {
+    }
     ::indigo::pb::io_message io;
-    io.set_content(data.toStdString());
-    io.set_resource_name(name.toStdString());
-
-    Module::publish(io, "io");
+    io.set_content(content);
+    io.set_content_size(resources.size());
 }
+
 
 void IO::start()
 {
@@ -47,20 +52,18 @@ void IO::start()
 
     QStringList devices = getConfigurationParameter("devices", "").toString().split(",");
 
-    for(int i = 0; i < devices.size(); ++i) {
-        QSharedPointer<AbstractResource> resource = QSharedPointer<AbstractResource>(new Resource(devices.at(i)));
-        data[resource->getName()] = new ControlledResource(resource);
+    resources.reserve(devices.size());
 
-        connect(data[resource->getName()], SIGNAL(dataReady(QByteArray,QString)),
-                this, SLOT(publish(QByteArray,QString));
+    for(int i = 0; i < devices.size(); ++i) {
+        resources.push_back(
+                   QSharedPointer<Resource>(
+                        new Resource(devices.at(i))));
     }
+
+    timer.start();
 }
 
 void IO::stop()
 {
-    foreach(QString key, data.keys()) {
-        delete data[key];
-    }
-
-    data.clear();
+    resources.clear();
 }

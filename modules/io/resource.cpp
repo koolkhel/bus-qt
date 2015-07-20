@@ -1,8 +1,7 @@
 #include "resource.h"
 #include <QLoggingCategory>
-Resource::Resource(QString name, QObject *parent)
+Resource::Resource(QString name)
     :
-      AbstractResource(parent),
       resourceName(name)
 {
     file.setFileName(name);

@@ -3,15 +3,13 @@
 
 #include <QObject>
 #include <QFile>
-#include "abstractresource.h"
 
-class Resource : public AbstractResource
+class Resource
 {
-    Q_OBJECT
 public:
-    explicit Resource(QString name, QObject *parent = 0);
+    explicit Resource(QString name);
+
     void setName(QString name);
-public slots:
     QByteArray read();
     void write(QByteArray);
     QString getName();

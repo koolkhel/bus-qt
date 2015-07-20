@@ -6,7 +6,8 @@
 #include <QDebug>
 #include <QFile>
 #include <QTimer>
-#include "controlledresource.h"
+#include <QSharedPointer>
+#include "resource.h"
 #include "module.h"
 
 Q_DECLARE_LOGGING_CATEGORY(IOC)
@@ -23,10 +24,10 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 public slots:
-    void publish(QByteArray);
+    void doOutputJob();
 private:
-
-    QMap <QString, ControlledResource *> data;
+    QVector < QSharedPointer < Resource > > resources;
+    QTimer timer;
 };
 
 #endif // SKEL_H
