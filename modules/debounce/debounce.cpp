@@ -1,14 +1,18 @@
 #include "debounce.h"
 
+#include "io_message.pb.h"
+#include "indigo_message.pb.h"
+
 Q_LOGGING_CATEGORY(DEBOUNCEC, "debounce")
 
-DEBOUNCE::DEBOUNCE(QObject *parent) : LimitTopic("spam")
+DEBOUNCE::DEBOUNCE(QObject *parent)
+    :
+      LimitTopic("spam"),
+      filtredMessage("iof")
 {
     setParent(parent);
 
     this->name = "debounce works";
-
-    setTimeout();
 
     qCDebug(DEBOUNCEC, "initialized");
 }
@@ -21,7 +25,7 @@ QStringList DEBOUNCE::getPubTopics()
 {
     QStringList topics;
 
-    topics << LimitTopic;
+    topics << LimitTopic << filtredMessage;
 
     return topics;
 }
@@ -29,29 +33,22 @@ QStringList DEBOUNCE::getPubTopics()
 void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 {
     qDebug() << "topic" << topic;
-    if(topic.compare(LimitTopic) == 0) {
+    if(topic.compare(LimitTopic) == 0 || topic.compare(filtredMessage) == 0) {
         return;
     }
 
-    Item temp(QTime::currentTime(), topic);
-    for(int i = 0; i != items.size(); ++i) {
-        if(items.at(i).first.msecsTo(temp.first) > m_timeout) {
-            items.removeAt(i--);
-        } else {
-            if(items.at(i).second ==  topic) {
-                items.removeAt(i--);
-                ::indigo::pb::internal_msg msg;
-                publish(msg, LimitTopic);
-            }
+    if(timer.elapsed() <= 200) {
+        if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
+            ::indigo::pb::io_message msg = message.GetExtension(::indigo::pb::io_message::io_message_in);
+
+           qCDebug(DEBOUNCEC) << "data is: " << msg.content();
         }
+    } else {
+        prevState = 0;
     }
-    items.append(temp);
+    timer = QTime::currentTime();
 }
 
-void DEBOUNCE::setTimeout(qint64 timeout)
-{
-    m_timeout = timeout;
-}
 
 void DEBOUNCE::start()
 {
@@ -60,6 +57,7 @@ void DEBOUNCE::start()
     foreach (QString topic, topics) {
         subscribe(topic);
     }
+
 }
 
 void DEBOUNCE::stop()

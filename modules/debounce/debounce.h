@@ -26,11 +26,10 @@ public:
     void setTimeout(qint64 timeout = 5 * 1000 * 1000);
 
 private:
-    typedef QPair<QTime, QString> Item;
-    QList < Item > items;
-    qint64 m_timeout;
-
+    uint64_t prevState;
+    QTime timer;
     QString LimitTopic;
+    QString filtredMessage;
 };
 
 #endif // SKEL_H
