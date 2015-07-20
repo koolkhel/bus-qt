@@ -13,28 +13,29 @@ void Resource::setName(QString name)
     resourceName = name;
 }
 
-QByteArray Resource::read()
+char Resource::read()
 {
-    return file.readAll();
+    bool value;
+    stream >> value;
+    return value;
 }
 
 void Resource::open()
 {
     if(!file.isOpen()) {
         if(file.open(QIODevice::ReadWrite)) {
+            stream.setDevice(&file);
+        } else {
             qDebug() << "error opening resource file";
         }
     }
 }
 
-void Resource::write(QByteArray data)
+void Resource::write(char data)
 {
     open();
 
-    if(file.write(data) != data.size()) {
-        qDebug() << "error writing resource file";
-    }
-    file.close();
+    stream << data;
 }
 
 QString Resource::getName()

@@ -3,19 +3,21 @@
 
 #include <QObject>
 #include <QFile>
-
+#include <QDataStream>
 class Resource
 {
 public:
     explicit Resource(QString name);
 
     void setName(QString name);
-    QByteArray read();
-    void write(QByteArray);
+    char read();
+    void write(char);
     QString getName();
 private:
     QString resourceName;
     QFile file;
+    QDataStream stream;
+
     void open();
 };
 

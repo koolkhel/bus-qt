@@ -39,7 +39,7 @@ void IO::doOutputJob()
 {
     uint64_t content = 0ll;
     for(int i = 0; i < resources.size(); ++i) {
-        if(resources[i]->read().toInt()) {
+        if(resources[i]->read()) {
             content |= (1 << i);
         }
     }
@@ -61,9 +61,7 @@ void IO::doInputJob(uint64_t content)
         char nbit = (content  >> i) & 1;
         char obit = (oldState >> i) & 1;
         if(nbit ^ obit) {
-            QByteArray bA;
-            bA.append(nbit);
-            resources[i]->write(bA);
+            resources[i]->write(nbit);
         }
     }
     timer.start();
