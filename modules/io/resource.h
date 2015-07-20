@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QFile>
-#include <QDataStream>
+#include <QTextStream>
 class Resource
 {
 public:
@@ -16,7 +16,7 @@ public:
 private:
     QString resourceName;
     QFile file;
-    QDataStream stream;
+    QTextStream stream;
 
     void open();
 };

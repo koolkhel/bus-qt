@@ -8,7 +8,7 @@ QT -= gui
 
 SOURCES += debounce.cpp \
     debouncepluginfactory.cpp
-LIBS += -L../../src/ -lprotobuf-lite -lindigo -ldebounce_message 
+LIBS += -L../../src/ -lprotobuf-lite -lindigo -ldebounce_message -lio_message
 
 HEADERS += debounce.h \
     debouncepluginfactory.h

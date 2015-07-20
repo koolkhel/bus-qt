@@ -15,8 +15,10 @@ void Resource::setName(QString name)
 
 char Resource::read()
 {
-    bool value;
+    char value;
+
     stream >> value;
+
     return value;
 }
 

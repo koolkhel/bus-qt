@@ -17,7 +17,6 @@ TEST(io, start) {
     c << "[modules]"
       << "io_instance=io"
       << "test_instance=test_module"
-      << "debounce_instance=debounce"
       << "[io_instance]"
       << "devices=/home/moka/Projects/debounce/modules/io/io.json"
       << "[test_instance]"
@@ -30,8 +29,14 @@ TEST(io, start) {
                 dispatcher->getModuleInstances().value("test_instance"));
 
     dispatcher->startAll();
+        testModule->subscribeTopic("io");
     QSignalSpy spy(testModule,  SIGNAL(messageReceivedSignal()));
-    spy.wait(10000);
+
+    spy.wait(1000);
+    spy.wait(1000);
+    spy.wait(1000);
+
+    qDebug() << spy.count(); //почему не всегда 3?
     delete dispatcher;
 
 
