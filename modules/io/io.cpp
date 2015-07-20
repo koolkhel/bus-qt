@@ -39,10 +39,34 @@ void IO::doOutputJob()
 {
     uint64_t content = 0ll;
     for(int i = 0; i < resources.size(); ++i) {
+        if(resources[i]->read().toInt()) {
+            content |= (1 << i);
+        }
     }
-    ::indigo::pb::io_message io;
-    io.set_content(content);
-    io.set_content_size(resources.size());
+    if(content) {
+        ::indigo::pb::io_message io;
+        io.set_content(content);
+        io.set_content_size(resources.size());
+        publish(io, "io");
+    }
+    oldState = content;
+}
+
+void IO::doInputJob(uint64_t content)
+{
+    if(content == oldState)
+        return;
+    timer.stop();
+    for(uint64_t i = 0; i < resources.size(); ++i) {
+        char nbit = (content  >> i) & 1;
+        char obit = (oldState >> i) & 1;
+        if(nbit ^ obit) {
+            QByteArray bA;
+            bA.append(nbit);
+            resources[i]->write(bA);
+        }
+    }
+    timer.start();
 }
 
 

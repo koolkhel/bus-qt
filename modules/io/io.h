@@ -25,9 +25,11 @@ public:
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 public slots:
     void doOutputJob();
+    void doInputJob(uint64_t content);
 private:
     QVector < QSharedPointer < Resource > > resources;
     QTimer timer;
+    uint64_t oldState;
 };
 
 #endif // SKEL_H
