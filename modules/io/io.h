@@ -27,7 +27,7 @@ public slots:
     void doOutputJob();
     void doInputJob(uint64_t content);
 private:
-    QVector < QSharedPointer < Resource > > resources;
+    Resource *resource;
     QTimer timer;
 };
 

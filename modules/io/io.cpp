@@ -11,6 +11,8 @@ IO::IO(QObject *parent)
 
     this->name = "io works";
 
+    resource = NULL;
+
     timer.setSingleShot(false);
     timer.setInterval(100);
 
@@ -37,26 +39,16 @@ void IO::respond(QString topic, indigo::pb::internal_msg &message)
 
 void IO::doOutputJob()
 {
-    uint64_t content = 0ll;
-    for(int i = 0; i < resources.size(); ++i) {
-        if(resources[i]->read()) {
-            content |= (1 << i);
-        }
-    }
-
     ::indigo::pb::internal_msg ioMessage;
     ::indigo::pb::io_message *io = ioMessage.MutableExtension(::indigo::pb::io_message::io_message_in);
-    io->set_content(content);
-    io->set_content_size(resources.size());
+    io->set_content(resource->read());
     publish(ioMessage, "io");
 }
 
 void IO::doInputJob(uint64_t content)
 {
     timer.stop();
-    for(int i = 0; i < resources.size(); ++i) {
-        resources[i]->write((content  >> i) & 1);
-    }
+    resource->write(content);
     timer.start();
 }
 
@@ -65,20 +57,25 @@ void IO::start()
 {
     stop();
 
-    QStringList devices = getConfigurationParameter("devices", "").toString().split(",");
-
-    resources.reserve(devices.size());
-
-    for(int i = 0; i < devices.size(); ++i) {
-        resources.push_back(
-                   QSharedPointer<Resource>(
-                        new Resource(devices.at(i))));
+    QString device = getConfigurationParameter("device", "").toString();
+    int timeout    = getConfigurationParameter("timeout", 100).toInt();
+    if(resource != NULL) {
+        stop();
+    }
+    if(device == "") {
+        qCDebug(IOC) << "empty device!";
     }
 
+    resource = new Resource(device);
+
+    timer.setInterval(timeout);
     timer.start();
 }
 
 void IO::stop()
 {
-    resources.clear();
+    if(resource != NULL) {
+        delete resource;
+        resource = NULL;
+    }
 }

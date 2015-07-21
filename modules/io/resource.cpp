@@ -15,10 +15,11 @@ void Resource::setName(QString name)
 
 char Resource::read()
 {
+    open();
     char value;
-
+    qDebug() << "[" << 1 << "]";
     stream >> value;
-
+    qDebug() << "[" << value << "]";
     return value;
 }
 
@@ -30,6 +31,9 @@ void Resource::open()
         } else {
             qDebug() << "error opening resource file";
         }
+    } else {
+        qDebug() << "woop";
+        stream.seek(0);
     }
 }
 
