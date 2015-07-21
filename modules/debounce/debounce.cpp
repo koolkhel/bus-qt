@@ -7,8 +7,7 @@ Q_LOGGING_CATEGORY(DEBOUNCEC, "debounce")
 
 DEBOUNCE::DEBOUNCE(QObject *parent)
     :
-      LimitTopic("spam"),
-      filtredMessage("iof")
+      LimitTopic("spam")
 {
     setParent(parent);
 
@@ -25,7 +24,7 @@ QStringList DEBOUNCE::getPubTopics()
 {
     QStringList topics;
 
-    topics << LimitTopic << filtredMessage;
+    topics << LimitTopic << id;
 
     return topics;
 }
@@ -33,37 +32,20 @@ QStringList DEBOUNCE::getPubTopics()
 void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 {
     qDebug() << "topic" << topic;
-    if(topic.compare(LimitTopic) == 0 || topic.compare(filtredMessage) == 0) {
+    if(topic.compare(LimitTopic) == 0 || topic.compare(id) == 0) {
         return;
     }
-
-    if(timer.elapsed() <= 200) {
-        if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
-
-            ::indigo::pb::io_message msg = message.GetExtension(::indigo::pb::io_message::io_message_in);
-
-            quint64 content = msg.content();
-            int sz = msg.content_size();
-            quint64 checker = 0ll;
-            for(int i = 0; i < sz; ++i) {
-                if((content  >> i) & 1) {
-                    ++bounced[i];
-                    if(bounced[i] > 5) {
-                        checker |= (1<<i);
-                    }
-                } else {
-                    bounced[i] = 0;
-                }
-            }
-
-            if(!checker) {
-                publish(message, filtredMessage); //all ok
+    if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
+        ::indigo::pb::io_message msg = message.GetExtension(::indigo::pb::io_message::io_message_in);
+        quint32 content = msg.content();
+        if(timer.elapsed() <= 200 && content) {
+            ++bounceCounter;
+            if(bounceCounter <= 5) {
+                publish(msg, id);
             } else {
-                publish(message, LimitTopic); //spam
+                publish(msg, LimitTopic);
             }
         }
-    } else {
-        memset(bounced, 0, 64);
     }
     timer = QTime::currentTime();
 }
@@ -71,11 +53,10 @@ void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 
 void DEBOUNCE::start()
 {
-    QStringList topics = getConfigurationParameter("inputTopics", "").toString().split(",");
+    QString device = getConfigurationParameter("id", "").toString();
+    id = "iof" + device;
 
-    foreach (QString topic, topics) {
-        subscribe(topic);
-    }
+    subscribe("io" + device);
 
 }
 

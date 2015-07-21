@@ -23,13 +23,12 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
-    void setTimeout(qint64 timeout = 5 * 1000 * 1000);
-
 private:
-    char bounced[64];
+    char bounceCounter;
+
     QTime timer;
     QString LimitTopic;
-    QString filtredMessage;
+    QString id;
 };
 
 #endif // SKEL_H

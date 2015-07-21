@@ -28,6 +28,7 @@ public slots:
     void doInputJob(uint64_t content);
 private:
     Resource *resource;
+    QString id;
     QTimer timer;
 };
 

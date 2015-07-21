@@ -42,7 +42,7 @@ void IO::doOutputJob()
     ::indigo::pb::internal_msg ioMessage;
     ::indigo::pb::io_message *io = ioMessage.MutableExtension(::indigo::pb::io_message::io_message_in);
     io->set_content(resource->read());
-    publish(ioMessage, "io");
+    publish(ioMessage, id);
 }
 
 void IO::doInputJob(uint64_t content)
@@ -58,6 +58,7 @@ void IO::start()
     stop();
 
     QString device = getConfigurationParameter("device", "").toString();
+    id = "io" + getConfigurationParameter("id", "").toString();
     int timeout    = getConfigurationParameter("timeout", 100).toInt();
     if(resource != NULL) {
         stop();
