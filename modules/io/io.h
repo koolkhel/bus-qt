@@ -29,7 +29,6 @@ public slots:
 private:
     QVector < QSharedPointer < Resource > > resources;
     QTimer timer;
-    uint64_t oldState;
 };
 
 #endif // SKEL_H

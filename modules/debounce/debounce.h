@@ -26,7 +26,7 @@ public:
     void setTimeout(qint64 timeout = 5 * 1000 * 1000);
 
 private:
-    uint64_t prevState;
+    char bounced[64];
     QTime timer;
     QString LimitTopic;
     QString filtredMessage;

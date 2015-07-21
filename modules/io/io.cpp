@@ -43,27 +43,19 @@ void IO::doOutputJob()
             content |= (1 << i);
         }
     }
-    if(content) {
-        ::indigo::pb::internal_msg ioMessage;
-        ::indigo::pb::io_message *io = ioMessage.MutableExtension(::indigo::pb::io_message::io_message_in);
-        io->set_content(content);
-        io->set_content_size(resources.size());
-        publish(ioMessage, "io");
-    }
-    oldState = content;
+
+    ::indigo::pb::internal_msg ioMessage;
+    ::indigo::pb::io_message *io = ioMessage.MutableExtension(::indigo::pb::io_message::io_message_in);
+    io->set_content(content);
+    io->set_content_size(resources.size());
+    publish(ioMessage, "io");
 }
 
 void IO::doInputJob(uint64_t content)
 {
-    if(content == oldState)
-        return;
     timer.stop();
     for(int i = 0; i < resources.size(); ++i) {
-        char nbit = (content  >> i) & 1;
-        char obit = (oldState >> i) & 1;
-        if(nbit ^ obit) {
-            resources[i]->write(nbit);
-        }
+        resources[i]->write((content  >> i) & 1);
     }
     timer.start();
 }

@@ -3,3 +3,5 @@
 *.pro.user
 Makefile
 moc*
+*.autosave
+*.backtrace.*

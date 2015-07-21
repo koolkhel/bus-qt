@@ -39,12 +39,31 @@ void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 
     if(timer.elapsed() <= 200) {
         if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
+
             ::indigo::pb::io_message msg = message.GetExtension(::indigo::pb::io_message::io_message_in);
 
-           qCDebug(DEBOUNCEC) << "data is: " << msg.content();
+            quint64 content = msg.content();
+            int sz = msg.content_size();
+            quint64 checker = 0ll;
+            for(int i = 0; i < sz; ++i) {
+                if((content  >> i) & 1) {
+                    ++bounced[i];
+                    if(bounced[i] > 5) {
+                        checker |= (1<<i);
+                    }
+                } else {
+                    bounced[i] = 0;
+                }
+            }
+
+            if(!checker) {
+                publish(message, filtredMessage); //all ok
+            } else {
+                publish(message, LimitTopic); //spam
+            }
         }
     } else {
-        prevState = 0;
+        memset(bounced, 0, 64);
     }
     timer = QTime::currentTime();
 }
