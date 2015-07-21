@@ -1,0 +1,14 @@
+package indigo.pb;
+
+import "sender_message.proto";
+
+option java_package = "ru.indigosystem.serv.pb";
+
+option java_outer_classname = "Module";
+option optimize_for = LITE_RUNTIME;
+
+message vpnremote_message {
+        required bool start = 2;
+        optional int32 exitStatus = 3;
+}
+
