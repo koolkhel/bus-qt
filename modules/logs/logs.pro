@@ -5,7 +5,6 @@ include(../plugins.pri)
 TARGET = logs
 TEMPLATE = lib
 QT -= gui
-QT += network
 
 SOURCES += logs.cpp \
     logspluginfactory.cpp

@@ -25,23 +25,9 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
-    void startServer();
-    void stopServer();
-
     void log(QString &str);
-signals:
-    void configurationChanged();
-private slots:
-
-    void acceptConfiguration();
-    void configurationDataReceived();
-    void configurationClientDisconnected();
 private:
-    QUdpSocket *socket;
-    QTcpServer *confServer;
-    QTcpSocket *confClientSocket;
 
-    int logPort;
     bool do_console;
 };
 
