@@ -7,11 +7,13 @@ TEMPLATE = lib
 QT -= gui
 
 SOURCES += vpnremote.cpp \
-    vpnremotepluginfactory.cpp
+    vpnremotepluginfactory.cpp \
+    remoteprocess.cpp
 LIBS += -L../../src/ -lprotobuf-lite -lindigo -lvpnremote_message 
 
 HEADERS += vpnremote.h \
-    vpnremotepluginfactory.h
+    vpnremotepluginfactory.h \
+    remoteprocess.h
 
 DISTFILES += \
     vpnremote.json \

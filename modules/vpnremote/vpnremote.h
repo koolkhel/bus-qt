@@ -3,9 +3,7 @@
 
 #include <QObject>
 #include <QLoggingCategory>
-#include <QDebug>
-#include <QProcess>
-#include <QVector>
+#include "remoteprocess.h"
 
 #include "module.h"
 
@@ -23,26 +21,7 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 private:
-
-    struct {
-        QString path;
-        QStringList StartParams;
-        QStringList StopParams;
-        bool state;
-        QProcess process;
-        bool start() {
-            if(!state) {
-                process.start(path, StartParams);
-            }
-            state = true;
-        }
-        bool stop() {
-            if(state) {
-                process.start(path, StopParams);
-            }
-            state = false;
-        }
-    }telnetd, openvpn;
+    RemoteProcess telnetd, openvpn;
 
 };
 
