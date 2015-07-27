@@ -75,5 +75,12 @@ void Module::messageReceived(const QList<QByteArray> &data)
 
 QVariant Module::getConfigurationParameter(const QString name, const QVariant &defaultValue = QVariant()) const
 {
+#ifdef _debug
+    if(configuration.value(name).isValid()) {
+        qCDebug(MODULE) << configuration.value(name);
+    } else {
+        qCWarning(MODULE) << "Using default value( " << defaultValue << " ) for " << name;
+    }
+#endif
     return configuration.value(name, defaultValue);
 }
