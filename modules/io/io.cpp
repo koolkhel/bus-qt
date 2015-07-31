@@ -1,9 +1,8 @@
 #include "io.h"
-#include "io_message.pb.h"
-
-#include "resource.h"
 
 Q_LOGGING_CATEGORY(IOC, "io")
+
+using namespace indigo::pb;
 
 IO::IO(QObject *parent)
 {
@@ -16,7 +15,7 @@ IO::IO(QObject *parent)
     timer.setSingleShot(false);
     timer.setInterval(100);
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(doOutputJob()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(doInputJob()));
 
     qCDebug(IOC, "hello,world");
 }
@@ -30,22 +29,25 @@ QStringList IO::getPubTopics()
 {
     QStringList topics;
 
+    topics << inputTopic << outputTopic;
+
     return topics;
 }
 
-void IO::respond(QString topic, indigo::pb::internal_msg &message)
+void IO::respond(QString topic, internal_msg &message)
 {
 }
 
-void IO::doOutputJob()
+void IO::doInputJob()
 {
-    ::indigo::pb::internal_msg ioMessage;
-    ::indigo::pb::io_message *io = ioMessage.MutableExtension(::indigo::pb::io_message::io_message_in);
+    internal_msg ioMessage;
+    io_message *io = ioMessage.MutableExtension(io_message::io_message_in);
     io->set_content(resource->read());
-    publish(ioMessage, id);
+    io->set_io_id(id);
+    publish(ioMessage, outputTopic);
 }
 
-void IO::doInputJob(uint64_t content)
+void IO::doOutputJob(uint64_t content)
 {
     timer.stop();
     resource->write(content);
@@ -58,14 +60,20 @@ void IO::start()
     stop();
 
     QString device = getConfigurationParameter("device", "").toString();
-    id = "io" + getConfigurationParameter("id", "").toString();
+    inputTopic     = getConfigurationParameter("inputTopic", "io_in").toString();
+    outputTopic    = getConfigurationParameter("outputTopic", "io_out").toString();
+    id             = static_cast< io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
     int timeout    = getConfigurationParameter("timeout", 100).toInt();
-    if(resource != NULL) {
-        stop();
-    }
+
     if(device == "") {
-        qCDebug(IOC) << "empty device!";
+        qCWarning(IOC) << "empty device!";
     }
+
+    if(id == io_message_IO_id_DEFAULT) {
+        qCWarning(IOC) << "default id";
+    }
+
+    subscribe(inputTopic);
 
     resource = new Resource(device);
 

@@ -17,5 +17,19 @@ message io_message {
     extend indigo_msg {
             optional io_message io_message_out = 207;
     }
+    enum IO_id {
+      DEFAULT = 0;
+      POWER1  = 1;
+      POWER2  = 2;
+      POWER3  = 3;
+      POWER4  = 4;
+      POWER5  = 5;
+      POWER6  = 6;
+      POWER7  = 7;
+      POWER8  = 8;
+      POWER9  = 9;
+      POWER10 = 10;
+    }
+    optional IO_id io_id = 2 [default = DEFAULT];
 }
 

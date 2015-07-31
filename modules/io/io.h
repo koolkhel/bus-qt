@@ -9,6 +9,7 @@
 #include <QSharedPointer>
 #include "resource.h"
 #include "module.h"
+#include "io_message.pb.h"
 
 Q_DECLARE_LOGGING_CATEGORY(IOC)
 
@@ -24,11 +25,13 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 public slots:
-    void doOutputJob();
-    void doInputJob(uint64_t content);
+    void doOutputJob(uint64_t content);
+    void doInputJob();
 private:
     Resource *resource;
-    QString id;
+    QString inputTopic;
+    QString outputTopic;
+    ::indigo::pb::io_message_IO_id id;
     QTimer timer;
 };
 

@@ -25,9 +25,10 @@ public:
 public slots:
     void doPowerJob();
 private:
-    QMap<QString, int> devices;
+    QSet<int> privateId;
+    QMap<int, int> devices;
     int delayedStart;
-
+    QString errorTopic;
     QTimer timer;
 };
 

@@ -10,6 +10,8 @@
 
 #include "module.h"
 
+#include "io_message.pb.h"
+
 Q_DECLARE_LOGGING_CATEGORY(DEBOUNCEC)
 
 class DEBOUNCE : public Module
@@ -24,11 +26,13 @@ public:
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
 private:
-    char bounceCounter;
-
+    int bounceCounter;
+    int limitBounce;
+    int timeout;
     QTime timer;
     QString LimitTopic;
-    QString id;
+    QString filtredTopic;
+    ::indigo::pb::io_message_IO_id id;
 };
 
 #endif // SKEL_H

@@ -29,7 +29,7 @@ TEST(io, start) {
                 dispatcher->getModuleInstances().value("test_instance"));
 
     dispatcher->startAll();
-        testModule->subscribeTopic("io");
+        testModule->subscribeTopic("io_in");
     QSignalSpy spy(testModule,  SIGNAL(messageReceivedSignal()));
 
     spy.wait(1000);

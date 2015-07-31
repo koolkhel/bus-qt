@@ -13,10 +13,10 @@ void Resource::setName(QString name)
     resourceName = name;
 }
 
-char Resource::read()
+int32_t Resource::read()
 {
     open();
-    char value;
+    int32_t value;
 
     stream >> value;
 
@@ -36,7 +36,7 @@ void Resource::open()
     }
 }
 
-void Resource::write(char data)
+void Resource::write(int32_t data)
 {
     open();
 

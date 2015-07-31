@@ -1,6 +1,5 @@
 #include "debounce.h"
 
-#include "io_message.pb.h"
 #include "indigo_message.pb.h"
 
 Q_LOGGING_CATEGORY(DEBOUNCEC, "debounce")
@@ -24,26 +23,27 @@ QStringList DEBOUNCE::getPubTopics()
 {
     QStringList topics;
 
-    topics << LimitTopic << id;
+    topics << LimitTopic << filtredTopic;
 
     return topics;
 }
 
 void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    qDebug() << "topic" << topic;
-    if(topic.compare(LimitTopic) == 0 || topic.compare(id) == 0) {
+    if(topic.compare(LimitTopic) == 0 || topic.compare(filtredTopic) == 0) {
         return;
     }
     if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
         ::indigo::pb::io_message msg = message.GetExtension(::indigo::pb::io_message::io_message_in);
-        quint32 content = msg.content();
-        if(timer.elapsed() <= 200 && content) {
-            ++bounceCounter;
-            if(bounceCounter <= 5) {
-                publish(msg, id);
-            } else {
-                publish(msg, LimitTopic);
+        if(msg.io_id() == id) {
+            quint32 content = msg.content();
+            if(timer.elapsed() <= timeout && content) {
+                ++bounceCounter;
+                if(bounceCounter <= limitBounce) {
+                    publish(message, filtredTopic);
+                } else {
+                    publish(message, LimitTopic);
+                }
             }
         }
     }
@@ -53,10 +53,16 @@ void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 
 void DEBOUNCE::start()
 {
-    QString device = getConfigurationParameter("id", "").toString();
-    id = "iof" + device;
+    QString inputTopic = getConfigurationParameter("inputTopic", "io_in").toString();
+    limitBounce        = getConfigurationParameter("limitBounce", 5).toInt();
+    timeout            = getConfigurationParameter("timeout", 200).toInt();
+    id                 = static_cast< ::indigo::pb::io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
 
-    subscribe("io" + device);
+    if(id == ::indigo::pb::io_message_IO_id_DEFAULT) {
+        qCWarning(DEBOUNCEC) << "default id";
+    }
+
+    subscribe(inputTopic);
 
 }
 

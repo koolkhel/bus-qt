@@ -34,9 +34,13 @@ QStringList POWER::getPubTopics()
 
 void POWER::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    indigo::pb::io_message msg = message.GetExtension(indigo::pb::io_message::io_message_in);
-    qCDebug(POWERC) << "Recived data" << msg.content();
-    devices[topic] = msg.content();
+    if(message.HasExtension(indigo::pb::io_message::io_message_in)) {
+        indigo::pb::io_message msg = message.GetExtension(indigo::pb::io_message::io_message_in);
+        if(privateId.find(msg.io_id()) != privateId.end()) {
+            qCDebug(POWERC) << "Recived data" << msg.content();
+            devices[msg.io_id()] = msg.content();
+        }
+    }
 }
 
 void POWER::doPowerJob()
@@ -46,7 +50,7 @@ void POWER::doPowerJob()
         return;
     }
     int value = 1;
-    for(QMap<QString, int>::const_iterator it = devices.cbegin(); it != devices.cend(); ++it) {
+    for(QMap<int, int>::const_iterator it = devices.cbegin(); it != devices.cend(); ++it) {
         value &= static_cast < bool > (it.value());
     }
     if(!value) {
@@ -67,8 +71,10 @@ void POWER::start()
     }
 
     foreach (QString topic, devices) {
-        subscribe("io" + topic);
+        privateId.insert(topic.toInt());
     }
+
+    subscribe("io_in");
     timer.setSingleShot(false);
 
     timer.start(interval);

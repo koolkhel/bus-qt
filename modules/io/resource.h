@@ -10,8 +10,8 @@ public:
     explicit Resource(QString name);
 
     void setName(QString name);
-    char read();
-    void write(char);
+    int32_t read();
+    void write(int32_t);
     QString getName();
 private:
     QString resourceName;
