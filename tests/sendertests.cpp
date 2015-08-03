@@ -47,7 +47,8 @@ TEST(SENDER, connect) {
       << "[sender_instance]"
       << "serverAddress=192.168.91.1"
       << "serverPort=9100"
-      << "uuid=c8d1d4dc-f845-11e2-b1b2-000c29d2c11e";
+      << "uuid=c8d1d4dc-f845-11e2-b1b2-000c29d2c11e"
+       << "sendTimeout=1000";
 
     Dispatcher *dispatcher = new Dispatcher();
     dispatcher->initializeAll(c);
@@ -82,11 +83,13 @@ TEST(SENDER, connect) {
         qApp->processEvents();
     }
 
-    usleep(1000 * 1000);
+    for (int j = 0; j < 10; j++) {
+        usleep(1000 * 1000);
 
-    for (int i = 0; i < 20000; i++) {
-        qApp->processEvents();
-        usleep(1000);
+        for (int i = 0; i < 20000; i++) {
+            qApp->processEvents();
+            usleep(1000);
+        }
     }
 
     module->stop();

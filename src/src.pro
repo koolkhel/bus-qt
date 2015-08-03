@@ -15,12 +15,7 @@ TEMPLATE = lib
 
 include(nzmqt/nzmqt.pri)
 
-SOURCES += gpsdpositionsource.cpp \
-        gpsdsatellitesource.cpp \
-SOURCES += indigoqueue.cpp \
-        indigoqueue.cpp \
-    support_unix.cpp \
-    indigologger.cpp \
+SOURCES += support_unix.cpp \
     subscribedispatcher.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
@@ -29,16 +24,11 @@ SOURCES += indigoqueue.cpp \
     module.cpp \
     modulep.cpp \
     pluginmodulefactory.cpp \
-     proxy.cpp \
+     proxy.cpp
 
 
 
-HEADERS  += indigoqueue.h \
-            indigoqueue.h \
-            gpsdpositionsource.h \
-            gpsdsatellitesource.h \
-    indigologger.h \
-    subscribedispatcher.h \
+HEADERS  += subscribedispatcher.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
     context.h \
@@ -46,10 +36,10 @@ HEADERS  += indigoqueue.h \
     module.h \
     modulep.h \
     pluginmodulefactory.h \
-    proxy.h \
+    proxy.h
 
 INCLUDEPATH += ../modules/protos/include
-LIBS += -L../modules/protos/bin -lsender_message -lindigo_message -levents_message -lgeo_message
+LIBS += -L../modules/protos/bin -lsender_message -levents_message -lgeo_message
 
 linux-g++ {
     INCLUDEPATH += /usr/local/include
