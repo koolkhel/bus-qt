@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <QApplication>
 #include <QCoreApplication>
 
 void enableSignalHandling();
@@ -19,7 +20,8 @@ void initPaths() {
 
 int main(int argc, char **argv) {
     enableSignalHandling();
-    QCoreApplication app(argc, argv);
+    //QCoreApplication app(argc, argv);
+    QApplication app(argc, argv);
     initPaths();
 
     int result = 0;

@@ -37,4 +37,5 @@ LIBS += -L../../src/ -lprotobuf-lite -lindigo -ltest_message -lskel_message -lsk
 DISTFILES += \
     ui.json \
     proto/ui_message.proto \
-    ui.rcc
+    ui.rcc \
+    ui.qrc

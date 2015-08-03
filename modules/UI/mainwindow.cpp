@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     QResource::registerResource("../modules/UI/ui.rcc");
-    setFocusPolicy(Qt::StrongFocus);
+    setFocusPolicy(Qt::NoFocus);
 
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
 
