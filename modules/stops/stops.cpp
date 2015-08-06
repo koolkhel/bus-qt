@@ -25,16 +25,19 @@ QStringList STOPS::getPubTopics()
 {
     QStringList topics;
 
+    topics << stopTopic;
+
     return topics;
 }
 
 void STOPS::respond(QString topic, indigo::pb::internal_msg &message)
 {
+    qCDebug(STOPSC) << topic;
     if (message.HasExtension(::indigo::pb::indigo_geo::geo_coords_in)) {
-        ::indigo::pb::indigo_geo::geo_coords_in msg = message.GetExtension(::indigo::pb::indigo_geo::geo_coords_in);
+        ::indigo::pb::indigo_geo msg = message.GetExtension(::indigo::pb::indigo_geo::geo_coords_in);
         if(steps.size() == storedSteps) {
             std::rotate(steps.begin(), steps.begin() + 1, steps.end());
-            steps[storedSteps - 1](qMakePair(msg.longitude(), msg.latitude()));
+            steps[storedSteps - 1] = (qMakePair(msg.longitude(), msg.latitude()));
             if(check(msg.speed_kmh())) {
                 ::indigo::pb::internal_msg message;
                 publish(message, stopTopic);
@@ -65,11 +68,12 @@ bool STOPS::check(int sc)
 
 void STOPS::start()
 {
-    storedSteps = getConfigurationParameter("storedSteps", 3);
-    typeOfLogic = getConfigurationParameter("typeOfLogic", 0);
-    accuracy    = getConfigurationParameter("accuracy", 100);
+    storedSteps = getConfigurationParameter("storedSteps", 3).toInt();
+    typeOfLogic = getConfigurationParameter("typeOfLogic", 1).toInt();
+    stopTopic   = getConfigurationParameter("stopTopic", "stoped").toString();
+    accuracy    = getConfigurationParameter("accuracy", 100).toInt();
 
-    QStringList topics = getConfigurationParameter("inputTopics", "").toString();
+    QStringList topics = getConfigurationParameter("inputTopics", "").toStringList();
 
     foreach (QString topic, topics) {
         subscribe(topic);

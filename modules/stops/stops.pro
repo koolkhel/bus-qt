@@ -8,7 +8,8 @@ QT -= gui
 
 SOURCES += stops.cpp \
     stopspluginfactory.cpp
-LIBS += -L../../src/ -lprotobuf-lite -lindigo -lstops_message 
+LIBS += -L../../src/ -lprotobuf-lite -lindigo -lstops_message -lgpsmodule_message
+
 
 HEADERS += stops.h \
     stopspluginfactory.h
