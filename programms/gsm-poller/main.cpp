@@ -16,14 +16,16 @@
 #include <syslog.h>
 #include <termios.h>
 #include <unistd.h>
-/*
-#include "./log-indigo.h"
+
+
 #include "./gps-indigo.h"
-*/
+
+#ifdef OLD_LOGGER
+    #include "./log-indigo.h"
+    static Logger *logger = LoggerFactory::getLogger("gsm-poller");
+#endif
 #define DEFAULT_SPEED	B115200
 #define SERIAL_PORT	"/dev/gsmtty3"
-
-static Logger *logger = LoggerFactory::getLogger("gsm-poller");
 
 int exit_pipe[2];
 FILE *output_file;
@@ -62,11 +64,16 @@ static void parse_options(int argc, char **argv) {
             break;
         case 'v':
             verbose = true;
+#ifdef OLD_LOGGER
             LoggerFactory::setVerbosityForApp(verbose);
+#endif
             break;
         case '?':
+#ifdef OLD_LOGGER
             logger_error("unknown option");
+#else
             print_usage();
+#endif
             exit(-1);
             break;
         default:
@@ -101,7 +108,7 @@ bool drain_data_fd(int fd)
     fd_set read_fds;
     struct timeval timeout;
     char dummy[255];
-    int i = 0;
+    unsigned int i = 0;
     bool result = false;
 
     FD_ZERO(&read_fds);
@@ -146,10 +153,10 @@ void talk(int fd, const char *cmd) {
 
     bytes_written = write(fd, cmd, strlen(cmd));
     if (bytes_written == -1) {
-        qFatal() << "serial port write error";
+        qCritical() << "serial port write error";
         return;;
     } else if (bytes_written == 0) {
-        fprintf(stderr, "zero bytes written to fd\n");
+        qDebug() << "zero bytes written to fd\n";
         exit(-500);
     }
 
@@ -162,12 +169,13 @@ int main(int argc, char **argv)
     int fd;
     int err = 0;
 
-    struct Record currentPosition;
-    struct GPS *gps = new struct GPS_real();
+    Record currentPosition;
+    GPS *gps = new GPS_real();
 
     struct termios ts;
-
+#ifdef OLD_LOGGER
     atexit(loggers_cleanup);
+#endif
     parse_options(argc, argv);
 
     signal(SIGHUP, SIG_IGN);
@@ -216,6 +224,7 @@ int main(int argc, char **argv)
 
     while (!exit_flag) {
         int dummy = 0, charge_percent = 0, voltage = 0;
+        (void) (dummy + charge_percent + voltage);
 
         talk(fd, "AT+CBC\r\n");
         sleep(1);

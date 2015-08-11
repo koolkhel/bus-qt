@@ -14,5 +14,9 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+LIBS += -lgps
+LIBS += -lpthread
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    gps-indigo.cpp
+HEADERS += gps-indigo.h
