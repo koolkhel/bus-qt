@@ -17,6 +17,11 @@ TEMPLATE = app
 LIBS += -lgps
 LIBS += -lpthread
 
-SOURCES += main.cpp \
-    gps-indigo.cpp
-HEADERS += gps-indigo.h
+SOURCES += \
+    main.cpp \
+    gps-indigo.cpp \
+    record-indigo.cpp
+
+HEADERS += \
+    gps-indigo.h \
+    record-indigo.h
