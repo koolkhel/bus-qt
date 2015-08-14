@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="blank-bus">images/blank-bus.png</file>
+        <file alias="end-station">images/end-station.png</file>
+        <file alias="middle-station">images/middle-station.png</file>
+        <file alias="next-bus-marker">images/next-bus-marker.png</file>
+        <file alias="next-bus-top">images/next-bus-top.png</file>
+        <file alias="night-end-station">images/night end station.png</file>
+        <file alias="night-middle-station">images/night middle station.png</file>
+        <file alias="night-next-bus-top">images/night next bus top.png</file>
+        <file alias="night-next-marker">images/night next marker.png</file>
+        <file alias="night-our-marker">images/night our marker.png</file>
+        <file alias="night-prev-bus-top">images/night prev bus top.png</file>
+        <file alias="night-prev-marker">images/night prev marker.png</file>
+        <file alias="night-right-static-block">images/night right static block.png</file>
+        <file alias="night-section">images/night section.png</file>
+        <file alias="night-top-static-block">images/night top static block.png</file>
+        <file alias="previous-bus-marker">images/previous-bus-marker.png</file>
+        <file alias="previous-bus-top">images/previous-bus-top.png</file>
+        <file alias="right-static-block">images/right-static-block.png</file>
+        <file alias="section">images/section.png</file>
+        <file alias="section1">images/section1.png</file>
+        <file alias="section12">images/section12.png</file>
+        <file alias="section12-black">images/section12-black.png</file>
+        <file alias="section21">images/section21.png</file>
+        <file alias="section21-black">images/section21-black.png</file>
+        <file alias="station">images/station.png</file>
+        <file alias="station1">images/station1.png</file>
+        <file alias="station1-black">images/station1-black.png</file>
+        <file alias="top-static-block">images/top-static-block.png</file>
+        <file alias="us-marker">images/us-marker.png</file>
+    </qresource>
+</RCC>

@@ -67,7 +67,7 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
     painter->drawText(QRect(rightBlockLevel,200,widthText,heightText),nextStationForecasting);
     painter->drawImage(leftBusLeft - 30, 70,currMarker);
 
-    for(int i=0; i< 2; i++)
+    for(int i=0; i< 10; i++)
     {
         painter->drawImage(leftBusLeft + 200 *i , 180,QImage(":/images/station1-black.png"));
         painter->drawImage(leftBusLeft + 30 + 200*i ,192,QImage(":/images/section12-black.png"));
