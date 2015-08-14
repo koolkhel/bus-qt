@@ -47,16 +47,6 @@ struct StaticDescriptorInitializer_ui_5fmessage_2eproto {
   }
 } static_descriptor_initializer_ui_5fmessage_2eproto_;
 
-namespace {
-
-static void MergeFromFail(int line) GOOGLE_ATTRIBUTE_COLD;
-static void MergeFromFail(int line) {
-  GOOGLE_CHECK(false) << __FILE__ << ":" << line;
-}
-
-}  // namespace
-
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -76,7 +66,7 @@ const int ui_message::kUiMessageInFieldNumber;
     ::google::protobuf::internal::MessageTypeTraits< ::indigo::pb::ui_message >, 11, false >
   ui_message::ui_message_in(kUiMessageInFieldNumber, ::indigo::pb::ui_message::default_instance());
 ui_message::ui_message()
-  : ::google::protobuf::MessageLite(), _arena_ptr_(NULL) {
+  : ::google::protobuf::MessageLite() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:indigo.pb.ui_message)
 }
@@ -85,8 +75,7 @@ void ui_message::InitAsDefaultInstance() {
 }
 
 ui_message::ui_message(const ui_message& from)
-  : ::google::protobuf::MessageLite(),
-    _arena_ptr_(NULL) {
+  : ::google::protobuf::MessageLite() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:indigo.pb.ui_message)
@@ -120,12 +109,8 @@ const ui_message& ui_message::default_instance() {
 
 ui_message* ui_message::default_instance_ = NULL;
 
-ui_message* ui_message::New(::google::protobuf::Arena* arena) const {
-  ui_message* n = new ui_message;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
+ui_message* ui_message::New() const {
+  return new ui_message;
 }
 
 void ui_message::Clear() {
@@ -200,13 +185,15 @@ void ui_message::SerializeWithCachedSizes(
 int ui_message::ByteSize() const {
   int total_size = 0;
 
-  // optional int32 data = 2 [default = 2];
-  if (has_data()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->data());
-  }
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 data = 2 [default = 2];
+    if (has_data()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->data());
+    }
 
+  }
   total_size += unknown_fields().size();
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -221,7 +208,7 @@ void ui_message::CheckTypeAndMergeFrom(
 }
 
 void ui_message::MergeFrom(const ui_message& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_data()) {
       set_data(from.data());
@@ -242,48 +229,18 @@ bool ui_message::IsInitialized() const {
 }
 
 void ui_message::Swap(ui_message* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void ui_message::InternalSwap(ui_message* other) {
-  std::swap(data_, other->data_);
-  std::swap(_has_bits_[0], other->_has_bits_[0]);
-  _unknown_fields_.swap(other->_unknown_fields_);
-  std::swap(_cached_size_, other->_cached_size_);
+  if (other != this) {
+    std::swap(data_, other->data_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.swap(other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
 }
 
 ::std::string ui_message::GetTypeName() const {
   return "indigo.pb.ui_message";
 }
 
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// ui_message
-
-// optional int32 data = 2 [default = 2];
-bool ui_message::has_data() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-void ui_message::set_has_data() {
-  _has_bits_[0] |= 0x00000001u;
-}
-void ui_message::clear_has_data() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-void ui_message::clear_data() {
-  data_ = 2;
-  clear_has_data();
-}
- ::google::protobuf::int32 ui_message::data() const {
-  // @@protoc_insertion_point(field_get:indigo.pb.ui_message.data)
-  return data_;
-}
- void ui_message::set_data(::google::protobuf::int32 value) {
-  set_has_data();
-  data_ = value;
-  // @@protoc_insertion_point(field_set:indigo.pb.ui_message.data)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 

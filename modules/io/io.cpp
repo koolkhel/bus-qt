@@ -1,5 +1,5 @@
 #include "io.h"
-
+#include <QTime>
 Q_LOGGING_CATEGORY(IOC, "io")
 
 using namespace indigo::pb;
@@ -7,6 +7,8 @@ using namespace indigo::pb;
 IO::IO(QObject *parent)
 {
     setParent(parent);
+
+    previousState = 2;
 
     this->name = "io works";
 
@@ -40,11 +42,19 @@ void IO::respond(QString topic, internal_msg &message)
 
 void IO::doInputJob()
 {
-    internal_msg ioMessage;
-    io_message *io = ioMessage.MutableExtension(io_message::io_message_in);
-    io->set_content(resource->read());
-    io->set_io_id(id);
-    publish(ioMessage, outputTopic);
+    qint32 currentState = resource->read();
+    if(currentState != previousState) {
+        previousState = currentState;
+        internal_msg ioMessage;
+        io_message *io = ioMessage.MutableExtension(io_message::io_message_in);
+        if(invert) {
+            currentState = (currentState == 1) ? 0 : 1;
+        }
+        io->set_value(currentState);
+        io->set_io_id(id);
+        io->set_epoch(QTime::currentTime().second());
+        publish(ioMessage, outputTopic);
+    }
 }
 
 void IO::doOutputJob(uint64_t content)
@@ -61,9 +71,10 @@ void IO::start()
 
     QString device = getConfigurationParameter("device", "").toString();
     inputTopic     = getConfigurationParameter("inputTopic", "io_in").toString();
-    outputTopic    = getConfigurationParameter("outputTopic", "io_out").toString();
-    id             = static_cast< io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
+    outputTopic   = getConfigurationParameter("outputTopic", "io_out").toString();
+    id                      = static_cast< io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
     int timeout    = getConfigurationParameter("timeout", 100).toInt();
+    invert             = getConfigurationParameter("invert", false).toBool();
 
     if(device == "") {
         qCWarning(IOC) << "empty device!";

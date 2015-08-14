@@ -29,10 +29,12 @@ public slots:
     void doInputJob();
 private:
     Resource *resource;
+    qint32 previousState;
     QString inputTopic;
     QString outputTopic;
     ::indigo::pb::io_message_IO_id id;
     QTimer timer;
+    bool invert;
 };
 
 #endif // SKEL_H

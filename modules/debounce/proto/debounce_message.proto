@@ -8,17 +8,15 @@ option java_outer_classname = "IndigoPB";
 option optimize_for = LITE_RUNTIME;
 
 message debounce_message {
-
-	/*
-	extend indigo_msg {
-                optional skel_message skel_message_out = 200;
-	}
-
-	extend internal_msg {
-		optional skel_message skel_message_in = 200;
-	}
-
-	optional int32 data = 2 [ default = 2 ];
-	*/
+    enum debounce_state {
+        STABLE = 0;
+        DEBOUNCE = 1;
+        DEBOUNCE_LETAL = 2;
+    }
+    optional debounce_state state = 4 [default = STABLE];
+    optional internal_msg msg = 5;
+    optional int64 epoch = 6;
+    extend internal_msg {
+            optional debounce_message debounce_message_in = 215;
+    }
 }
-

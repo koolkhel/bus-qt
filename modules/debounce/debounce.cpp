@@ -11,7 +11,7 @@ DEBOUNCE::DEBOUNCE(QObject *parent)
     setParent(parent);
 
     this->name = "debounce works";
-
+    dbc = dbcMessage.MutableExtension(indigo::pb::debounce_message::debounce_message_in);
     qCDebug(DEBOUNCEC, "initialized");
 }
 
@@ -30,24 +30,47 @@ QStringList DEBOUNCE::getPubTopics()
 
 void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    if(topic.compare(LimitTopic) == 0 || topic.compare(filtredTopic) == 0) {
-        return;
-    }
-    if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
+    if(inputCheck(topic, message)) {
         ::indigo::pb::io_message msg = message.GetExtension(::indigo::pb::io_message::io_message_in);
         if(msg.io_id() == id) {
-            quint32 content = msg.content();
-            if(timer.elapsed() <= timeout && content) {
-                ++bounceCounter;
-                if(bounceCounter <= limitBounce) {
-                    publish(message, filtredTopic);
-                } else {
-                    publish(message, LimitTopic);
-                }
+            bounceStarted.start();
+            dbc->set_allocated_msg(&message);
+            switch(state) {
+              default:
+                    qCWarning(DEBOUNCEC) << "Wrong state"; break;
+              case 0:
+                    state = 1;
+                    dbc->set_state(::indigo::pb::debounce_message_debounce_state_DEBOUNCE);
+                    dbc->set_epoch(QTime::currentTime().msecsSinceStartOfDay()); break;
+              case 1:
+                    state = 2;
+                    publish(dbcMessage, "STARTED BOUNCE"); break;
+               case 2: if((QTime::currentTime().msecsSinceStartOfDay() - dbc->epoch()) > timeout) {
+                    dbc->set_state(::indigo::pb::debounce_message_debounce_state_DEBOUNCE_LETAL);
+                    publish(dbcMessage, "FATAL BOUNCE");
+                } break;
             }
         }
+
     }
-    timer = QTime::currentTime();
+}
+
+bool DEBOUNCE::inputCheck(QString topic, indigo::pb::internal_msg &message)
+{
+    if(topic.compare(LimitTopic) == 0 || topic.compare(filtredTopic) == 0) {
+        return false;
+    }
+    if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
+       return true;
+    }
+    return false;
+}
+
+void DEBOUNCE::stabilized()
+{
+    state = 0;
+    dbc->set_state(indigo::pb::debounce_message_debounce_state_DEBOUNCE);
+    publish(dbcMessage, filtredTopic);
 }
 
 
@@ -57,7 +80,7 @@ void DEBOUNCE::start()
     limitBounce        = getConfigurationParameter("limitBounce", 5).toInt();
     timeout            = getConfigurationParameter("timeout", 200).toInt();
     id                 = static_cast< ::indigo::pb::io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
-
+    
     if(id == ::indigo::pb::io_message_IO_id_DEFAULT) {
         qCWarning(DEBOUNCEC) << "default id";
     }

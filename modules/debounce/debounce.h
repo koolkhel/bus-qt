@@ -5,11 +5,13 @@
 #include <QLoggingCategory>
 #include <QDebug>
 #include <QTime>
+#include <QTimer>
 #include <QString>
 #include <QtGlobal>
 
 #include "module.h"
-
+#include "indigo_message.pb.h"
+#include "debounce_message.pb.h"
 #include "io_message.pb.h"
 
 Q_DECLARE_LOGGING_CATEGORY(DEBOUNCEC)
@@ -25,11 +27,17 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
+    bool inputCheck(QString topic, indigo::pb::internal_msg &message);
+ public slots:
+    void stabilized();
 private:
+    indigo::pb::internal_msg dbcMessage;
+    indigo::pb::debounce_message *dbc;
     int bounceCounter;
     int limitBounce;
     int timeout;
-    QTime timer;
+    QTimer bounceStarted;    
+    int state ;
     QString LimitTopic;
     QString filtredTopic;
     ::indigo::pb::io_message_IO_id id;

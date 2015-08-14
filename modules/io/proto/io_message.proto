@@ -8,7 +8,7 @@ option java_outer_classname = "IndigoPB";
 option optimize_for = LITE_RUNTIME;
 
 message io_message {
-    required uint32 content = 1;
+    required uint32 value = 1;
 
     extend internal_msg {
             optional io_message io_message_in = 206;
@@ -31,5 +31,6 @@ message io_message {
       POWER10 = 10;
     }
     optional IO_id io_id = 2 [default = DEFAULT];
+    optional uint64 epoch = 3;
 }
 

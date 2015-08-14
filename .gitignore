@@ -5,3 +5,4 @@ Makefile
 moc*
 *.autosave
 *.backtrace.*
+*.pb.h
