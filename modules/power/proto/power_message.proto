@@ -9,16 +9,26 @@ option optimize_for = LITE_RUNTIME;
 
 message power_message {
 
-	/*
-	extend indigo_msg {
-                optional skel_message skel_message_out = 200;
-	}
+    extend internal_msg {
+            optional power_message power_message_in = 219;
+    }
 
-	extend internal_msg {
-		optional skel_message skel_message_in = 200;
-	}
+    extend indigo_msg {
+            optional power_message power_message_out = 220;
+    }
 
-	optional int32 data = 2 [ default = 2 ];
-	*/
+    enum STAT {
+      CH_SUSP = 0;
+      CH_DONE  = 1;
+      FCH_PROG  = 2;
+      PCH_PROG  = 3;
+    }
+    enum ACpg_STATE {
+        GOOD = 0;
+        BAD  = 1;
+    }
+    optional STAT stat1 = 2 [default = CH_SUSP];
+    optional STAT stat2 = 3 [default = CH_SUSP];
+    optional ACpg_STATE acpg = 4 [default = GOOD];
 }
 

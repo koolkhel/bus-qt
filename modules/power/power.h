@@ -5,7 +5,6 @@
 #include <QLoggingCategory>
 #include <QDebug>
 #include <QMap>
-#include <QTimer>
 
 #include "module.h"
 
@@ -22,14 +21,13 @@ public:
     void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
-public slots:
+private:
     void doPowerJob();
 private:
-    QSet<int> privateId;
-    QMap<int, int> devices;
-    int delayedStart;
-    QString errorTopic;
-    QTimer timer;
+    int S1, S2, ACPG;
+    QMap < int, int > privateID;
+    QString errorTopic, powerTopic;
 };
+
 
 #endif // SKEL_H

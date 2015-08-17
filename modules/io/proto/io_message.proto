@@ -19,9 +19,9 @@ message io_message {
     }
     enum IO_id {
       DEFAULT = 0;
-      POWER1  = 1;
-      POWER2  = 2;
-      POWER3  = 3;
+      S1  = 1;
+      S2  = 2;
+      ACPG  = 3;
       POWER4  = 4;
       POWER5  = 5;
       POWER6  = 6;
@@ -32,5 +32,13 @@ message io_message {
     }
     optional IO_id io_id = 2 [default = DEFAULT];
     optional uint64 epoch = 3;
+
+    enum debounce_state {
+        STABLE = 0;
+        DEBOUNCE = 1;
+        DEBOUNCE_LETAL = 2;
+    }
+    optional debounce_state state = 4 [default = STABLE];
+
 }
 

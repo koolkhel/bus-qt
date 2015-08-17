@@ -1,5 +1,6 @@
 #include "power.h"
 #include "io_message.pb.h"
+#include "power_message.pb.h"
 
 Q_LOGGING_CATEGORY(POWERC, "power")
 
@@ -8,10 +9,6 @@ POWER::POWER(QObject *parent)
     setParent(parent);
 
     this->name = "power works";
-
-    delayedStart = 100;
-
-    connect(&timer, SIGNAL(timeout()), this, SLOT(doPowerJob()));
 
     errorTopic = "power issue";
 
@@ -36,51 +33,73 @@ void POWER::respond(QString topic, indigo::pb::internal_msg &message)
 {
     if(message.HasExtension(indigo::pb::io_message::io_message_in)) {
         indigo::pb::io_message msg = message.GetExtension(indigo::pb::io_message::io_message_in);
-        if(privateId.find(msg.io_id()) != privateId.end()) {
-            qCDebug(POWERC) << "Recived data" << msg.content();
-            devices[msg.io_id()] = msg.content();
+        if(privateID.keys().indexOf(msg.io_id()) != -1) {
+            privateID[msg.io_id()] = msg.value();
+            doPowerJob();
         }
     }
 }
 
+
+
 void POWER::doPowerJob()
 {
-    if(delayedStart > 0) {
-        --delayedStart;
-        return;
+    indigo::pb::power_message::STAT       STAT1;
+    indigo::pb::power_message::STAT       STAT2;
+    indigo::pb::power_message::ACpg_STATE acpg;
+    if(privateID[ACPG] == 1) {
+        acpg = indigo::pb::power_message_ACpg_STATE_GOOD;
+    } else {
+        acpg = indigo::pb::power_message_ACpg_STATE_BAD;
     }
-    int value = 1;
-    for(QMap<int, int>::const_iterator it = devices.cbegin(); it != devices.cend(); ++it) {
-        value &= static_cast < bool > (it.value());
+
+    if(privateID[S1] == 1 && privateID[S2] == 1) {
+        STAT1 = indigo::pb::power_message_STAT_PCH_PROG;
+    } else if (privateID[S1] == 1 && privateID[S2] == 0) {
+        STAT1 = indigo::pb::power_message_STAT_FCH_PROG;
+    } else if (privateID[S1] == 0 && privateID[S2] == 1) {
+        STAT1 = indigo::pb::power_message_STAT_CH_DONE;
+    } else if (privateID[S1] == 0 && privateID[S2] == 0) {
+        STAT1 = indigo::pb::power_message_STAT_CH_SUSP;
+    } else {
+        qCWarning(POWERC) << "HOW?";
     }
-    if(!value) {
-        ::indigo::pb::internal_msg message;
-        publish(message, errorTopic);
-    }
+
+    indigo::pb::internal_msg pwrMessage;
+    indigo::pb::power_message *pwr = pwrMessage.MutableExtension(indigo::pb::power_message::power_message_in);
+    pwr->set_acpg(acpg);
+    pwr->set_stat1(STAT1);
+
+    publish(pwrMessage, powerTopic);
 }
 
 void POWER::start()
 {
-    delayedStart = getConfigurationParameter("delayedStart", 1).toInt();
-    int interval = getConfigurationParameter("interval", 200).toInt();
 
-    QStringList devices = getConfigurationParameter("devices", "").toStringList();
-
-    if(devices.size() != 10) {
-        qCWarning(POWERC) << "Not 10 devices in config" << getConfigurationParameter("devices", "");
+    powerTopic = getConfigurationParameter("powerTopic", "power").toString();
+    S1 = getConfigurationParameter("S1_ID", -1).toInt();
+    privateID[S1] = 0;
+    if(S1 == -1) {
+        qCWarning(POWERC) << "S1 wrong id";
     }
 
-    foreach (QString topic, devices) {
-        privateId.insert(topic.toInt());
+    S2 = getConfigurationParameter("S2_ID", -1).toInt();
+    privateID[S2] = 0;
+    if(S2 == -1) {
+        qCWarning(POWERC) << "S2 wrong id";
     }
 
-    subscribe("io_in");
-    timer.setSingleShot(false);
+    ACPG = getConfigurationParameter("ACPG_ID", -1).toInt();
+    privateID[ACPG] = 1;
+    if(ACPG == -1) {
+        qCWarning(POWERC) << "ACPG wrong id";
+    }
 
-    timer.start(interval);
+    QString inputTopic = getConfigurationParameter("inputTopic", "io_in").toString();
+    subscribe(inputTopic);
 }
 
 void POWER::stop()
 {
-    timer.stop();
+    privateID.clear();
 }

@@ -32,14 +32,15 @@ public:
     void stabilized();
 private:
     indigo::pb::internal_msg dbcMessage;
-    indigo::pb::debounce_message *dbc;
-    int bounceCounter;
-    int limitBounce;
     int timeout;
+    int epoch;
+    int state;
+
     QTimer bounceStarted;    
-    int state ;
-    QString LimitTopic;
+    QString limitTopic;
+    QString bounceStartedTopic;
     QString filtredTopic;
+
     ::indigo::pb::io_message_IO_id id;
 };
 

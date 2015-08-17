@@ -71,10 +71,10 @@ void IO::start()
 
     QString device = getConfigurationParameter("device", "").toString();
     inputTopic     = getConfigurationParameter("inputTopic", "io_in").toString();
-    outputTopic   = getConfigurationParameter("outputTopic", "io_out").toString();
-    id                      = static_cast< io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
+    outputTopic    = getConfigurationParameter("outputTopic", "io_out").toString();
+    id             = static_cast< io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
     int timeout    = getConfigurationParameter("timeout", 100).toInt();
-    invert             = getConfigurationParameter("invert", false).toBool();
+    invert         = getConfigurationParameter("invert", false).toBool();
 
     if(device == "") {
         qCWarning(IOC) << "empty device!";
