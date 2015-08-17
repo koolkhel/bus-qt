@@ -6,3 +6,5 @@ moc*
 *.autosave
 *.backtrace.*
 *.pb.h
+app
+tests

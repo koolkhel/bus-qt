@@ -26,7 +26,7 @@ TEST(io, start) {
       << "inputTopics=io";
     QFile file("/home/yury/tmp.txt");
     file.open(QIODevice::WriteOnly);
-    qDebug() << file.errorString();
+
     QTextStream stream(&file);
 
     stream << 1;

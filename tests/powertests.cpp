@@ -9,6 +9,8 @@
 #include <QTest>
 #include <QSignalSpy>
 #include <unistd.h>
+#include <QFile>
+#include <QTextStream>
 
 TEST(power, start) {
 
@@ -16,61 +18,41 @@ TEST(power, start) {
 
     QStringList c;
     c << "[modules]"
-      << "io_instance1=io"
-      << "io_instance2=io"
-      << "io_instance3=io"
-      << "io_instance4=io"
-      << "io_instance5=io"
-      << "io_instance6=io"
-      << "io_instance7=io"
-      << "io_instance8=io"
-      << "io_instance9=io"
-      << "io_instance10=io"
+      << "S1=io"
+      << "S2=io"
+      << "ACPG=io"
       << "power_instance=power"
       << "test_instance=test_module"
-      << "[io_instance1]"
+      << "[S1]"
       << "id=1"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance2]"
+      << "device=/home/yury/tmp1.txt"
+      << "[S2]"
       << "id=2"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance3]"
+      << "device=/home/yury/tmp2.txt"
+      << "[ACPG]"
       << "id=3"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance4]"
-      << "id=4"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance5]"
-      << "id=5"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance6]"
-      << "id=6"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance7]"
-      << "id=7"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance8]"
-      << "id=8"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance9]"
-      << "id=9"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
-      << "[io_instance10]"
-      << "id=10"
-      << "device=/home/moka/Projects/debounce/modules/io/io.json"
+      << "device=/home/yury/tmp3.txt"
       << "[power_instance]"
-      << "devices=1,2,3,4,5,6,7,8,9,10"
-      << "[test_instance]"
-      << "[debounce_instance]"
-      << "inputTopics=io";
+      << "S1_ID=1"
+      << "S2_ID=2"
+      << "ACPG_ID=3"
+      << "[test_instance]";
 
     dispatcher->initializeAll(c);
+    for(int i = 1; i < 4; ++i) {
+        QFile file(QString("/home/yury/tmp%1.txt").arg(i));
+        file.open(QIODevice::WriteOnly);
+        QTextStream stream(&file);
+        stream << 1;
+        file.close();
+    }
 
     TestModule *testModule = reinterpret_cast<TestModule *>(
                 dispatcher->getModuleInstances().value("test_instance"));
 
     dispatcher->startAll();
-        //testModule->subscribeTopic("io");
+
+    testModule->subscribeTopic("power");
     QSignalSpy spy(testModule,  SIGNAL(messageReceivedSignal()));
 
     spy.wait(1000*1000*10);

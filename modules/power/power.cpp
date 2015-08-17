@@ -34,6 +34,7 @@ void POWER::respond(QString topic, indigo::pb::internal_msg &message)
     if(message.HasExtension(indigo::pb::io_message::io_message_in)) {
         indigo::pb::io_message msg = message.GetExtension(indigo::pb::io_message::io_message_in);
         if(privateID.keys().indexOf(msg.io_id()) != -1) {
+            qCDebug(POWERC) << privateID[msg.io_id()] << msg.value();
             privateID[msg.io_id()] = msg.value();
             doPowerJob();
         }

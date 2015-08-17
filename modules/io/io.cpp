@@ -53,7 +53,7 @@ void IO::doInputJob()
         io->set_value(currentState);
         io->set_io_id(id);
         io->set_epoch(QTime::currentTime().second());
-        publish(ioMessage, outputTopic);
+        publish(ioMessage, inputTopic);
     }
 }
 
