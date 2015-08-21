@@ -1,3 +1,11 @@
 *.o
 *.so*
 *.pro.user
+moc_*
+tests/tests
+app/app
+*.ini
+Makefile
+*.backtrace*
+modules/protos/include/*
+modules/protos/lib/*
