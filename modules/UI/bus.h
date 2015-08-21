@@ -6,8 +6,8 @@
 
 struct Bus {
 public:
-    Bus(QColor fontColor, QPixmap l_Image, QPoint pos = QPoint(0, 0));
-
+    Bus(QColor fontColor, QPixmap l_Image, QPoint pos = QPoint(0, 0), QPoint eps = QPoint(0, 0));
+    void init(class QGraphicsScene *scene);
     QGraphicsTextItem * name()  const;
     QGraphicsTextItem * time()  const;
 

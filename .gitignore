@@ -9,3 +9,4 @@ Makefile
 *.backtrace*
 modules/protos/include/*
 modules/protos/lib/*
+ui_*.h
