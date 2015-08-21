@@ -1,23 +1,33 @@
 #include "bus.h"
 #include <QFont>
 #include <QTime>
+#include <QGraphicsScene>
 
-Bus::Bus(QColor fontColor, QPixmap l_Image, QPoint pos) {
+Bus::Bus(QColor fontColor, QPixmap l_Image, QPoint pos, QPoint eps) {
     m_image = new QGraphicsPixmapItem(l_Image);
     m_name = new QGraphicsTextItem();
     m_time =   new QGraphicsTextItem();
 
     m_name->setDefaultTextColor(fontColor);
-    m_name->setFont(QFont("DroidSans.ttf",22, QFont::Bold));
+    m_name->setFont(QFont("DroidSans.ttf",33, QFont::Bold));
     m_name->setPlainText("N/A");
     m_name->setPos(pos);
 
-    m_image->setPos(pos.x(), pos.y() + 50);
+    m_image->setPos(pos.x() + eps.x(), pos.y() + eps.y());
 
     m_time->setDefaultTextColor(fontColor);
     m_time->setFont(QFont("DroidSans.ttf",22, QFont::Bold));
     m_time->setPlainText("N/A");
-    m_time->setPos(pos.x(), pos.y() + 50 + l_Image.height());
+    m_time->setPos(pos.x()+ eps.x() - 10, pos.y() +  eps.y() + l_Image.height());
+}
+
+void Bus::init(QGraphicsScene *scene)
+{
+    if(scene == NULL)
+        return;
+    scene->addItem(m_image);
+    scene->addItem(m_name);
+    scene->addItem(m_time);
 }
 
 QGraphicsTextItem *Bus::name() const {

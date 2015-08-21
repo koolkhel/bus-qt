@@ -105,12 +105,10 @@ void MainWindow::update(const indigo::pb::schedule_movement_update &msg)
             clocks[0]->setPlainText(QTime::fromMSecsSinceStartOfDay(time).toString("mm:ss"));
         }
     }
-    double position = bus.position() + 1; //special trunc
-    qDebug() << position << RouteInfo.station_size();
-    qDebug() << RouteInfo.station(position).schedule_times_size();
+
     clocks[3]->setPlainText(
                 QTime::fromMSecsSinceStartOfDay(
-                    RouteInfo.station(position).schedule_times(0).visit_time() * 1000)
+                    RouteInfo.station(bus.position() + 1).schedule_times(0).visit_time() * 1000)
                 .toString("mm:ss"));
     ;
     Line->setPos(202.5 - bus.position() * Line->moveWidth() , 70);
@@ -173,18 +171,14 @@ void MainWindow::initializeBus()
     leftBus = new Bus(
                            Qt::red,
                            QPixmap::fromImage(QImage(":/images/night prev bus top.png")),
-                           QPoint(12, staticBlockY+30));
-
-    scene->addItem(leftBus->image());
-    scene->addItem(leftBus->name());
-    scene->addItem(leftBus->time());
+                           QPoint(-50, staticBlockY+5),
+                            QPoint(60, 70));
+    leftBus->init(scene);
 
     rightBus = new Bus(
                             Qt::green,
                             QPixmap::fromImage(QImage(":/images/night next bus top.png")),
-                            QPoint(355, staticBlockY+30));
-
-    scene->addItem(rightBus->image());
-    scene->addItem(rightBus->name());
-    scene->addItem(rightBus->time());
+                            QPoint(255, staticBlockY+5),
+                            QPoint(100, 70));
+    rightBus->init(scene);
 }

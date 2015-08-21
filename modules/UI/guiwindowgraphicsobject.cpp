@@ -51,12 +51,13 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
         if(bus.route_order() != m_me) {
                 painter->drawText(
                                     x - bus.busname().length() * 1.3 + mvWidth*bus.position() ,
-                                    0,
+                                    27,
                                     QString::fromStdString(bus.busname()));
                 painter->drawImage(
                             x + mvWidth * bus.position(),
                             30,
                             ((bus.route_order() < m_me)  ? PrevBus : NextBus));
+
         }
     }
 
