@@ -18,17 +18,17 @@ TEMPLATE = lib
 SOURCES +=\
         mainwindow.cpp \
         guiwindowgraphicsobject.cpp \
-        bus.cpp \
-        currentbus.cpp \
     uimodule.cpp \
-    uipluginfactory.cpp
+    uipluginfactory.cpp \
+    timer.cpp \
+    bus.cpp
 
 HEADERS  += mainwindow.h \
         guiwindowgraphicsobject.h \
-        bus.h \
-        currentbus.h \
     uimodule.h \
-    uipluginfactory.h
+    uipluginfactory.h \
+    timer.h \
+    bus.h
 
 FORMS    += mainwindow.ui
 

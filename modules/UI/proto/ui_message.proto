@@ -68,6 +68,9 @@ message bus_on_route {
 
 // расстояние по прямой до следующего
     optional int32 distance_to_next_m = 7 [ default = 0 ];
+
+//  абсолютная позиция на маршруте
+   optional double position = 8 [default = 0];
 }
 
 // наш автобус
@@ -94,25 +97,3 @@ message schedule_movement_update {
         optional schedule_movement_update schedule_update_out = 301;
     }
 }
-
-message ui_message {
-
-	optional string previousBusTime = 3;
-	optional string previousBusLabel = 4;
-	optional string previousBusImage = 5;
-	optional string secondBusTime = 6;
-	optional string secondBusLabel = 7;
-	optional string secondBusImage = 8;
-	optional string currentRouteTime = 9;
-	optional string previousStationTime = 10;
-	optional string nextStationTimeTable = 11;
-	optional string nextStationForecasting = 12;
-
-
-	extend internal_msg {
-		optional ui_message ui_message_in = 300;
-	}
-
-	optional int32 data = 2 [ default = 2 ];
-}
-

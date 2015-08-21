@@ -6,7 +6,10 @@
 #include <QDebug>
 
 #include "module.h"
-#include "currentbus.h"
+
+#include "ui_message.pb.h"
+
+#include "mainwindow.h"
 
 Q_DECLARE_LOGGING_CATEGORY(UI_MODULE)
 
@@ -20,7 +23,8 @@ class UIModule : public Module
         void stop();
         QStringList getPubTopics();
         void respond(QString topic, ::indigo::pb::internal_msg &message);
-        Q_SIGNAL void messageReceivedSignal(Bus*, Bus*, CurrentBus*);
+private:
+        MainWindow *w;
 };
 
 #endif // UIMODULE_H
