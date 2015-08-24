@@ -17,28 +17,39 @@ message io_message {
     extend indigo_msg {
             optional io_message io_message_out = 207;
     }
+
     enum IO_id {
       DEFAULT = 0;
       S1  = 1;
       S2  = 2;
       ACPG  = 3;
-      POWER4  = 4;
-      POWER5  = 5;
-      POWER6  = 6;
-      POWER7  = 7;
-      POWER8  = 8;
-      POWER9  = 9;
-      POWER10 = 10;
+      NET_ANT  = 4;
+      PWRKEY  = 5;
+      IN1  = 6;
+      IN2  = 7;
+      IN3  = 8;
+      IN4  = 9;
+      OUT1 = 10;
+      OUT2 = 11;
+      OUT3 = 12;
+      OUT4 = 13;
+      STATUS_GSM = 14;
+      EN_GSM = 15;
+      RST_GPS = 16;
+      EN_GPS = 17;
+      POWER_ON_USB = 18;
     }
-    optional IO_id io_id = 2 [default = DEFAULT];
-    optional uint64 epoch = 3;
 
-    enum debounce_state {
+    optional IO_id io_id = 2 [default = DEFAULT];
+
+    optional timestamp time = 3;
+
+    enum bounce_state {
         STABLE = 0;
-        DEBOUNCE = 1;
-        DEBOUNCE_LETAL = 2;
+        BOUNCE = 1;
     }
-    optional debounce_state state = 4 [default = STABLE];
+    
+    optional bounce_state bounce = 4 [default = STABLE];
 
 }
 

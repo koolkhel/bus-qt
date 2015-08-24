@@ -30,5 +30,24 @@ message power_message {
     optional STAT stat1 = 2 [default = CH_SUSP];
     optional STAT stat2 = 3 [default = CH_SUSP];
     optional ACpg_STATE acpg = 4 [default = GOOD];
+
+    optional timestamp time = 5;
+
+    enum PowerStatus {
+    	RUNNING_ON_BATTERY = 1;
+	RUNNING_ON_AC = 2;
+	POWER_UNKNOWN = 3; // дребезг основного разъема
+    }
+
+    optional PowerStatus powerStatus = 6;
+
+    enum ChargerStatus {
+    	BATTERY_CHARGED = 1; // done
+	BATTERY_CHARGING_IN_PROGRESS = 2; // pre-charge + fast-charge
+	BATTERY_NOT_CHARGING = 3; // suspend
+	UNKNOWN = 4; // дребезг контактов
+    }
+
+    optional ChargerStatus chargerStatus = 7;
 }
 

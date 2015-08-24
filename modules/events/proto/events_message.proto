@@ -15,7 +15,7 @@ enum indigo_event_type {
 message indigo_event {
 	optional indigo_event_type type = 1;
 
-	optional int32 time = 2;
+	optional timestamp time = 2;
 
 	optional int32 parameter = 3;
 
