@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QGraphicsPixmapItem>
@@ -137,7 +136,6 @@ void MainWindow::initializeStaticObjects()
     QImage l_image[] = {QImage(":/images/night our marker.png"),
                                         QImage(":/images/night top static block.png"),
                                         QImage(":/images/night right static block.png")};
-    qDebug() << l_image[1].width();
     for(int i = 0; i < 3; ++i) {
      QGraphicsPixmapItem * graphItem =
             new QGraphicsPixmapItem ((QPixmap::fromImage(l_image[i])));

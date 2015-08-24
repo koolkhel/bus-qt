@@ -8,6 +8,7 @@
 GuiWindowGraphicsObject::GuiWindowGraphicsObject()
 {
     RouteInfo = NULL;
+    mvWidth = 200;
 }
 
 GuiWindowGraphicsObject::~GuiWindowGraphicsObject()
@@ -20,7 +21,7 @@ QRectF GuiWindowGraphicsObject::boundingRect() const
     if(RouteInfo == NULL)
         return QRectF(0,0,0,0);
 
-    return QRectF(0, 0, 200*RouteInfo->station_size(), 165);
+    return QRectF(0, 0, mvWidth*(RouteInfo->station_size() + 1), 165);
 }
 
 void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
