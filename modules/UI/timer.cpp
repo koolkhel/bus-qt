@@ -1,4 +1,4 @@
-#include "timer.h"
+    #include "timer.h"
 Timer::Timer(int startTime, bool reverse) {
     setDefaultTextColor(Qt::white);
     currentTime = startTime;

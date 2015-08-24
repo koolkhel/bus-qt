@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QGraphicsPixmapItem>
