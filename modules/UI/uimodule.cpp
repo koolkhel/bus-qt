@@ -42,11 +42,9 @@ void UIModule::respond(QString topic, indigo::pb::internal_msg &message)
 {
     Q_UNUSED(topic)
     if(message.HasExtension(::indigo::pb::route_info::route_info_in)) {
-        qDebug() << "route_info_in";
         w->update(message.GetExtension(::indigo::pb::route_info::route_info_in));
     }
     if(message.HasExtension(indigo::pb::schedule_movement_update::schedule_update_in)) {
-        qDebug() << "schedule_update_in";
         w->update(message.GetExtension(indigo::pb::schedule_movement_update::schedule_update_in));
     }
 }

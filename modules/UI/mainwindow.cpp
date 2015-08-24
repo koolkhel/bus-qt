@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
 
-    scene = new QGraphicsScene(QRect(0, 0, 680, 100));
+    scene = new QGraphicsScene(0, 0, 680, 100);
 
     ui->graphicsView->setScene(scene);
 
@@ -83,7 +83,7 @@ void MainWindow::update(const indigo::pb::schedule_movement_update &msg)
     } else {
         leftBus->show();
     }
-    if(bus.route_order() ==( msg.buses_size() - 1)) {
+    if(bus.route_order() == msg.buses_size()) {
         rightBus->hide();
     } else {
         rightBus->show();
@@ -100,9 +100,14 @@ void MainWindow::update(const indigo::pb::schedule_movement_update &msg)
     if(time != 0) {
         if(time < 0) {
             clocks[0]->setPlainText(QString("-%1")
-                                                        .arg(QTime::fromMSecsSinceStartOfDay(time).toString("mm:ss")));
+                                                        .arg(QTime::fromMSecsSinceStartOfDay(-time).toString("mm:ss")));
         } else {
             clocks[0]->setPlainText(QTime::fromMSecsSinceStartOfDay(time).toString("mm:ss"));
+        }
+        if(time > -2*60*1000) {
+            clocks[0]->setDefaultTextColor(Qt::green);
+        } else {
+            clocks[0]->setDefaultTextColor(Qt::red);
         }
     }
 
@@ -120,11 +125,6 @@ void MainWindow::update(const indigo::pb::route_info &msg)
 
     RouteInfo = msg;
     state = true;
-    QGraphicsTextItem * label = new QGraphicsTextItem(QString::fromStdString(RouteInfo.bus_number()));
-    scene->addItem(label);
-    label->setFont(QFont("Arial", 23));
-    label->setDefaultTextColor(Qt::white);
-    label->setPos(170, 0);
 
     Line->setRoute(&RouteInfo);
     Line->setPos(202.5, 70);
@@ -132,11 +132,12 @@ void MainWindow::update(const indigo::pb::route_info &msg)
 
 void MainWindow::initializeStaticObjects()
 {
-    int l_x[] = {170, -55, 460};
+    int l_x[] = {170, -58, 460};
     int l_y[] = {40, staticBlockY, staticBlockY};
     QImage l_image[] = {QImage(":/images/night our marker.png"),
                                         QImage(":/images/night top static block.png"),
                                         QImage(":/images/night right static block.png")};
+    qDebug() << l_image[1].width();
     for(int i = 0; i < 3; ++i) {
      QGraphicsPixmapItem * graphItem =
             new QGraphicsPixmapItem ((QPixmap::fromImage(l_image[i])));
@@ -148,9 +149,9 @@ void MainWindow::initializeStaticObjects()
 void MainWindow::initializeClocks()
 {
     Timer * item = new Timer();
-    item->setFont(QFont("DroidSans.ttf",22, QFont::Bold));
+    item->setFont(QFont("DroidSans.ttf",40, QFont::Bold));
     ui->graphicsView->scene()->addItem(item);
-    item->setPos(530, -125);
+    item->setPos(465, -150);
 
     for(int i = 0; i < 4; ++i) {      
         if(i == 1) {
@@ -158,11 +159,11 @@ void MainWindow::initializeClocks()
         } else {
             clocks[i] = new QGraphicsTextItem();
         }
-        clocks[i]->setDefaultTextColor(Qt::gray);
+        clocks[i]->setDefaultTextColor(Qt::white);
         clocks[i]->setPlainText("N/A");
-        clocks[i]->setFont(QFont("DroidSans.ttf",22, QFont::Bold));
+        clocks[i]->setFont(QFont("DroidSans.ttf",33));
         ui->graphicsView->scene()->addItem(clocks[i]);
-        clocks[i]->setPos(550, -20 + 80*i);
+        clocks[i]->setPos(530, -28 + 80*i);
     }
 }
 
@@ -171,14 +172,14 @@ void MainWindow::initializeBus()
     leftBus = new Bus(
                            Qt::red,
                            QPixmap::fromImage(QImage(":/images/night prev bus top.png")),
-                           QPoint(-50, staticBlockY+5),
-                            QPoint(60, 70));
+                           QPoint(-20, staticBlockY+15),
+                            QPoint(30, 65));
     leftBus->init(scene);
 
     rightBus = new Bus(
                             Qt::green,
                             QPixmap::fromImage(QImage(":/images/night next bus top.png")),
-                            QPoint(255, staticBlockY+5),
-                            QPoint(100, 70));
+                            QPoint(320, staticBlockY+15),
+                            QPoint(30, 65));
     rightBus->init(scene);
 }
