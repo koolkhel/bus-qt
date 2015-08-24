@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QGraphicsPixmapItem>
@@ -5,6 +6,7 @@
 #include <sstream>
 #include <QResource>
 #include <QDateTime>
+#include <unistd.h>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -13,7 +15,7 @@
 #include <QFontDatabase>
 #include "timer.h"
 
-const int staticBlockY = -195;
+const int staticBlockY = -190;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -41,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     initializeBus();
 
     state = false;
+    id_timer = 0;
+    this->setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -141,6 +145,10 @@ void MainWindow::initializeStaticObjects()
             new QGraphicsPixmapItem ((QPixmap::fromImage(l_image[i])));
         scene->addItem(graphItem);
         graphItem->setPos(l_x[i],l_y[i]);
+
+        if(i == 0) {
+            Marker = graphItem;
+        }
     }
 }
 
@@ -149,7 +157,7 @@ void MainWindow::initializeClocks()
     Timer * item = new Timer();
     item->setFont(QFont("DroidSans.ttf",40, QFont::Bold));
     ui->graphicsView->scene()->addItem(item);
-    item->setPos(465, -150);
+    item->setPos(465, staticBlockY + 45);
 
     for(int i = 0; i < 4; ++i) {      
         if(i == 1) {
@@ -161,7 +169,7 @@ void MainWindow::initializeClocks()
         clocks[i]->setPlainText("N/A");
         clocks[i]->setFont(QFont("DroidSans.ttf",33));
         ui->graphicsView->scene()->addItem(clocks[i]);
-        clocks[i]->setPos(530, -28 + 80*i);
+        clocks[i]->setPos(530, staticBlockY+167 + 80*i);
     }
 }
 
@@ -170,14 +178,37 @@ void MainWindow::initializeBus()
     leftBus = new Bus(
                            Qt::red,
                            QPixmap::fromImage(QImage(":/images/night prev bus top.png")),
-                           QPoint(-20, staticBlockY+15),
-                            QPoint(30, 65));
+                           QPoint(-20, staticBlockY+5),
+                            QPoint(30, 75));
     leftBus->init(scene);
 
     rightBus = new Bus(
                             Qt::green,
                             QPixmap::fromImage(QImage(":/images/night next bus top.png")),
-                            QPoint(320, staticBlockY+15),
-                            QPoint(30, 65));
+                            QPoint(270, staticBlockY+5),
+                            QPoint(80, 75));
     rightBus->init(scene);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    Marker->show();
+    switch(event->key()) {
+    case Qt::Key_Up: Marker->setPos(170, 0); break;
+    case Qt::Key_Down: Marker->setPos(170, 80); break;
+    case Qt::Key_Left: Marker->setPos(130, 40); break;
+    case Qt::Key_Right: Marker->setPos(210, 40); break;
+    default: Marker->hide(); break;
+    }
+    if(id_timer != 0) {
+        killTimer(id_timer);
+    }
+    id_timer = startTimer(2000);
+}
+
+void MainWindow::timerEvent(QTimerEvent *timer)
+{
+    Marker->setPos(170, 40);
+    Marker->show();
+    killTimer(timer->timerId());
 }

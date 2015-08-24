@@ -9,7 +9,7 @@ Bus::Bus(QColor fontColor, QPixmap l_Image, QPoint pos, QPoint eps) {
     m_time =   new QGraphicsTextItem();
 
     m_time->setDefaultTextColor(fontColor);
-    m_time->setFont(QFont("DroidSans.ttf",33));
+    m_time->setFont(QFont("DroidSans.ttf",40, QFont::Bold));
     m_time->setPlainText("N/A");
     m_time->setPos(pos);
 

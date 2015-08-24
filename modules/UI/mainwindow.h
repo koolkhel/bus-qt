@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QKeyEvent>
 
 #include "bus.h"
 #include "guiwindowgraphicsobject.h"
@@ -28,17 +29,23 @@ class MainWindow : public QMainWindow
         void initializeStaticObjects();
         void initializeClocks();
         void initializeBus();
+        void keyPressEvent(QKeyEvent * event);
+        void timerEvent(QTimerEvent *);
      private:
         Ui::MainWindow *ui;
 
         QGraphicsScene *scene;
 
         QGraphicsTextItem * clocks[4];
+
+        QGraphicsPixmapItem *Marker;
+
         Bus  *leftBus, *rightBus;
 
         GuiWindowGraphicsObject * Line;
         bool state;
         indigo::pb::route_info  RouteInfo;
+        int id_timer;
 };
 
 

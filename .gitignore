@@ -5,7 +5,7 @@ moc_*
 tests/tests
 app/app
 *.ini
-Makefile
+Makefile*
 *.backtrace*
 modules/protos/include/*
 modules/protos/lib/*
