@@ -42,8 +42,8 @@ TEST(UI, bigBaby) {
     route_info->set_route_name("2");
 
     ::indigo::pb::schedule_station *station = route_info->add_station();
-    station->set_station_name("Конечная\nЛевая");
-    for(int i = 0; i < 2; ++i) {
+    station->set_station_name("Конечная Левая");
+    for(int i = 0; i < 10; ++i) {
         station = route_info->add_station();
         station->set_station_name(QString("Промежуточная %1").arg(i).toStdString());
     }
