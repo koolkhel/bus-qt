@@ -1,8 +1,4 @@
 #include <QDebug>
-<<<<<<< HEAD
-=======
-
->>>>>>> e099ccb85d1beafd0638c0b09f678a8c0e5bdc32
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QGraphicsPixmapItem>
