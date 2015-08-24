@@ -8,6 +8,7 @@
 GuiWindowGraphicsObject::GuiWindowGraphicsObject()
 {
     RouteInfo = NULL;
+    mvWidth = 200;
 }
 
 GuiWindowGraphicsObject::~GuiWindowGraphicsObject()
@@ -20,7 +21,7 @@ QRectF GuiWindowGraphicsObject::boundingRect() const
     if(RouteInfo == NULL)
         return QRectF(0,0,0,0);
 
-    return QRectF(-20, 0, 200*RouteInfo->station_size(), 150);
+    return QRectF(0, 0, mvWidth*(RouteInfo->station_size() + 1), 165);
 }
 
 void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -30,20 +31,21 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
         Q_UNUSED(widget);
         return;
     }
-    painter->setPen(QPen(Qt::white,1));
+    painter->setFont(QFont("DroidSans.ttf",12, QFont::Bold));
+    painter->setPen(QPen(Qt::lightGray,2));
 
     painter->setRenderHint(QPainter::Antialiasing);
 
-    QImage FirstStation(":/images/station1-black.png"),
-                   LastStation(":/images/station1-black.png"),
-                   RegularStation(":/images/station1-black.png"),
-                   BlankLine(":/images/section12-black.png"),
+    QImage FirstStation(":/images/night end station.png"),
+                   LastStation(":/images/night end station.png"),
+                   RegularStation(":/images/night middle station.png"),
+                   BlankLine(":/images/night section.png"),
                    NextBus(":/images/night next marker.png"),
                    PrevBus(":/images/night prev marker.png");
 
     const int y = qMax(PrevBus.height(), NextBus.height()) + 30;
     const int x = 0;
-    mvWidth = BlankLine.width();
+    mvWidth = BlankLine.width() + FirstStation.width();
     const int lineEps    = qMax(RegularStation.height(), qMax(FirstStation.height(), LastStation.height())) / 2.5;
 
     for(int i = 0; i < BusInfo.buses_size(); ++i) {
@@ -57,14 +59,13 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
                             x + mvWidth * bus.position(),
                             30,
                             ((bus.route_order() < m_me)  ? PrevBus : NextBus));
-
         }
     }
 
     painter->drawImage(x , y,FirstStation);
 
     if(RouteInfo->station_size() > 1) {
-        painter->drawImage(x ,y + lineEps,BlankLine);
+        painter->drawImage(x + FirstStation.width() ,y + lineEps  ,BlankLine);
         painter->drawImage(x + mvWidth*(RouteInfo->station_size()-1), y, LastStation);
     }
     for(int i=1; i< (RouteInfo->station_size() - 1); i++) {
@@ -72,12 +73,12 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
                     x  + mvWidth *i ,
                     y,
                     RegularStation);
-        painter->drawImage(x + lineEps + mvWidth*i ,y + lineEps,BlankLine);
+        painter->drawImage(x  + mvWidth*i + FirstStation.width() ,y + lineEps,BlankLine);
     }
     for(int i = 0; i < RouteInfo->station_size(); ++i)  {
         const std::string *name = &RouteInfo->station(i).station_name();
-        painter->drawText(x - name->length() * 1.3 + mvWidth *i,
-                                          y + lineEps*3.5+ 20*(i & 1),
+        painter->drawText(x + mvWidth *i,
+                                          y + lineEps*3.5 + 5 + 20*(i & 1),
                           QString::fromStdString(*name));
     }
 }

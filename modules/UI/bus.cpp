@@ -8,17 +8,17 @@ Bus::Bus(QColor fontColor, QPixmap l_Image, QPoint pos, QPoint eps) {
     m_name = new QGraphicsTextItem();
     m_time =   new QGraphicsTextItem();
 
-    m_name->setDefaultTextColor(fontColor);
-    m_name->setFont(QFont("DroidSans.ttf",33, QFont::Bold));
-    m_name->setPlainText("N/A");
-    m_name->setPos(pos);
+    m_time->setDefaultTextColor(fontColor);
+    m_time->setFont(QFont("DroidSans.ttf",33));
+    m_time->setPlainText("N/A");
+    m_time->setPos(pos);
 
     m_image->setPos(pos.x() + eps.x(), pos.y() + eps.y());
 
-    m_time->setDefaultTextColor(fontColor);
-    m_time->setFont(QFont("DroidSans.ttf",22, QFont::Bold));
-    m_time->setPlainText("N/A");
-    m_time->setPos(pos.x()+ eps.x() - 10, pos.y() +  eps.y() + l_Image.height());
+    m_name->setDefaultTextColor(fontColor);
+    m_name->setFont(QFont("DroidSans.ttf",18));
+    m_name->setPlainText("N/A");
+    m_name->setPos(pos.x()+ eps.x() - 15, pos.y() +  eps.y() + l_Image.height() + 10);
 }
 
 void Bus::init(QGraphicsScene *scene)
