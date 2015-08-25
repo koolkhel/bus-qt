@@ -4,10 +4,10 @@ import "sender_message.proto";
 
 option java_package = "ru.indigosystem.serv.pb";
 
-option java_outer_classname = "Module";
+option java_outer_classname = "Logs";
 option optimize_for = LITE_RUNTIME;
 
-message module_message {
+message logs_message {
 
 	/*
 	extend indigo_msg {

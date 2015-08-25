@@ -2,7 +2,7 @@
 #include "skel_message.pb.h"
 #include "test_message.pb.h"
 #include "geo_message.pb.h"
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 
 Q_LOGGING_CATEGORY(TESTC, "test_module")
@@ -58,15 +58,13 @@ void TestModule::sendTestMessage()
 {
     //publish("");
 
-    ::indigo::pb::indigo_msg message;
-    ::indigo::pb::indigo_geo geo;
-    geo.set_latitude(5.0);
-    geo.set_longitude(6.0);
-    geo.mutable_unixtime()->set_time(555);
+    ::indigo::pb::internal_msg positionMessage;
+    ::indigo::pb::indigo_geo *geo = positionMessage.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
+    geo->set_latitude(5.0);
+    geo->set_longitude(6.0);
+    geo->mutable_unixtime()->set_time(555);
 
-    message.AddExtension(::indigo::pb::indigo_geo::geo_coords)->CopyFrom(geo);
-
-    publish(message,name);
+    publish(positionMessage,name);
 
 }
 

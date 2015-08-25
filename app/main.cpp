@@ -1,12 +1,9 @@
-#include "mainwindow.h"
 #include <QApplication>
 #include <QStyleFactory>
 #include <QFontDatabase>
 #include <QLabel>
 #include <QDebug>
 #include "dispatcher.h"
-
-#include "testclass.h"
 
 void enableSignalHandling();
 

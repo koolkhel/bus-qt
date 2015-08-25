@@ -7,8 +7,11 @@
 
 #include "module.h"
 
-#include <QGeoPositionInfo>
-#include <QGeoSatelliteInfo>
+//#include <QGeoPositionInfo>
+//#include <QGeoSatelliteInfo>
+
+class QGeoPositionInfo;
+class QGeoSatelliteInfo;
 
 Q_DECLARE_LOGGING_CATEGORY(GPSMODULEC)
 

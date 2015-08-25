@@ -2,7 +2,6 @@
 
 #include "indigologger.h"
 #include "dispatcher.h"
-#include "gpsmodule.h"
 #include "modules/test/test.h"
 #include <QDebug>
 #include <QTest>

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 #include <QDebug>
 #include <QScreen>
@@ -12,7 +12,6 @@
 #include <qdatetime.h>
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
-#include "testclass.h"
 #include <zmq.hpp>
 #include <sstream>
 
@@ -163,8 +162,6 @@ void MainWindow::satellitesInUseUpdated(int count)
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    testclass *tes = new testclass;
-    tes->test();
     /*QString filter = "GPS";
     ZeroMQPublisher *publisher = new ZeroMQPublisher("tcp://127.0.0.1:8080",filter);
     ZeroMQSubscriber *subscriber = new ZeroMQSubscriber();

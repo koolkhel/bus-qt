@@ -5,6 +5,7 @@ Makefile*
 moc*
 *.autosave
 *.backtrace.*
-*.pb.h
+*.pb.*
 app
 tests
+ui_*.h

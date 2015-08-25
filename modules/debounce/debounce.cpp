@@ -1,7 +1,5 @@
 #include "debounce.h"
 
-#include "indigo_message.pb.h"
-
 Q_LOGGING_CATEGORY(DEBOUNCEC, "debounce")
 
 DEBOUNCE::DEBOUNCE(QObject *parent)

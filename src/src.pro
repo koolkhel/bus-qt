@@ -18,10 +18,7 @@ include(../defaults.pri)
 DEFINES += _debug
 
 SOURCES += indigoqueue.cpp \
-        mainwindow.cpp \
-    testclass.cpp \
     support_unix.cpp \
-    indigologger.cpp \
     subscribedispatcher.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
@@ -29,16 +26,12 @@ SOURCES += indigoqueue.cpp \
     dispatcher.cpp \
     module.cpp \
     modulep.cpp \
-    topic.cpp \
     pluginmodulefactory.cpp \
      proxy.cpp \
 
 
 
-HEADERS  += mainwindow.h \
-            indigoqueue.h \
-    testclass.h \
-    indigologger.h \
+HEADERS  += indigoqueue.h \
     subscribedispatcher.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
@@ -46,15 +39,11 @@ HEADERS  += mainwindow.h \
     dispatcher.h \
     module.h \
     modulep.h \
-    topic.h \
     pluginmodulefactory.h \
     proxy.h \
 
-    currentbus.h
-FORMS    += mainwindow.ui
-
 INCLUDEPATH += ../modules/protos/include
-LIBS += -L../modules/protos/bin -lindigo_message -levents_message -lgeo_message
+LIBS += -L../modules/protos/bin -lsender_message -levents_message -lgeo_message
 
 linux-g++ {
     INCLUDEPATH += /usr/local/include

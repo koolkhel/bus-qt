@@ -1,6 +1,6 @@
 include(../defaults.pri)
 
-LIBS += -L../src -L../modules/protos/bin -lindigo -lindigo_message -levents_message -lgeo_message
+LIBS += -L../src -L../modules/protos/bin -lindigo -lsender_message -levents_message -lgeo_message
 
 TARGET = app
 TEMPLATE = app

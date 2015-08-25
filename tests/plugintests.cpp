@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "indigologger.h"
-#include "loggertester.h"
 #include <QtNetwork/QTcpSocket>
 
 #include <QDebug>
@@ -17,7 +16,7 @@
 
 #include "events_message.pb.h"
 #include "geo_message.pb.h"
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 
 #include "module.h"
 #include "pluginmodulefactory.h"

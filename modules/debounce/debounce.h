@@ -10,7 +10,7 @@
 #include <QtGlobal>
 
 #include "module.h"
-#include "indigo_message.pb.h"
+#include "sender_message.pb.h"
 #include "debounce_message.pb.h"
 #include "io_message.pb.h"
 
