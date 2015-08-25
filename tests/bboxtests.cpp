@@ -103,7 +103,7 @@ TEST(BBOX, DISABLED_overflowHandling) {
 
         geo->set_longitude(35.5);
         geo->set_latitude(36.6);
-        geo->set_unixtime(QDateTime::currentMSecsSinceEpoch() / 1000);
+        geo->mutable_unixtime()->set_time(QDateTime::currentMSecsSinceEpoch() / 1000);
         geo->set_satellites_used(10);
 
         testModule->sendMessage(positionMessage, "raw_gps");
@@ -149,7 +149,7 @@ TEST(BBOX, sendingConfirmed) {
 
         geo->set_longitude(35.5);
         geo->set_latitude(36.6);
-        geo->set_unixtime(QDateTime::currentMSecsSinceEpoch() / 1000);
+        geo->mutable_unixtime()->set_time(QDateTime::currentMSecsSinceEpoch() / 1000);
         geo->set_satellites_used(10);
 
         testModule->sendMessage(positionMessage, "raw_gps");

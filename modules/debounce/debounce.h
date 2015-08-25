@@ -27,18 +27,17 @@ public:
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
-    bool inputCheck(QString topic, indigo::pb::internal_msg &message);
+    bool moduleLogic(const indigo::pb::io_message &);
  public slots:
     void stabilized();
 private:
     indigo::pb::internal_msg dbcMessage;
+    QTimer bounceStarted;
     int timeout;
-    int epoch;
+     ::indigo::pb::timestamp epoch;
     int state;
 
-    QTimer bounceStarted;    
-    QString limitTopic;
-    QString bounceStartedTopic;
+    QString bounceTopic;
     QString filtredTopic;
 
     ::indigo::pb::io_message_IO_id id;

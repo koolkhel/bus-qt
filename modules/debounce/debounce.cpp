@@ -5,8 +5,6 @@
 Q_LOGGING_CATEGORY(DEBOUNCEC, "debounce")
 
 DEBOUNCE::DEBOUNCE(QObject *parent)
-    :
-      limitTopic("spam")
 {
     setParent(parent);
 
@@ -25,49 +23,35 @@ QStringList DEBOUNCE::getPubTopics()
 {
     QStringList topics;
 
-    topics << limitTopic << filtredTopic << bounceStartedTopic;
+    topics << bounceTopic << filtredTopic;
 
     return topics;
 }
 
 void DEBOUNCE::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    if(inputCheck(topic, message)) {
-        ::indigo::pb::io_message *msg = message.MutableExtension(::indigo::pb::io_message::io_message_in);
-        if(msg->io_id() == id) {
-            bounceStarted.start();
-            dbcMessage = message;
-            switch(state) {
-            default:
-                qCWarning(DEBOUNCEC) << "Wrong state"; break;
-            case 0:
-                state = 1;
-                msg->set_state(::indigo::pb::io_message_debounce_state_DEBOUNCE);
-                epoch = (QTime::currentTime().msecsSinceStartOfDay()); break;
-            case 1:
-                state = 2;
-                msg->set_epoch(epoch);
-                publish(dbcMessage, bounceStartedTopic); break;
-            case 2:
-                if((QTime::currentTime().msecsSinceStartOfDay() - epoch) > timeout) {
-                    msg->set_state(::indigo::pb::io_message_debounce_state_DEBOUNCE_LETAL);
-                    publish(dbcMessage, limitTopic);
-                    state = 3;
-                } break;
-            case 3: break;
-            }
-        }
 
+    if(message.HasExtension(::indigo::pb::io_message::io_message_in) &&
+        moduleLogic(message.GetExtension(::indigo::pb::io_message::io_message_in))) {
+            dbcMessage = message;
     }
 }
 
-bool DEBOUNCE::inputCheck(QString topic, indigo::pb::internal_msg &message)
+bool DEBOUNCE::moduleLogic(const indigo::pb::io_message &msg)
 {
-    if(topic.compare(limitTopic) == 0 || topic.compare(filtredTopic) == 0) {
-        return false;
-    }
-    if (message.HasExtension(::indigo::pb::io_message::io_message_in)) {
-       return true;
+
+    if(msg.io_id() == id) {
+        bounceStarted.start();
+        if(state == 0) {
+            epoch = msg.time();
+            state = 1;
+        } else if(state == 1 && ((msg.time().time() - epoch.time()) > timeout)) {
+            dbcMessage.MutableExtension(::indigo::pb::io_message::io_message_in)
+                    ->set_bounce(::indigo::pb::io_message_bounce_state_BOUNCE);
+            publish(dbcMessage, bounceTopic);
+            state = 2;
+        }
+        return true;
     }
     return false;
 }
@@ -76,7 +60,7 @@ void DEBOUNCE::stabilized()
 {
     state = 0;
     ::indigo::pb::io_message *msg = dbcMessage.MutableExtension(::indigo::pb::io_message::io_message_in);
-    msg->set_state(indigo::pb::io_message_debounce_state_STABLE);
+    msg->set_bounce(indigo::pb::io_message_bounce_state_STABLE);
     publish(dbcMessage, filtredTopic);
 }
 
@@ -84,16 +68,19 @@ void DEBOUNCE::stabilized()
 void DEBOUNCE::start()
 {
     state = 0;
-    bounceStartedTopic = getConfigurationParameter("bounceStartedTopic", "bnc_str").toString();
     QString inputTopic = getConfigurationParameter("inputTopic", "io_in").toString();
-    filtredTopic       = getConfigurationParameter("filtredTopic", "iof_in").toString();
-    limitTopic         = getConfigurationParameter("limitTopic", "bnc_end").toString();
-    timeout            = getConfigurationParameter("timeout", 200).toInt();
-    id                 = static_cast< ::indigo::pb::io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
+    bounceTopic              = getConfigurationParameter("bounceTopic", "bnc_str").toString();
+    filtredTopic                 = getConfigurationParameter("filtredTopic", "iof_in").toString();
+    timeout                       = getConfigurationParameter("timeout", 200).toInt();
+    int stableTime          = getConfigurationParameter("stableTime", 500).toInt();
+    id                                     = static_cast< ::indigo::pb::io_message_IO_id > (getConfigurationParameter("id", 0).toInt());
     
     if(id == ::indigo::pb::io_message_IO_id_DEFAULT) {
         qCWarning(DEBOUNCEC) << "default id";
     }
+
+    bounceStarted.setInterval(stableTime);
+    bounceStarted.setSingleShot(true);
 
     subscribe(inputTopic);
 

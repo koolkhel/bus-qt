@@ -90,7 +90,7 @@ void GPSMODULE::positionUpdated(const QGeoPositionInfo &update)
 
     geo->set_longitude(update.coordinate().longitude());
     geo->set_latitude(update.coordinate().latitude());
-    geo->set_unixtime(QDateTime::currentMSecsSinceEpoch() / 1000);
+    geo->mutable_unixtime()->set_time(QDateTime::currentMSecsSinceEpoch() / 1000);
     geo->set_satellites_used(last_satellite_count);
 
     if (update.hasAttribute(QGeoPositionInfo::GroundSpeed)) {

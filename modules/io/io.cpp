@@ -47,13 +47,12 @@ void IO::doInputJob()
         previousState = currentState;
         internal_msg ioMessage;
         io_message *io = ioMessage.MutableExtension(io_message::io_message_in);
-        if(invert) {
-            currentState = (currentState == 1) ? 0 : 1;
-        }
-        io->set_value(currentState);
+
+        io->set_value((invert) ? !currentState : currentState);
         io->set_io_id(id);
-        io->set_epoch(QTime::currentTime().second());
-        publish(ioMessage, inputTopic);
+        io->mutable_time()->set_time(QTime::currentTime().msecsSinceStartOfDay());
+
+        publish(ioMessage, outputTopic);
     }
 }
 

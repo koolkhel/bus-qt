@@ -11,45 +11,55 @@
 #include <QFile>
 #include <QTextStream>
 
-TEST(io, start) {
-
+TEST(io, read) {
+    int TestCount = 10;
     Dispatcher *dispatcher = new Dispatcher();
 
     QStringList c;
     c << "[modules]"
-      << "io_instance=io"
-      << "test_instance=test_module"
-      << "[io_instance]"
-      << "device=/home/yury/tmp.txt"
-      << "[test_instance]"
-      << "[debounce_instance]"
-      << "inputTopics=io";
+       << "io_instance=io"
+       << "test_instance=test_module"
+       << "[io_instance]"
+       << "inputTopic=io_in"
+       << "device=/home/yury/tmp.txt"
+       << "[test_instance]";
     QFile file("/home/yury/tmp.txt");
     file.open(QIODevice::WriteOnly);
 
     QTextStream stream(&file);
 
     stream << 1;
+    file.close();
+
     dispatcher->initializeAll(c);
 
     TestModule *testModule = reinterpret_cast<TestModule *>(
                 dispatcher->getModuleInstances().value("test_instance"));
-
-    dispatcher->startAll();
-        testModule->subscribeTopic("io_out");
     QSignalSpy spy(testModule,  SIGNAL(messageReceivedSignal()));
 
-    spy.wait(20000);
-    spy.wait(1000);
-    spy.wait(1000);
-    stream.seek(0);
-    stream << 0;
-    spy.wait(5000);
-    stream.seek(0);
-    stream << 1;
-    spy.wait(5000);
+    dispatcher->startAll();
+    testModule->subscribeTopic("io_out");
 
-    qDebug() << spy.count(); //почему не всегда 3?
+
+    QTestEventLoop loop;
+    loop.enterLoop(10);
+
+    int blocked = spy.count();
+    for(int i = 0; i  < TestCount; ++i) {
+        if(!file.open(QIODevice::WriteOnly)) {
+            qDebug() << "blocking";
+            ++blocked;
+        }
+        stream << (i & 1);
+        file.close();
+        spy.wait(1000);
+    }
+
+    qDebug() << spy.count() << blocked
+                //Тут бывает какаято погрешность в 0:-2
+                      <<( ((spy.count()-blocked )== TestCount) ?  "Everything seems Ok"
+                                                                                                : "Hmmm hmmm look more careful");
+
     delete dispatcher;
 
 

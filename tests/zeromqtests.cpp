@@ -54,7 +54,7 @@ TEST(ZMQ, ProtobufSendFilter)
 
     geo.set_latitude(5.0);
     geo.set_longitude(6.0);
-    geo.set_unixtime(555);
+    geo.mutable_unixtime()->set_time(555);
 
     // код расширения берется из расширяющего класса. В нем записано название
     // поля из основного класса
@@ -63,7 +63,7 @@ TEST(ZMQ, ProtobufSendFilter)
             << "Geo coord extension failed to add";
 
     myevent.set_type(::indigo::pb::EVENT_NOTHING);
-    myevent.set_time(666);
+    myevent.mutable_time()->set_time(666);
     message.AddExtension(::indigo::pb::indigo_event::events)->CopyFrom(myevent);
     ASSERT_TRUE(message.HasExtension(::indigo::pb::indigo_event::events))
             << "Events extension failed to add";
@@ -108,7 +108,7 @@ TEST(ZMQ, ProtobufSendFilter)
             << "Wrong received latitude";
     ASSERT_EQ(geo2.longitude(), 6.0)
             << "Wrong received longitude";
-    ASSERT_EQ(geo2.unixtime(), 555)
+    ASSERT_EQ(geo2.unixtime().time(), 555)
             << "Wrong received unixtime";
 
     ASSERT_TRUE(message2.HasExtension(::indigo::pb::indigo_event::events))
@@ -118,7 +118,7 @@ TEST(ZMQ, ProtobufSendFilter)
 
     ASSERT_EQ(event2.type(), ::indigo::pb::EVENT_NOTHING)
             << "Incorrect parsed event type";
-    ASSERT_EQ(event2.time(), 666)
+    ASSERT_EQ(event2.time().time(), 666)
             << "Incorrect parsed event time";
 
     QThread *contextThread = new QThread;

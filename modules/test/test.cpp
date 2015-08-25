@@ -62,7 +62,7 @@ void TestModule::sendTestMessage()
     ::indigo::pb::indigo_geo geo;
     geo.set_latitude(5.0);
     geo.set_longitude(6.0);
-    geo.set_unixtime(555);
+    geo.mutable_unixtime()->set_time(555);
 
     message.AddExtension(::indigo::pb::indigo_geo::geo_coords)->CopyFrom(geo);
 
