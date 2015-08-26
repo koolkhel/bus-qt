@@ -17,20 +17,6 @@ message power_message {
             optional power_message power_message_out = 220;
     }
 
-    enum STAT {
-      CH_SUSP = 0;
-      CH_DONE  = 1;
-      FCH_PROG  = 2;
-      PCH_PROG  = 3;
-    }
-    enum ACpg_STATE {
-        GOOD = 0;
-        BAD  = 1;
-    }
-    optional STAT stat1 = 2 [default = CH_SUSP];
-    optional STAT stat2 = 3 [default = CH_SUSP];
-    optional ACpg_STATE acpg = 4 [default = GOOD];
-
     optional timestamp time = 5;
 
     enum PowerStatus {
@@ -45,7 +31,7 @@ message power_message {
     	BATTERY_CHARGED = 1; // done
 	BATTERY_CHARGING_IN_PROGRESS = 2; // pre-charge + fast-charge
 	BATTERY_NOT_CHARGING = 3; // suspend
-	UNKNOWN = 4; // дребезг контактов
+        BATTERY_UNKNOWN = 4; // дребезг контактов
     }
 
     optional ChargerStatus chargerStatus = 7;

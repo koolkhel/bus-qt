@@ -26,7 +26,7 @@ private:
 private:
     int S1, S2, ACPG;
     QMap < int, int > privateID;
-    QString errorTopic, powerTopic;
+    QString  powerTopic;
 };
 
 

@@ -9,3 +9,5 @@ moc*
 app
 tests
 ui_*.h
+src/nzmqt/bin
+modules/protos/lib
