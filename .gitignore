@@ -5,7 +5,6 @@ Makefile*
 moc_*
 *.backtrace*
 ui_*.h
-ui_*.cpp
 modules/protos/include/
 modules/protos/lib/
 src/nzmqt/bin/
