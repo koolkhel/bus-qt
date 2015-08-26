@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QGraphicsPixmapItem>
@@ -21,8 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QResource::registerResource("../modules/UI/ui.rcc");
-    QFontDatabase::addApplicationFont("DroidSans.ttf");
+    if(!QResource::registerResource("../modules/UI/ui.rcc")) {
+        qCWarning(UIMODULE) << "Error Loading resouce file(NO IMAGES)";
+    }
+    if(QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans.ttf") == -1) {
+        qCDebug(UIMODULE) << "Error Loading font";
+    }
 
     ui->setupUi(this);
 
@@ -55,9 +58,10 @@ MainWindow::~MainWindow()
 void MainWindow::update(const indigo::pb::schedule_movement_update &msg)
 {
     if(!state) {
-        qWarning () << "NOT INITIALIZED ROUTE";
+        qCWarning (UIMODULE) << "NOT INITIALIZED ROUTE";
         return;
     }
+
     ::indigo::pb::bus_on_route bus ;
     int i = 0;
 
@@ -69,7 +73,7 @@ void MainWindow::update(const indigo::pb::schedule_movement_update &msg)
     }
 
     if(i == msg.buses_size()) {
-        qWarning() << "cant find myself on route";
+        qCWarning(UIMODULE) << "cant find myself on route";
         return;
     }
 
@@ -93,10 +97,7 @@ void MainWindow::update(const indigo::pb::schedule_movement_update &msg)
     }
 
     Line->updatePoints(msg, bus.route_order());
-    if(bus.seconds_from_route_start()) {  //Эпичный костылько,
-                                                                       //решение одно, если сервер будет обычно слать 0, а когда машина выходит 1 секунду
-                                                                       //Или каждые часы выделить в отдельные элементы,
-                                                                       //но это не решит проблемы постоянно перерисовки
+    if(bus.seconds_from_route_start()) {
         static_cast < Timer * > (clocks[1])->changeTime(bus.seconds_from_route_start()*1000);
     }
     int time = msg.this_bus().previous_station_visit_time()*1000;
@@ -120,12 +121,12 @@ void MainWindow::update(const indigo::pb::schedule_movement_update &msg)
                 .toString("mm:ss"));
     ;
     Line->setPos(202.5 - bus.position() * Line->moveWidth() , 70);
-
+    qCDebug(UIMODULE) << "Update positions";
 }
 
 void MainWindow::update(const indigo::pb::route_info &msg)
 {
-
+    qCDebug(UIMODULE) << "Initialize route with "<< msg.station_size() << "stations";
     RouteInfo = msg;
     state = true;
 

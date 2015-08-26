@@ -6,10 +6,13 @@
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
 
+#include "ui_message.pb.h"
+
+#include "category.h"
+
 #include "bus.h"
 #include "guiwindowgraphicsobject.h"
 
-#include "ui_message.pb.h"
 namespace Ui {
 class MainWindow;
 }

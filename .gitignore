@@ -9,4 +9,5 @@ Makefile*
 *.backtrace*
 modules/protos/include/*
 modules/protos/lib/*
+src/nzmqt/bin
 ui_*.h

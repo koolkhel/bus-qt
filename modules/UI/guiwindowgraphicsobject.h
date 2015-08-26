@@ -4,6 +4,8 @@
 #include <QVector>
 
 #include "ui_message.pb.h"
+
+#include "category.h"
 class GuiWindowGraphicsObject: public QGraphicsObject
 {
     Q_OBJECT

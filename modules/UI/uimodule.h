@@ -2,7 +2,6 @@
 #define UIMODULE_H
 
 #include <QObject>
-#include <QLoggingCategory>
 #include <QDebug>
 
 #include "module.h"
@@ -10,8 +9,8 @@
 #include "ui_message.pb.h"
 
 #include "mainwindow.h"
+#include "category.h"
 
-Q_DECLARE_LOGGING_CATEGORY(UI_MODULE)
 
 class UIModule : public Module
 {

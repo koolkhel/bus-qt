@@ -21,18 +21,22 @@ SOURCES +=\
     uimodule.cpp \
     uipluginfactory.cpp \
     timer.cpp \
-    bus.cpp
+    bus.cpp \
+    category.cpp
 
 HEADERS  += mainwindow.h \
         guiwindowgraphicsobject.h \
     uimodule.h \
     uipluginfactory.h \
     timer.h \
-    bus.h
+    bus.h \
+    category.h
 
 FORMS    += mainwindow.ui
 
-LIBS += -L../../src/ -lprotobuf-lite -lindigo -ltest_message -lskel_message -lskel_message2 -lui_message
+LIBS += -L../../src/ -lprotobuf-lite -lindigo -lui_message
+
+#RESOURCES += fonts/DroidSans.ttf
 
 DISTFILES += \
     ui.json \

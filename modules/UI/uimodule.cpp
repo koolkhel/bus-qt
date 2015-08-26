@@ -1,14 +1,4 @@
 #include "uimodule.h"
-#include "skel_message.pb.h"
-#include "test_message.pb.h"
-#include "mainwindow.h"
-#include "ui_message.pb.h"
-#include <unistd.h>
-#include <QApplication>
-
-
-Q_LOGGING_CATEGORY(UIMODULE, "UI")
-
 
 UIModule::UIModule(QObject *parent)
 {
