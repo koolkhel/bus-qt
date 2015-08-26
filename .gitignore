@@ -8,3 +8,7 @@ ui_*.h
 modules/protos/include/
 modules/protos/lib/
 src/nzmqt/bin/
+app/app
+tests/tests
+tmp.ini
+*.autosave
