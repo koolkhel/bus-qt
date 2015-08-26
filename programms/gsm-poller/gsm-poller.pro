@@ -18,10 +18,6 @@ LIBS += -lgps
 LIBS += -lpthread
 
 SOURCES += \
-    main.cpp \
-    gps-indigo.cpp \
-    record-indigo.cpp
+    main.cpp
 
-HEADERS += \
-    gps-indigo.h \
-    record-indigo.h
+HEADERS +=

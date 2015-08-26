@@ -1,3 +1,7 @@
 *.o
 *.so*
 *.pro.user
+modules/UI/ui_mainwindow.h
+modules/protos/include/
+modules/protos/lib/
+src/nzmqt/bin/

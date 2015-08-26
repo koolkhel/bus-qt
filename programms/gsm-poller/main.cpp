@@ -18,8 +18,6 @@
 #include <unistd.h>
 
 
-#include "./gps-indigo.h"
-
 #ifdef OLD_LOGGER
     #include "./log-indigo.h"
     static Logger *logger = LoggerFactory::getLogger("gsm-poller");
@@ -169,9 +167,6 @@ int main(int argc, char **argv)
     int fd;
     int err = 0;
 
-    Record currentPosition;
-    GPS *gps = new GPS_real();
-
     struct termios ts;
 #ifdef OLD_LOGGER
     atexit(loggers_cleanup);
@@ -233,14 +228,6 @@ int main(int argc, char **argv)
         talk(fd, "AT+CGATT?\r\n");
         sleep(1);
 
-        gps->readRecord(&currentPosition);
-        if (currentPosition.isValid) {
-            char buf[255];
-            snprintf(buf, 255, "lon lat %lf %lf\n", currentPosition.fix.latitude, currentPosition.fix.longitude);
-            output(buf);
-        } else {
-            output("no gps coordinates\n");
-        }
         sleep(60);
     }
 
@@ -250,14 +237,10 @@ int main(int argc, char **argv)
     fclose(output_file);
 
     close(fd);
-    if (gps)
-        delete gps;
 
     return 0;
 
 out:
-    if (gps)
-        delete gps;
 
     qCritical() << "gsm poller failed, you're loser with next error:\n   " << error_string;
 
