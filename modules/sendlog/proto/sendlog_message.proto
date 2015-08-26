@@ -4,7 +4,7 @@ import "sender_message.proto";
 
 option java_package = "ru.indigosystem.serv.pb";
 
-option java_outer_classname = "Module";
+option java_outer_classname = "SendLog";
 option optimize_for = LITE_RUNTIME;
 
 message sendlog_message {
@@ -18,8 +18,9 @@ message sendlog_message {
                 optional sendlog_message sendlog_message_in = 212;
 	}
 
-        required int32 category = 2;
-        required string message = 3;
+        optional string category = 2 [ default = "" ];
+        optional string message = 3 [ default = "" ];
+	optional timestamp time = 4;
 
 }
 
