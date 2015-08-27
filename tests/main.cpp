@@ -6,6 +6,7 @@ void enableSignalHandling();
 void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63);
 
 void initPaths() {
+
     //printf("hello, world %s\n", qPrintable(qApp->applicationDirPath()));
     QString path = qApp->applicationDirPath();
 
@@ -17,8 +18,11 @@ void initPaths() {
     //printf("%s\n", qPrintable(qApp->libraryPaths().join(",")));
 }
 
+
 int main(int argc, char **argv) {
     enableSignalHandling();
+    //freopen( "/dev/null","w", stdout);
+   // freopen( "/dev/null","w", stderr);
     QCoreApplication app(argc, argv);
     initPaths();
 

@@ -1,7 +1,7 @@
 #include "module.h"
-
+#include <unistd.h>
 #include <QDebug>
-
+#include <QApplication>
 Q_LOGGING_CATEGORY(MODULE, "module")
 
 Module::Module()
@@ -44,6 +44,10 @@ void Module::stop()
 void Module::publish(::indigo::pb::internal_msg &msg, QString topic)
 {
     qCDebug(MODULE) << "publishing to topic: " << topic;
+    qApp->processEvents();
+    usleep(16017);
+    qApp->processEvents();
+
     dispatcher->publish(mod_p, msg, topic);
 }
 

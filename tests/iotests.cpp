@@ -12,7 +12,8 @@
 #include <QTextStream>
 
 TEST(io, read) {
-    int TestCount = 10;
+    int TestCount = 100*1000;
+
     Dispatcher *dispatcher = new Dispatcher();
 
     QStringList c;
@@ -22,6 +23,7 @@ TEST(io, read) {
        << "[io_instance]"
        << "inputTopic=io_in"
        << "device=/home/yury/tmp.txt"
+       << "timeout=20"
        << "[test_instance]";
     QFile file("/home/yury/tmp.txt");
     file.open(QIODevice::WriteOnly);
@@ -52,7 +54,8 @@ TEST(io, read) {
         }
         stream << (i & 1);
         file.close();
-        spy.wait(1000);
+        loop.enterLoopMSecs(37);
+//fprintf(stderr, "%d\n", i);
     }
 
     qDebug() << spy.count() << blocked
