@@ -3,6 +3,7 @@ find .. -name "*.proto" -exec cp {} . \;
 
 OUTPUT=bin
 mkdir -p $OUTPUT
+mkdir include
 
 for i in sender_message.proto *.proto; do
 	CLASS=`basename $i .proto`

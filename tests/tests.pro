@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     plugintests.cpp \
     gpstests.cpp \
     bboxtests.cpp \
-    sendertests.cpp
+    sendertests.cpp \
+    sendlogtests.cpp
 
 #
 #    loggertester.cpp \

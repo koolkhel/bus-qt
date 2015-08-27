@@ -20,7 +20,7 @@ message sendlog_message {
 
         optional string category = 2 [ default = "" ];
         optional string message = 3 [ default = "" ];
-	optional timestamp time = 4;
+        optional int32 time = 4;
 
 }
 

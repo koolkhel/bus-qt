@@ -6,3 +6,6 @@ find -name '*.o' \
 rm tests/tests
 rm app/app
 rm tests/tmp.ini
+rm -r modules/protos/lib
+rm -r modules/protos/include
+rm -r modules/protos/bin

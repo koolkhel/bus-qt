@@ -30,58 +30,20 @@ void SENDLOG::respond(QString topic, indigo::pb::internal_msg &message)
     socket->writeDatagram(qba.data(), qba.size(), QHostAddress::Broadcast, logPort);
 }
 
-void SENDLOG::startServer()
+void SENDLOG::read()
 {
-    if (!confServer->listen(QHostAddress::Any, getConfigurationParameter("configurationServerPort", 45001).toInt())) {
-        fprintf(stderr, "no start server\n");
-    }
-}
-
-void SENDLOG::stopServer()
-{
-        confServer->close();
-}
-
-void SENDLOG::acceptConfiguration()
-{
-    qCDebug(SENDLOGC) << "server: accept configuration client";
-    confServer->pauseAccepting();
-    while (confServer->hasPendingConnections()) {
-        confClientSocket = confServer->nextPendingConnection();
-        QObject::connect(confClientSocket, SIGNAL(readyRead()), SLOT(configurationDataReceived()));
-        QObject::connect(confClientSocket, SIGNAL(disconnected()), SLOT(configurationClientDisconnected()));
-    }
-}
-
-void SENDLOG::configurationDataReceived()
-{
-    QString data = QString::fromLocal8Bit(confClientSocket->readLine());
-    qCDebug(SENDLOGC) << "server: configuration received: " << data;
-    QLoggingCategory::setFilterRules(data.simplified());
-    emit configurationChanged();
-}
-
-void SENDLOG::configurationClientDisconnected()
-{
-    qCDebug(SENDLOGC) << "server: client disconnected";
-    if (confServer != NULL) {
-        // FIXME сокет вылетает
-        //confServer->resumeAccepting();
-    }
-    QObject::connect(confClientSocket, 0, 0);
-    confClientSocket->deleteLater();
-    confClientSocket = NULL;
+    printf("hello");
 }
 
 void SENDLOG::start()
 {
     logPort = getConfigurationParameter("logPort", 45000).toInt();
 
-    socket = new QUdpSocket();
+    socket = new QUdpSocket(this);
+     socket->bind(QHostAddress::Any, logPort);
+     // тут еще какой то код конструктора //
+     connect(socket, SIGNAL(readyRead()), SLOT(read()));
 
-    confServer = new QTcpServer();
-    QObject::connect(confServer, SIGNAL(newConnection()), SLOT(acceptConfiguration()));
-    startServer();
 }
 
 void SENDLOG::stop()
