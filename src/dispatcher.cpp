@@ -179,6 +179,5 @@ void Dispatcher::readConfiguration(QSettings &settings, QString moduleInstanceNa
          } else {
              printf("%s", qPrintable(loader.errorString()));
          }
-
      }
  }

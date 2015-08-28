@@ -15,7 +15,7 @@ class QTcpSocket;
 
 class LOGS : public Module
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
     LOGS(QObject *parent = 0);
