@@ -14,7 +14,7 @@
 void reset(::indigo::pb::indigo_geo *geo) {
     geo->set_longitude(123);
     geo->set_latitude(321);
-    geo->set_unixtime(QDateTime::currentMSecsSinceEpoch() / 1000);
+    geo->mutable_unixtime()->set_time(QDateTime::currentMSecsSinceEpoch() / 1000);
     geo->set_satellites_used(0);
     geo->set_speed_kmh(0);
 }

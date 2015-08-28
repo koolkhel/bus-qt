@@ -12,6 +12,7 @@ core.*
 *.backtrace*
 
 app/app
+programms/gsm-poller/gsm-poller
 tests/tests
 tests/tmp.ini
 
