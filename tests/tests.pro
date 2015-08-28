@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     sendertests.cpp \
     uitests.cpp \
     sendlogtests.cpp \
-    stopstests.cpp
+    stopstests.cpp \
+    vpnremotetests.cpp
 
 #
 #    loggertester.cpp \
