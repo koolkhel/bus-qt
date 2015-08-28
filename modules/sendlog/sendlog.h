@@ -27,8 +27,10 @@ public:
 private slots:
     void read();
 private:
+    void write(QByteArray);
+private:
     QUdpSocket *socket;
-
+    QHostAddress remoteServer;
     int logPort;
 };
 

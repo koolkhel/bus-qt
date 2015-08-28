@@ -25,14 +25,25 @@ QStringList SENDLOG::getPubTopics()
 
 void SENDLOG::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    QString str;
-    QByteArray qba = str.toLocal8Bit();
-    socket->writeDatagram(qba.data(), qba.size(), QHostAddress::Broadcast, logPort);
+    std::string str;
+    message.SerializeToString(&str);
+    topic += " ";
+    topic += QString::fromStdString(str);
+
+    write(topic.toLocal8Bit());
 }
 
 void SENDLOG::read()
 {
-    printf("hello");
+    QByteArray datagram;
+    datagram.resize(socket->pendingDatagramSize());
+    socket->readDatagram(datagram.data(), datagram.size());
+    write(datagram);
+}
+
+void SENDLOG::write(QByteArray data)
+{
+    socket->writeDatagram(data, remoteServer, logPort);
 }
 
 void SENDLOG::start()
@@ -40,10 +51,14 @@ void SENDLOG::start()
     logPort = getConfigurationParameter("logPort", 45000).toInt();
 
     socket = new QUdpSocket(this);
-     socket->bind(QHostAddress::Any, logPort);
-     // тут еще какой то код конструктора //
-     connect(socket, SIGNAL(readyRead()), SLOT(read()));
+    socket->bind(QHostAddress::Any, logPort);
+    connect(socket, SIGNAL(readyRead()), SLOT(read()));
 
+    logPort = getConfigurationParameter("serverPort", 45001).toInt();
+
+    remoteServer = QHostAddress(
+                getConfigurationParameter("serverAddress", "127.0.0.1")
+                    .toString());
 }
 
 void SENDLOG::stop()

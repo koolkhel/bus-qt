@@ -12,3 +12,4 @@ app/app
 tests/tests
 tmp.ini
 *.autosave
+core.*

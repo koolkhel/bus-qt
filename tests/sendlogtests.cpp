@@ -19,7 +19,8 @@ TEST(sendlog, udp_read) {
     c << "[modules]"
       << "sendlog_instance=sendlog"
       << "[sendlog_instance]"
-      << "logport=45000";
+      << "logPort=45000"
+      << "serverPort=45001";
 
     Dispatcher *dispatcher = new Dispatcher();
     dispatcher->initializeAll(c);
@@ -27,7 +28,8 @@ TEST(sendlog, udp_read) {
 
     QTestEventLoop loop;
     loop.enterLoop(100);
-
-
+    // nc -l -u 45001 & echo -n “foo” | nc -4u -w1 127.0.0.1 45000
+    // Для теста начинаем слушать в фоне  сообщения
+    // И затем отправляем сообщение
 }
 
