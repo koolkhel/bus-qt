@@ -17,8 +17,7 @@ include(nzmqt/nzmqt.pri)
 include(../defaults.pri)
 DEFINES += _debug
 
-SOURCES += indigoqueue.cpp \
-    support_unix.cpp \
+SOURCES += support_unix.cpp \
     subscribedispatcher.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
@@ -27,12 +26,11 @@ SOURCES += indigoqueue.cpp \
     module.cpp \
     modulep.cpp \
     pluginmodulefactory.cpp \
-     proxy.cpp \
+     proxy.cpp
 
 
 
-HEADERS  += indigoqueue.h \
-    subscribedispatcher.h \
+HEADERS  += subscribedispatcher.h \
     zeromqpublisher.h \
     zeromqsubscriber.h \
     context.h \
@@ -40,7 +38,7 @@ HEADERS  += indigoqueue.h \
     module.h \
     modulep.h \
     pluginmodulefactory.h \
-    proxy.h \
+    proxy.h
 
 INCLUDEPATH += ../modules/protos/include
 LIBS += -L../modules/protos/bin -lsender_message -levents_message -lgeo_message
@@ -48,11 +46,11 @@ LIBS += -L../modules/protos/bin -lsender_message -levents_message -lgeo_message
 linux-g++ {
     INCLUDEPATH += /usr/local/include
     QMAKE_CXXFLAGS += -fvisibility=default -g3
-    LIBS += -L/usr/local/lib -lprotobuf-lite -fvisibility=default -ldl -lbacktrace
+    LIBS += -L/usr/local/lib -lgps -lprotobuf-lite -fvisibility=default -ldl -lbacktrace
 }
 
 linux-arm-indigo-g++ {
-    LIBS += -lprotobuf-lite -ldl
+    LIBS += -lgps -lprotobuf-lite -ldl
 }
 
 target.path = /opt/Qt-arm

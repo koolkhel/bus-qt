@@ -32,7 +32,6 @@ void indigoLoggerStart()
         instance = new IndigoLogger();
         qSetMessagePattern(logPattern);
     }
-
     instance->startServer();
 }
 

@@ -7,15 +7,93 @@ option java_package = "ru.indigosystem.serv.pb";
 option java_outer_classname = "IndigoPB";
 option optimize_for = LITE_RUNTIME;
 
-message ui_message {
-	extend indigo_msg {
-                optional ui_message ui_message_out = 200;
-	}
+// в какое время от начала маршрута нужно было быть на точке + когда это время действует
+// например, у двойки с 16:00 не подразумевается заезд на рынок
+message station_visit_schedule_time {
+    optional int32 visit_time = 1;
 
-	extend internal_msg {
-		optional ui_message ui_message_in = 200;
-	}
-
-	optional int32 data = 2 [ default = 2 ];
+    optional int32 daytime_start = 2;
+    optional int32 daytime_end = 3;
 }
 
+// контрольная точка
+message schedule_station {
+    optional string station_name = 1;
+
+    repeated station_visit_schedule_time schedule_times = 2;
+}
+
+// информация о маршруте; шлется один раз
+message route_info {
+    repeated schedule_station station = 1;
+
+// "2"
+    optional string route_name = 2;
+
+// наш номер, чтоб отличать себя от других. Н200ЕМ
+    optional string bus_number = 3 [ default = "" ];
+
+// девайс включился, спрашивает сервер, есть ли инфа.
+// если сервер поставил машину на маршрут, то шлет сам
+    optional bool request = 4 [ default = false ];
+
+    extend internal_msg {
+        optional route_info route_info_in = 302;
+    }
+
+    extend indigo_msg {
+        optional route_info route_info_out = 302;
+    }
+}
+
+// другие автобусы
+message bus_on_route {
+// номер автобуса
+    optional string busname = 1 [ default = "" ];
+
+// время от начала маршрута
+    optional int32 seconds_from_route_start = 2 [ default = 0 ];
+
+// порядковый номер (вычисленный) на маршруте - между кем и кем находится каждый автобус
+    optional int32 route_order = 3 [ default = 0 ];
+
+// время от предыдущего до текущего
+    optional int32 time_to_prev = 4 [ default = 0 ];
+
+// время от текущего до следующего
+    optional int32 time_to_next = 5 [ default = 0 ];
+
+// расстояние по прямой до предыдущего
+    optional int32 distance_to_prev_m = 6 [ default = 0 ];
+
+// расстояние по прямой до следующего
+    optional int32 distance_to_next_m = 7 [ default = 0 ];
+
+//  абсолютная позиция на маршруте
+   optional double position = 8 [default = 0];
+}
+
+// наш автобус
+message this_bus_on_route {
+// время заезда на предыдущую контрольную точку
+    optional int32 previous_station_visit_time = 1;
+}
+
+// повторяющееся сообщение, шлется много раз
+// TODO: нужно понять размер получающегося заполненного сообщения
+message schedule_movement_update {
+
+// информация, специфичная для текущего ТС (часть данных находится в общем списке)
+    optional this_bus_on_route this_bus = 1;
+
+// все соседи по маршруту
+    repeated bus_on_route buses = 2;
+
+    extend internal_msg {
+        optional schedule_movement_update schedule_update_in = 301;
+    }
+
+    extend indigo_msg {
+        optional schedule_movement_update schedule_update_out = 301;
+    }
+}

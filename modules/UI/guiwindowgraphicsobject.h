@@ -1,25 +1,28 @@
 #ifndef GUIWINDOWGRAPHICSOBJECT_H
 #define GUIWINDOWGRAPHICSOBJECT_H
 #include <QGraphicsObject>
-#include "bus.h"
+#include <QVector>
 
+#include "ui_message.pb.h"
+
+#include "category.h"
 class GuiWindowGraphicsObject: public QGraphicsObject
 {
     Q_OBJECT
 
     public:
-        GuiWindowGraphicsObject(QGraphicsItem *parent = 0,Bus *previous =0, Bus *next =0);
+        GuiWindowGraphicsObject();
         virtual ~GuiWindowGraphicsObject();
         QRectF boundingRect() const Q_DECL_OVERRIDE;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) Q_DECL_OVERRIDE;
-
+        void updatePoints(const indigo::pb::schedule_movement_update &info, int me);
+        void setRoute(const indigo::pb::route_info *);
+        int moveWidth();
     private:
-        Bus *leftBus;
-        Bus *rightBus;
-        QString previousStationTime;
-        QString currentRouteTime;
-        QString nextStationTimeTable;
-        QString nextStationForecasting;
+        const indigo::pb::route_info * RouteInfo;
+        indigo::pb::schedule_movement_update BusInfo;
+        int m_me;
+        int mvWidth;
 };
 
 #endif // GUIWINDOWGRAPHICSOBJECT_H

@@ -1,17 +1,11 @@
 #include "guiwindowgraphicsobject.h"
-#include "bus.h"
 #include <QPainter>
 #include <QTextOption>
-#include <QTime>
 
-GuiWindowGraphicsObject::GuiWindowGraphicsObject(QGraphicsItem *parent,Bus *previous, Bus *next) : QGraphicsObject(parent)
+GuiWindowGraphicsObject::GuiWindowGraphicsObject()
 {
-    leftBus = previous;
-    rightBus = next;
-    previousStationTime = "02:50";
-    currentRouteTime = "00:00:43";
-    nextStationTimeTable = "02:02";
-    nextStationForecasting = "02:00";
+    RouteInfo = NULL;
+    mvWidth = 200;
 }
 
 GuiWindowGraphicsObject::~GuiWindowGraphicsObject()
@@ -21,60 +15,86 @@ GuiWindowGraphicsObject::~GuiWindowGraphicsObject()
 
 QRectF GuiWindowGraphicsObject::boundingRect() const
 {
-    return QRectF(0, 0, 200, 200);
+    if(RouteInfo == NULL)
+        return QRectF(0,0,0,0);
+
+    return QRectF(0, 0, mvWidth*(RouteInfo->station_size() + 1), 200);
 }
 
 void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setFont(QFont("Times",22, QFont::Bold));
-    const int leftBusLeft = 10;
-    const int leftBusTop = -135;
-    const int rightBusLeft = 355;
-    const int widthText = 200;
-    const int heightText = 100;
-    const int rightBlockLevel = 570;
+    if(RouteInfo == NULL) {
+        Q_UNUSED(option);
+        Q_UNUSED(widget);
+        return;
+    }
+    painter->setFont(QFont("DroidSans.ttf",16, QFont::Bold));
+    painter->setPen(QPen(Qt::white,2));
 
-
-
-    QImage currMarker(":/images/night our marker.png");
     painter->setRenderHint(QPainter::Antialiasing);
 
-    //Статичные картинки
-    painter->drawImage(-55, -215,QImage(":/images/night top static block.png"));
-    painter->drawImage(470, -215, QImage(":/images/night right static block.png"));
+    QImage FirstStation(":/images/night end station.png"),
+                   LastStation(":/images/night end station.png"),
+                   RegularStation(":/images/night middle station.png"),
+                   BlankLine(":/images/night section.png"),
+                   NextBus(":/images/night next marker.png"),
+                   PrevBus(":/images/night prev marker.png");
 
+    const int y = qMax(PrevBus.height(), NextBus.height()) + (painter->font().pointSize() * 2) + 5;
+    const int x = 0;
+    mvWidth = BlankLine.width() + FirstStation.width();
+    const int lineEps    = qMax(RegularStation.height(), qMax(FirstStation.height(), LastStation.height())) / 2.5;
 
-    //Левый автобус
-    painter->setPen(QPen(Qt::red, 1));
-    painter->drawImage(leftBusLeft,leftBusTop,QImage(leftBus->getImage()));
+    for(int i = 0; i < BusInfo.buses_size(); ++i) {
+        ::indigo::pb::bus_on_route bus = BusInfo.buses(i);
+        if(bus.route_order() != m_me) {
+                painter->drawText(
+                                    x - bus.busname().length() * 1.3 + mvWidth*bus.position() ,
+                                    (painter->font().pointSize() * 2),
+                                    QString::fromStdString(bus.busname()));
+                painter->drawImage(
+                            x + mvWidth * bus.position(),
+                            (painter->font().pointSize() * 2) + 5,
+                            ((bus.route_order() < m_me)  ? PrevBus : NextBus));
+        }
+    }
 
-    painter->drawText(QRectF(leftBusLeft,-185,widthText, heightText),leftBus->getTime());
-    painter->drawText(QRectF(leftBusLeft,-115,widthText, heightText),leftBus->getLabel());
+    painter->drawImage(x , y,FirstStation);
 
-    //Правый автобус
-    painter->setPen(QPen(Qt::green,1));
-    painter->drawImage(rightBusLeft, leftBusTop,QImage(rightBus->getImage()));
-    painter->drawText(QRect(rightBusLeft, -185,widthText,heightText),rightBus->getTime());
-    painter->drawText(QRect(rightBusLeft, -115,widthText,heightText),rightBus->getLabel());
-
-    painter->setPen(QPen(Qt::gray,1));
-
-    QTime time = QTime::currentTime();
-    painter->drawText(QRect(rightBlockLevel - 20,leftBusTop - 10,widthText,heightText),time.toString());
-    painter->drawText(QRect(rightBlockLevel,-40,widthText,heightText), previousStationTime);
-    painter->drawText(QRect(rightBlockLevel,40,widthText,heightText), currentRouteTime);
-    painter->drawText(QRect(rightBlockLevel,120,widthText,heightText),nextStationTimeTable);
-    painter->drawText(QRect(rightBlockLevel,200,widthText,heightText),nextStationForecasting);
-
-    painter->drawImage(leftBusLeft - 30, 70,currMarker);
-
-    for(int i=0; i< 2; i++)
-    {
-        painter->drawImage(leftBusLeft + 200 *i , 180,QImage(":/images/station1-black.png"));
-        painter->drawImage(leftBusLeft + 30 + 200*i ,192,QImage(":/images/section12-black.png"));
-        painter->drawText(leftBusLeft + 200 *i, 240,"Некрасовский");
+    if(RouteInfo->station_size() > 1) {
+        painter->drawImage(x + FirstStation.width() ,y + lineEps  ,BlankLine);
+        painter->drawImage(x + mvWidth*(RouteInfo->station_size()-1), y, LastStation);
+    }
+    for(int i=1; i< (RouteInfo->station_size() - 1); i++) {
+        painter->drawImage(
+                    x  + mvWidth *i ,
+                    y,
+                    RegularStation);
+        painter->drawImage(x  + mvWidth*i + FirstStation.width() ,y + lineEps,BlankLine);
+    }
+    for(int i = 0; i < RouteInfo->station_size(); ++i)  {
+        const std::string *name = &RouteInfo->station(i).station_name();
+        painter->drawText(x + mvWidth *i,
+                                          y + lineEps*3.5 + 10 + (painter->font().pointSize() + 7)*(i & 1),
+                          QString::fromStdString(*name));
     }
 }
 
+void GuiWindowGraphicsObject::updatePoints(const indigo::pb::schedule_movement_update &info, int me)
+{
+    BusInfo = info;
+    m_me=me;
+}
 
+void GuiWindowGraphicsObject::setRoute(const indigo::pb::route_info *rte)
+{
+    RouteInfo = rte;
+    if(RouteInfo->station_size() == 0) {
+        qCWarning(UIMODULE) << "Something strange 0 Names";
+    }
+}
 
+int GuiWindowGraphicsObject::moveWidth()
+{
+    return mvWidth;
+}

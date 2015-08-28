@@ -5,6 +5,7 @@
 #include <QDebug>
 #include "dispatcher.h"
 
+
 void enableSignalHandling();
 
 int main(int argc, char *argv[])
@@ -24,7 +25,7 @@ int main(int argc, char *argv[])
     dispatcher->initializeAll(c);*/
     QStringList c;
     c << "[modules]" << "ui_instance=UI" << "test_instance=test_module";
-   dispatcher->initializeAll(c);
+    dispatcher->initializeAll(c);
 
     dispatcher->startAll();
 

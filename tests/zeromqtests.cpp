@@ -22,6 +22,7 @@
 
 #define ZMQ_PUB_STR "tcp://127.0.0.1:8080"
 #define ZMQ_SUB_STR "tcp://127.0.0.1:8080"
+
 const QString ZMQ_PUB_STR_SECOND = "tcp://127.0.0.1:8081";
 
 

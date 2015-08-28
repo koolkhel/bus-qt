@@ -1,24 +1,23 @@
 #ifndef BUS_H
 #define BUS_H
-#include <QString>
+#include <QGraphicsTextItem>
+#include <QGraphicsPixmapItem>
+#include <QColor>
 
-class Bus
-{
+struct Bus {
 public:
-    Bus();
-    QString getTime() const;
-    void setTime(const QString &value);
+    Bus(QColor fontColor, QPixmap l_Image, QPoint pos = QPoint(0, 0), QPoint eps = QPoint(0, 0));
+    void init(class QGraphicsScene *scene);
+    QGraphicsTextItem * name()  const;
+    QGraphicsTextItem * time()  const;
 
-    QString getLabel() const;
-    void setLabel(const QString &value);
-
-    QString getImage() const;
-    void setImage(const QString &value);
-
+    QGraphicsPixmapItem * image() const;
+    void update(int time, const std::string &name) const;
+    void show() const;
+    void hide() const;
 private:
-    QString time;
-    QString label;
-    QString image;
+    QGraphicsPixmapItem * m_image;
+    QGraphicsTextItem *m_name, *m_time;
 };
 
 #endif // BUS_H

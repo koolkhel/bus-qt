@@ -1,28 +1,19 @@
 #include "uimodule.h"
-#include "skel_message.pb.h"
-#include "test_message.pb.h"
-#include "mainwindow.h"
-
-#include <QApplication>
-
-
-Q_LOGGING_CATEGORY(UIMODULE, "ui_module")
-
 
 UIModule::UIModule(QObject *parent)
 {
-    //setParent(parent);
+    setParent(parent);
     this->name = "ui_instance";
     qCDebug(UIMODULE, "hello,world");
 }
 
 void UIModule::start()
 {
-    QApplication a();
-    MainWindow w;
-    w.show();
+    w = new MainWindow();
+    w->show();
+    QString inputTopic= getConfigurationParameter("inputTopic", "ui_topic").toString();
+    subscribe(inputTopic);
 
-    subscribe("test_instance");
 }
 
 void UIModule::stop()
@@ -37,35 +28,15 @@ QStringList UIModule::getPubTopics()
     return topics;
 }
 
-
-void UIModule::show()
-{
-
-}
-
-void UIModule::getElements()
-{
-
-}
-
-void UIModule::sendTestMessage()
-{
-
-}
-
-void UIModule::subscribeTopic(QString topic)
-{
-
-}
-
 void UIModule::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    emit messageReceivedSignal();
-
-    if (message.HasExtension(::indigo::pb::skel_message::skel_message_in)) {
-        ::indigo::pb::skel_message msg = message.GetExtension(::indigo::pb::skel_message::skel_message_in);
-
-        qCDebug(UIMODULE) << "data is: " << msg.data();
+    Q_UNUSED(topic)
+    if(message.HasExtension(::indigo::pb::route_info::route_info_in)) {
+        w->update(message.GetExtension(::indigo::pb::route_info::route_info_in));
+    }
+    if(message.HasExtension(indigo::pb::schedule_movement_update::schedule_update_in)) {
+        w->update(message.GetExtension(indigo::pb::schedule_movement_update::schedule_update_in));
     }
 }
+
 

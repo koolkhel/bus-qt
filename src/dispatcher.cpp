@@ -167,12 +167,11 @@ void Dispatcher::readConfiguration(QSettings &settings, QString moduleInstanceNa
          QString dir = pluginDir.absoluteFilePath(pluginFilePath);
          QPluginLoader loader(dir);
          QJsonObject metadata = loader.metaData();
-         //printf("%s\n", qPrintable(metadata.keys().join(",")));
-         //printf("%s\n", qPrintable(metadata.value("IID").toString()));
-
          bool result = loader.load();
          //ASSERT_TRUE(result);
+
          if(result) {
+
              QObject *obj = loader.instance();
 
              PluginModuleFactory *factory = qobject_cast<PluginModuleFactory *>(obj);
@@ -180,5 +179,6 @@ void Dispatcher::readConfiguration(QSettings &settings, QString moduleInstanceNa
          } else {
              printf("%s", qPrintable(loader.errorString()));
          }
+
      }
  }

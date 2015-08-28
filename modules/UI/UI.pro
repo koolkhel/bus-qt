@@ -18,23 +18,28 @@ TEMPLATE = lib
 SOURCES +=\
         mainwindow.cpp \
         guiwindowgraphicsobject.cpp \
-        bus.cpp \
-        currentbus.cpp \
     uimodule.cpp \
-    uipluginfactory.cpp
+    uipluginfactory.cpp \
+    timer.cpp \
+    bus.cpp \
+    category.cpp
 
 HEADERS  += mainwindow.h \
         guiwindowgraphicsobject.h \
-        bus.h \
-        currentbus.h \
     uimodule.h \
-    uipluginfactory.h
+    uipluginfactory.h \
+    timer.h \
+    bus.h \
+    category.h
 
 FORMS    += mainwindow.ui
 
-LIBS += -L../../src/ -lprotobuf-lite -lindigo -ltest_message -lskel_message -lskel_message2
+LIBS += -L../../src/ -lprotobuf-lite -lindigo -lui_message
+
+#RESOURCES += fonts/DroidSans.ttf
 
 DISTFILES += \
     ui.json \
     proto/ui_message.proto \
-    ui.rcc
+    ui.rcc \
+    ui.qrc

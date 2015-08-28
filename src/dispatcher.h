@@ -19,6 +19,7 @@
 class Dispatcher : public QObject
 {
     Q_OBJECT
+
 public:
     Dispatcher();
 
