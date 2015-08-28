@@ -54,7 +54,6 @@ void Skel::start()
 
     static int counter = 0;
     my_msg->set_data(counter++);
-
     publish(msg, "skel");
 }
 

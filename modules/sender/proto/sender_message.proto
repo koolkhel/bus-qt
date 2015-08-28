@@ -26,3 +26,7 @@ message indigo_UUID {
     optional sint64 most_significant_bits = 2 [ default = 0 ];
 }
 
+message timestamp {
+    optional int32 time = 1 [ default = 0 ];
+}
+

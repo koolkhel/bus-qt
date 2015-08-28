@@ -1,0 +1,39 @@
+package indigo.pb;
+
+import "sender_message.proto";
+
+option java_package = "ru.indigosystem.serv.pb";
+
+option java_outer_classname = "IndigoPB";
+option optimize_for = LITE_RUNTIME;
+
+message power_message {
+
+    extend internal_msg {
+            optional power_message power_message_in = 219;
+    }
+
+    extend indigo_msg {
+            optional power_message power_message_out = 220;
+    }
+
+    optional timestamp time = 5;
+
+    enum PowerStatus {
+    	RUNNING_ON_BATTERY = 1;
+	RUNNING_ON_AC = 2;
+	POWER_UNKNOWN = 3; // дребезг основного разъема
+    }
+
+    optional PowerStatus powerStatus = 6;
+
+    enum ChargerStatus {
+    	BATTERY_CHARGED = 1; // done
+	BATTERY_CHARGING_IN_PROGRESS = 2; // pre-charge + fast-charge
+	BATTERY_NOT_CHARGING = 3; // suspend
+        BATTERY_UNKNOWN = 4; // дребезг контактов
+    }
+
+    optional ChargerStatus chargerStatus = 7;
+}
+

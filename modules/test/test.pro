@@ -7,7 +7,7 @@ TEMPLATE = lib
 
 QT -= gui
 
-LIBS += -L../protos/bin -ltest_message -lskel_message
+LIBS += -L../protos/bin -ltest_message -lskel_message -lio_message
 
 SOURCES += test.cpp \
     testpluginfactory.cpp

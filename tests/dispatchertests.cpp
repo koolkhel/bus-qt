@@ -8,8 +8,10 @@
 #include <QSignalSpy>
 
 #include <unistd.h>
+void foo(QtMsgType, const QMessageLogContext &, const QString &) {}
 
 TEST(disptest, sanity) {
+    qInstallMessageHandler(foo);
     // запуск контекстов и т.д.
     Dispatcher *dispatcher = new Dispatcher();
 
@@ -51,9 +53,12 @@ TEST(disptest, sanity) {
 
     for (int i = 0; i < 10000; i++) {
         skelModule->start();
+
         qApp->processEvents();
         qApp->processEvents();
     }
+
+
 
     // class GPSModule : protected Module
     //GPSModule *module = new GPSModule(simulation);

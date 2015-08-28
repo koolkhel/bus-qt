@@ -14,7 +14,7 @@ message indigo_geo {
 
     required double latitude = 2;
 
-    required int32 unixtime = 3;
+    required timestamp unixtime = 3;
 
     optional int32 speed_kmh = 4 [ default = 0 ];
 

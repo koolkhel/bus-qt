@@ -14,6 +14,8 @@ TARGET = indigo
 TEMPLATE = lib
 
 include(nzmqt/nzmqt.pri)
+include(../defaults.pri)
+DEFINES += _debug
 
 SOURCES += indigoqueue.cpp \
     support_unix.cpp \

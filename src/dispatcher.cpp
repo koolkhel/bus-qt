@@ -172,11 +172,13 @@ void Dispatcher::readConfiguration(QSettings &settings, QString moduleInstanceNa
 
          bool result = loader.load();
          //ASSERT_TRUE(result);
-         //printf("%s\n", qPrintable(loader.errorString()));
+         if(result) {
+             QObject *obj = loader.instance();
 
-         QObject *obj = loader.instance();
-
-         PluginModuleFactory *factory = qobject_cast<PluginModuleFactory *>(obj);
-         pluginFactories.insert(factory->getModuleType(), factory);
+             PluginModuleFactory *factory = qobject_cast<PluginModuleFactory *>(obj);
+             pluginFactories.insert(factory->getModuleType(), factory);
+         } else {
+             printf("%s", qPrintable(loader.errorString()));
+         }
      }
  }

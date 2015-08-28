@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS += src app tests modules
+SUBDIRS += src modules app tests

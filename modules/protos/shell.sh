@@ -2,6 +2,7 @@ rm -rf *.proto
 find .. -name "*.proto" -exec cp {} . \;
 
 OUTPUT=bin
+mkdir include
 mkdir -p $OUTPUT
 
 for i in sender_message.proto *.proto; do
