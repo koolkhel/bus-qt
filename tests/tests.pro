@@ -28,7 +28,8 @@ SOURCES += main.cpp \
     powertests.cpp \
     sendertests.cpp \
     uitests.cpp \
-    sendlogtests.cpp
+    sendlogtests.cpp \
+    stopstests.cpp
 
 #
 #    loggertester.cpp \
