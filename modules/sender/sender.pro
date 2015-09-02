@@ -11,7 +11,7 @@ SOURCES += sender.cpp \
     senderpluginfactory.cpp \
     protobufnegotiator.cpp \
     outgoingmessage.cpp
-LIBS += -L../../src/ -lprotobuf-lite -lindigo -lsender_message 
+LIBS += -L../../src/ -lprotobuf-lite -lindigo -lsender_message -lblackbox_message
 
 HEADERS += sender.h \
     senderpluginfactory.h \
