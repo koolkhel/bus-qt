@@ -54,7 +54,7 @@ TEST(io, read) {
         }
         stream << (i & 1);
         file.close();
-        loop.enterLoopMSecs(37);
+        //loop.enterLoopMSecs(37);
 //fprintf(stderr, "%d\n", i);
     }
 

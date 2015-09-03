@@ -49,7 +49,7 @@ TEST(BBOX, sqlite) {
     }
 }
 
-TEST(BBOX, DISABLED_create) {
+TEST(BBOX, create) {
     QStringList c;
     c << "[modules]"
       << "bbox_instance=blackbox"
@@ -64,7 +64,7 @@ TEST(BBOX, DISABLED_create) {
     ASSERT_TRUE(dispatcher->getModuleInstances().value("bbox_instance") != NULL);
 }
 
-TEST(BBOX, DISABLED_zeromq_version) {
+TEST(BBOX, zeromq_version) {
     int major, minor, patch;
     zmq_version(&major, &minor, &patch);
     qDebug() << QString("%1.%2.%3").arg(major).arg(minor).arg(patch);
@@ -73,7 +73,7 @@ TEST(BBOX, DISABLED_zeromq_version) {
     ASSERT_EQ(minor, 0);
 }
 
-TEST(BBOX, DISABLED_overflowHandling) {
+TEST(BBOX, overflowHandling) {
     QStringList c;
     c << "[modules]"
       << "bbox_instance=blackbox"
