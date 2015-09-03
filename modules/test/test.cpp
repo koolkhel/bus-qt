@@ -7,11 +7,6 @@
 
 Q_LOGGING_CATEGORY(TESTC, "test_module")
 
-TEST(Habr, cut)
-{
-    qDebug() << "123";
-}
-
 static TestModule *instance = NULL;
 
 TestModule::TestModule(QObject *parent)
