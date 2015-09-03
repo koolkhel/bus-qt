@@ -3,14 +3,20 @@
 #include "test_message.pb.h"
 #include "geo_message.pb.h"
 #include "sender_message.pb.h"
-
+#include "tests.h"
 
 Q_LOGGING_CATEGORY(TESTC, "test_module")
+
+static TestModule *instance = NULL;
 
 TestModule::TestModule(QObject *parent)
 {
     setParent(parent);
+
     this->name = "test_instance";
+
+    instance = this;
+
     qCDebug(TESTC, "hello,world");
 }
 

@@ -8,7 +8,7 @@
 #include <QTest>
 #include <QSignalSpy>
 
-
+#include <unistd.h>
 #include <QtSql>
 
 #include "sender_message.pb.h"

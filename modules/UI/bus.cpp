@@ -9,14 +9,14 @@ Bus::Bus(QColor fontColor, QPixmap l_Image, QPoint pos, QPoint eps) {
     m_time =   new QGraphicsTextItem();
 
     m_time->setDefaultTextColor(fontColor);
-    m_time->setFont(QFont("DroidSans.ttf",40, QFont::Bold));
+    m_time->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",40, QFont::Bold));
     m_time->setPlainText("N/A");
     m_time->setPos(pos);
 
     m_image->setPos(pos.x() + eps.x(), pos.y() + eps.y());
 
     m_name->setDefaultTextColor(fontColor);
-    m_name->setFont(QFont("DroidSans.ttf",18));
+    m_name->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",18));
     m_name->setPlainText("N/A");
     m_name->setPos(pos.x()+ eps.x() - 15, pos.y() +  eps.y() + l_Image.height() + 10);
 }
