@@ -20,6 +20,9 @@ public:
     // sub -> connectTo -> xpub
     void registerPublisher(nzmqt::ZMQSocket *modulePublisher);
 
+    QString publisherAddress() const { return hostPublisher; }
+    QString subscriberAddress() const { return hostSubscriber; }
+
 private:
     nzmqt::ZMQSocket *xPublisher;
     nzmqt::ZMQSocket *xSubscriber;

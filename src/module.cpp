@@ -44,9 +44,6 @@ void Module::stop()
 void Module::publish(::indigo::pb::internal_msg &msg, QString topic)
 {
     qCDebug(MODULE) << "publishing to topic: " << topic;
-    qApp->processEvents();
-    usleep(16017);
-    qApp->processEvents();
 
     dispatcher->publish(mod_p, msg, topic);
 }

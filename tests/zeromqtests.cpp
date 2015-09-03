@@ -742,6 +742,7 @@ TEST(ZMQ, C) {
     zmq_ctx_destroy (context);
 }
 
+
 TEST(ZMQ, 100messages) {
 
     QThread *contextThread = new QThread;

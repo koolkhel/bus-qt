@@ -76,8 +76,10 @@ void Dispatcher::startAll()
         // publisher (модуль) -> connectTo -> xsub (проксик) <->
         // xpub (проксик) <- connectTo <- subscriber (модуль)
 
-        proxy->registerPublisher(mod_p->getPublisher()->getPublisher());
-        proxy->registerSubscriber(mod_p->getSubscriber()->getSubscriber());
+        mod_p->getPublisher()->getPublisher()->connectTo(proxy->subscriberAddress());
+        mod_p->getSubscriber()->getSubscriber()->connectTo(proxy->publisherAddress());
+        //proxy->registerPublisher(mod_p->getPublisher()->getPublisher());
+        //proxy->registerSubscriber(mod_p->getSubscriber()->getSubscriber());
 
         module->mod_p = mod_p;
 
