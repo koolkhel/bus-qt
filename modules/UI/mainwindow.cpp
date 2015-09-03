@@ -14,7 +14,7 @@
 #include <QFontDatabase>
 #include "timer.h"
 
-const int staticBlockY = -190;
+const int staticBlockY = -180;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setFocusPolicy(Qt::NoFocus);
-
+    ui->graphicsView->setFont("DroidSans.ttf");
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
 
     scene = new QGraphicsScene(0, 0, 680, 100);
@@ -170,7 +170,7 @@ void MainWindow::initializeClocks()
         clocks[i]->setPlainText("N/A");
         clocks[i]->setFont(QFont("DroidSans.ttf",33));
         ui->graphicsView->scene()->addItem(clocks[i]);
-        clocks[i]->setPos(530, staticBlockY+167 + 80*i);
+        clocks[i]->setPos(530, staticBlockY+165 + 80*i);
     }
 }
 
