@@ -28,7 +28,7 @@ void GuiWindowGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphic
         Q_UNUSED(widget);
         return;
     }
-    painter->setFont(QFont("DroidSans.ttf",16, QFont::Bold));
+    painter->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",16, QFont::Bold));
     painter->setPen(QPen(Qt::white,2));
 
     painter->setRenderHint(QPainter::Antialiasing);

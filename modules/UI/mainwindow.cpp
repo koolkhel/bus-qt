@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setFocusPolicy(Qt::NoFocus);
-    ui->graphicsView->setFont("DroidSans.ttf");
+
     ui->graphicsView->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
 
     scene = new QGraphicsScene(0, 0, 680, 100);
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     state = false;
     id_timer = 0;
-    this->setFocus();
+    //this->setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -156,9 +156,9 @@ void MainWindow::initializeStaticObjects()
 void MainWindow::initializeClocks()
 {
     Timer * item = new Timer();
-    item->setFont(QFont("DroidSans.ttf",40, QFont::Bold));
+    item->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",45, QFont::Bold));
     ui->graphicsView->scene()->addItem(item);
-    item->setPos(465, staticBlockY + 45);
+    item->setPos(465, staticBlockY + 40);
 
     for(int i = 0; i < 4; ++i) {      
         if(i == 1) {
@@ -168,7 +168,7 @@ void MainWindow::initializeClocks()
         }
         clocks[i]->setDefaultTextColor(Qt::white);
         clocks[i]->setPlainText("N/A");
-        clocks[i]->setFont(QFont("DroidSans.ttf",33));
+        clocks[i]->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",33));
         ui->graphicsView->scene()->addItem(clocks[i]);
         clocks[i]->setPos(530, staticBlockY+165 + 80*i);
     }
@@ -193,6 +193,7 @@ void MainWindow::initializeBus()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
+    qCDebug(UIMODULE) << "key pressed: " << event->key();
     Marker->show();
     switch(event->key()) {
     case Qt::Key_Up: Marker->setPos(170, 0); break;
