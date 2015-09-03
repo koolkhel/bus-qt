@@ -13,7 +13,8 @@ SOURCES += test.cpp \
     testpluginfactory.cpp
 
 HEADERS += test.h \
-    testpluginfactory.h
+    testpluginfactory.h \
+    tests.h
 
 DISTFILES += \
     test.json \
