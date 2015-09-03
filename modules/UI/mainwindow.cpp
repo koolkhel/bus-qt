@@ -14,7 +14,7 @@
 #include <QFontDatabase>
 #include "timer.h"
 
-const int staticBlockY = -180;
+const int staticBlockY = -190;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -158,7 +158,7 @@ void MainWindow::initializeClocks()
     Timer * item = new Timer();
     item->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",45, QFont::Bold));
     ui->graphicsView->scene()->addItem(item);
-    item->setPos(465, staticBlockY + 40);
+    item->setPos(465, staticBlockY + 35);
 
     for(int i = 0; i < 4; ++i) {      
         if(i == 1) {
@@ -170,7 +170,7 @@ void MainWindow::initializeClocks()
         clocks[i]->setPlainText("N/A");
         clocks[i]->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",33));
         ui->graphicsView->scene()->addItem(clocks[i]);
-        clocks[i]->setPos(530, staticBlockY+165 + 80*i);
+        clocks[i]->setPos(530, staticBlockY+163 + 80*i);
     }
 }
 
