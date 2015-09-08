@@ -59,7 +59,7 @@ void print_stacktrace(FILE *out, unsigned int max_frames) {
             fprintf(out, "lib: %s, fn: %s\n", dlinfo.dli_fname, symname);
             char buf[255];
             memset(buf, 0, 255);
-            snprintf(buf, 255, "addr2line -C -e \"%s\" 0x%lx | grep -v ??", dlinfo.dli_fname, (char *) addrlist[i] - (char *) dlinfo.dli_fbase);
+            snprintf(buf, 255, "addr2line -C -e \"%s\" 0x%lx | grep -v ??", dlinfo.dli_fname, (long unsigned int) (long int) addrlist[i] - (long int) dlinfo.dli_fbase);
             FILE *row = popen(buf, "r");
             while (!feof(row)) {
                 char buf2[255];

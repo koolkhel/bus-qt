@@ -5,8 +5,10 @@
 # implementations to nzmqt.cpp file.
 DEFINES += NZMQT_LIB
 
-# SOURCES += \
-  #  $$PWD/src/nzmqt/nzmqt.cpp
+DESTDIR=$$BINDIR
+
+SOURCES += \
+  $$PWD/src/nzmqt/nzmqt.cpp
 
 HEADERS += \
     $$PWD/include/nzmqt/global.hpp \

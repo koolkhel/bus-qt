@@ -12,7 +12,11 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-LIBS += -L../src -L../modules/protos/bin -L../modules/bin -ltest -ltest_message -lskel_message -lskel_message2 -lblackbox_message \
+include(../paths.pri)
+
+DESTDIR=$$BINDIR
+
+LIBS += -L$$BINDIR -L$$PROTODIR -L$$MODDIR -ltest -ltest_message -lskel_message -lskel_message2 -lblackbox_message \
     -lindigo -lsender_message -lgeo_message -levents_message -lprotobuf-lite -lio_message -lui_message
 
 INCLUDEPATH += /usr/local/include

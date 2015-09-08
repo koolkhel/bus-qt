@@ -1,4 +1,9 @@
-INCLUDEPATH += $$PWD/ $$PWD/src $$PWD/src/nzmqt/include $$PWD/src/nzmqt/3rdparty/cppzmq $$PWD/modules/protos/include
-LIBS += -L$$PWD/src/nzmqt/bin -lzmq -lnzmqt -rdynamic -L$$PWD/modules/protos/bin
+include(paths.pri)
+
+INCLUDEPATH += $$PRJ_PATH/ $$PRJ_PATH/src $$PRJ_PATH/src/nzmqt/include $$PRJ_PATH/src/nzmqt/3rdparty/cppzmq $$PRJ_PATH/modules/protos/include
+LIBS += -lzmq -rdynamic -L$$PROTODIR
 
 CONFIG += debug
+
+DISTFILES += \
+    $$PWD/paths.pri

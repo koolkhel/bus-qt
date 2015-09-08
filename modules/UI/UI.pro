@@ -38,6 +38,8 @@ LIBS += -L../../src/ -lprotobuf-lite -lindigo -lui_message
 
 #RESOURCES += fonts/DroidSans.ttf
 
+QMAKE_POST_LINK = ./compile.sh $$MODROOTDIR/UI
+
 DISTFILES += \
     ui.json \
     proto/ui_message.proto \

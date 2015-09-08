@@ -8,13 +8,20 @@ QT       += core gui positioning network
 
 CONFIG -= app_bundle
 
+
+
+include(../paths.pri)
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = indigo
 TEMPLATE = lib
+DESTDIR=$$BINDIR
 
 include(nzmqt/nzmqt.pri)
 include(../defaults.pri)
+
+!buildpass:system(cd ../modules/protos && ./shell.sh $$PROTODIR $$QMAKE_QMAKE)
+
 DEFINES += _debug
 
 SOURCES += support_unix.cpp \
@@ -41,7 +48,7 @@ HEADERS  += subscribedispatcher.h \
     proxy.h
 
 INCLUDEPATH += ../modules/protos/include
-LIBS += -L../modules/protos/bin -lsender_message -levents_message -lgeo_message
+LIBS += -L$$PROTODIR -lsender_message -levents_message -lgeo_message
 
 linux-g++ {
     INCLUDEPATH += /usr/local/include
