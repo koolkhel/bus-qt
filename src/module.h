@@ -19,8 +19,8 @@ class Module : public QObject
 {
     Q_OBJECT
 public:
-    Module();
-    Module(QMap<QString, QVariant>& configuration, QString name);
+    Module(QObject *parent = 0);
+    Module(QMap<QString, QVariant>& configuration, QString name, QObject *parent = 0);
     Module(QString name);
     virtual ~Module() = 0;
     friend class Dispatcher;

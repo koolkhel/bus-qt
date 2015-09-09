@@ -20,7 +20,7 @@ LIBS += -L$$BINDIR -L$$PROTODIR -L$$MODDIR -ltest -ltest_message -lskel_message 
     -lindigo -lsender_message -lgeo_message -levents_message -lprotobuf-lite -lio_message -lui_message
 
 INCLUDEPATH += /usr/local/include
-SOURCES += main.cpp \
+SOURCES += \
     gtest-all.cc \
     zeromqtests.cpp \
     dispatchertests.cpp \
@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     uitests.cpp \
     sendlogtests.cpp \
     stopstests.cpp \
-    vpnremotetests.cpp
+    vpnremotetests.cpp \
+    testmain.cpp
 
 #
 #    loggertester.cpp \

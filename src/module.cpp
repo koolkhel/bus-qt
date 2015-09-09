@@ -4,12 +4,14 @@
 #include <QApplication>
 Q_LOGGING_CATEGORY(MODULE, "module")
 
-Module::Module()
+Module::Module(QObject *parent)
+    : QObject(parent)
 {
     this->name = "";
 }
 
-Module::Module(QMap<QString, QVariant>& configuration, QString name)
+Module::Module(QMap<QString, QVariant>& configuration, QString name, QObject *parent)
+    : QObject(parent)
 {
     this->configuration = configuration;
     this->name = name;
@@ -77,7 +79,7 @@ QVariant Module::getConfigurationParameter(const QString name, const QVariant &d
 {
 #ifdef _debug
     if(configuration.value(name).isValid()) {
-        qCDebug(MODULE) << configuration.value(name);
+        qCDebug(MODULE) << configuration.value(name) << " for " << name;
     } else {
         qCWarning(MODULE) << "Using default value( " << defaultValue << " ) for " << name;
     }

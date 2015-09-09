@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <QApplication>
+#include <QDebug>
 
 void enableSignalHandling();
 void print_stacktrace(FILE *out = stderr, unsigned int max_frames = 63);
@@ -24,6 +25,8 @@ int main(int argc, char **argv) {
     //freopen( "/dev/null","w", stdout);
    // freopen( "/dev/null","w", stderr);
     QApplication app(argc, argv);
+
+    qDebug() << "hello";
 
     initPaths();
 

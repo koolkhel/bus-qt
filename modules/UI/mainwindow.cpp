@@ -22,9 +22,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     if(!QResource::registerResource("../modules/UI/ui.rcc")) {
         qCWarning(UIMODULE) << "Error Loading resouce file(NO IMAGES)";
+        abort();
     }
     if(QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans.ttf") == -1) {
         qCDebug(UIMODULE) << "Error Loading font";
+        abort();
+    }
+    if(QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans-Bold.ttf") == -1) {
+        qCDebug(UIMODULE) << "Error Loading font";
+        abort();
     }
 
     ui->setupUi(this);

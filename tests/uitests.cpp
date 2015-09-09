@@ -33,6 +33,10 @@ TEST(UI, bigBaby) {
         }
     }
 
+    QThread::currentThread()->setObjectName("system thread");
+    dispatcher->dumpObjectInfo();
+    dispatcher->dumpObjectTree();
+
     TestModule *testModule = reinterpret_cast<TestModule *>(
                 dispatcher->getModuleInstances().value("test_instance"));
 
