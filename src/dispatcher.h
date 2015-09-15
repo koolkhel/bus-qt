@@ -10,7 +10,6 @@
 #include <QSettings>
 
 #include "module.h"
-#include "context.h"
 #include "pluginmodulefactory.h"
 #include "proxy.h"
 

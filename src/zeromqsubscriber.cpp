@@ -1,20 +1,38 @@
 #include "zeromqsubscriber.h"
-#include "context.h"
 #include <QDebug>
 
-ZeroMQSubscriber::ZeroMQSubscriber(nzmqt::ZMQContext* context)
-{
-   subscriber = context->createSocket(nzmqt::ZMQSocket::TYP_SUB);
+#include "indigo.h"
 
-   connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)),
-           SLOT(messageRecieved(const QList<QByteArray>&)));
-   connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)), SIGNAL(message(const QList<QByteArray>&)));
+ZeroMQSubscriber::ZeroMQSubscriber(nzmqt::ZMQContext* context, QObject *parent)
+    : QObject(parent)
+{
+    _context = context;
 }
 
-void ZeroMQSubscriber::subscribeTo(QString address,QString subscriberFilter)
+void ZeroMQSubscriber::start()
 {
-    subscriber->connectTo(address);
+    INDIGO_CHECK_THREAD;
+
+    subscriber = _context->createSocket(nzmqt::ZMQSocket::TYP_SUB);
+
+    connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)),
+            SLOT(messageRecieved(const QList<QByteArray>&)));
+    connect(subscriber, SIGNAL(messageReceived(const QList<QByteArray>&)),
+            SIGNAL(message(const QList<QByteArray>&)));
+}
+
+void ZeroMQSubscriber::subscribe(QString subscriberFilter)
+{
+    INDIGO_CHECK_THREAD;
+
     subscriber->subscribeTo(subscriberFilter);
+}
+
+void ZeroMQSubscriber::connectTo(QString address)
+{
+    INDIGO_CHECK_THREAD;
+
+    subscriber->connectTo(address);
 }
 
 nzmqt::ZMQSocket *ZeroMQSubscriber::getSubscriber() const
@@ -22,6 +40,7 @@ nzmqt::ZMQSocket *ZeroMQSubscriber::getSubscriber() const
     return subscriber;
 }
 
+#if 0
 bool ZeroMQSubscriber::recieve(nzmqt::ZMQMessage *message)
 {
     qCDebug(ZMQ) << "receive not should be";
@@ -35,6 +54,7 @@ bool ZeroMQSubscriber::recieve(nzmqt::ZMQMessage *message)
         return false;
     }
 }
+#endif
 
 void ZeroMQSubscriber::close()
 {

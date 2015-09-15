@@ -24,14 +24,10 @@ Dispatcher::Dispatcher() : freePort(5555), proxyXPub("tcp://127.0.0.1:5554")
 
     context = nzmqt::createDefaultContext();
     context->start();
-    //modules.insert("GPS","HelloGPS");
-    //modules.insert("GEOCOORD","HelloGEOCOORD");
 
-    QThread *proxyThread = new QThread(this);
     // запустить zmq_proxy в отдельном потоке, выделить ему адреса, публиковать и подписываться только на zmq_proxy
     proxy = new Proxy(context, "tcp://127.0.0.1:5000", "tcp://127.0.0.1:5001");
     //proxy = new Proxy(context, "inproc://xpub", "inproc://xsub");
-    proxy->moveToThread(proxyThread);
     proxy->start();
 }
 
@@ -49,7 +45,8 @@ void Dispatcher::publish(ModuleP *modP, ::indigo::pb::internal_msg &msg, QString
     msg.set_id(sampleId++);
     QByteArray data = QByteArray::fromStdString(msg.SerializeAsString());
 
-    modP->getPublisher()->sendMessage(data, topic);
+    QMetaObject::invokeMethod(modP->getPublisher(), "sendMessage", Qt::QueuedConnection,
+                              Q_ARG(QByteArray, data), Q_ARG(QString, topic));
 }
 
 QString Dispatcher::getFreePublisherEndpoint()
@@ -60,27 +57,33 @@ QString Dispatcher::getFreePublisherEndpoint()
 
 void Dispatcher::startAll()
 {
+    //QThread::currentThread()->setObjectName("main_thread");
     foreach (QString instanceName, moduleInstances.keys()) {
         Module *module = moduleInstances.find(instanceName).value();
 
         ModuleP *mod_p = new ModuleP(instanceName);
 
         QString endPoint = getFreePublisherEndpoint();
-        mod_p->setPublisher(new ZeroMQPublisher(context, endPoint));
+        ZeroMQPublisher *pub = new ZeroMQPublisher(context, endPoint);
+        // TODO поток
+        pub->moveToThread(QThread::currentThread());
+        QMetaObject::invokeMethod(pub, "start", Qt::QueuedConnection);
+
 
         // подписал прокси на endPoint
-        //proxy->subscribeTo(endPoint);
         ZeroMQSubscriber *sub = new ZeroMQSubscriber(context);
-        mod_p->setSubscriber(sub);
+        // TODO поток
+        sub->moveToThread(QThread::currentThread());
+        QMetaObject::invokeMethod(sub, "start", Qt::QueuedConnection);
 
         // publisher (модуль) -> connectTo -> xsub (проксик) <->
         // xpub (проксик) <- connectTo <- subscriber (модуль)
 
-        mod_p->getPublisher()->getPublisher()->connectTo(proxy->subscriberAddress());
-        mod_p->getSubscriber()->getSubscriber()->connectTo(proxy->publisherAddress());
-        //proxy->registerPublisher(mod_p->getPublisher()->getPublisher());
-        //proxy->registerSubscriber(mod_p->getSubscriber()->getSubscriber());
+        QMetaObject::invokeMethod(pub, "connectTo", Qt::QueuedConnection, Q_ARG(QString, proxy->subscriberAddress()));
+        QMetaObject::invokeMethod(sub, "connectTo", Qt::QueuedConnection, Q_ARG(QString, proxy->publisherAddress()));
 
+        mod_p->setPublisher(pub);
+        mod_p->setSubscriber(sub);
         module->mod_p = mod_p;
 
         connect(mod_p, SIGNAL(messageReceived(const QList<QByteArray> &)),
@@ -93,7 +96,8 @@ void Dispatcher::startAll()
 void Dispatcher::subscribe(Module *module, QString topicName)
 {
     ModuleP *mod_p = module->mod_p;
-    mod_p->getSubscriber()->getSubscriber()->subscribeTo(topicName);
+    QMetaObject::invokeMethod(mod_p->getSubscriber(), "subscribe", Qt::QueuedConnection,
+                              Q_ARG(QString, topicName));
 }
 
 // для тестов

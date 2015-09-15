@@ -26,7 +26,6 @@ ZeroMQPublisher *ModuleP::getPublisher() const
 void ModuleP::setPublisher(ZeroMQPublisher *value)
 {
     publisher = value;
-    publisher->getPublisher()->setLinger(5);
 }
 
 ZeroMQSubscriber *ModuleP::getSubscriber() const
@@ -38,7 +37,6 @@ void ModuleP::setSubscriber(ZeroMQSubscriber *value)
 {
     subscriber = value;
     connect(subscriber, SIGNAL(message(const QList<QByteArray> &)), SIGNAL(messageReceived(const QList<QByteArray>&)));
-    subscriber->getSubscriber()->setLinger(5);
 }
 
 void ModuleP::printDebug()

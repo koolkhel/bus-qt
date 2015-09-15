@@ -11,7 +11,6 @@
 
 #include "zeromqpublisher.h"
 #include "zeromqsubscriber.h"
-#include "context.h"
 #include "zhelpers.h"
 #include "proxy.h"
 
@@ -19,7 +18,7 @@
 #include "geo_message.pb.h"
 #include "sender_message.pb.h"
 
-
+#if 0
 #define ZMQ_PUB_STR "tcp://127.0.0.1:8080"
 #define ZMQ_SUB_STR "tcp://127.0.0.1:8080"
 
@@ -909,3 +908,4 @@ TEST(ZMQ, C_10th) {
     zmq_ctx_destroy (context);
 }
 
+#endif

@@ -8,9 +8,13 @@
 #include <QSignalSpy>
 
 #include <unistd.h>
+
+#include "indigo.h"
 void foo(QtMsgType, const QMessageLogContext &, const QString &) {}
 
 TEST(disptest, sanity) {
+    ASSERT_TRUE(qApp->thread() == QThread::currentThread());
+
     qInstallMessageHandler(foo);
     // запуск контекстов и т.д.
     Dispatcher *dispatcher = new Dispatcher();
@@ -37,12 +41,14 @@ TEST(disptest, sanity) {
 
     dispatcher->startAll();
 
+    usleep(2 * 1000 * 1000);
+
     QSignalSpy mySpy(testModule, SIGNAL(messageReceivedSignal()));
 
     testModule->subscribeTopic("skel");
 
 
-    usleep(1000 * 1000);
+    usleep(2000 * 1000);
 
     qApp->processEvents();
     qApp->processEvents();
@@ -51,7 +57,7 @@ TEST(disptest, sanity) {
 
     usleep(1000);
 
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 100000; i++) {
         skelModule->start();
 
         qApp->processEvents();

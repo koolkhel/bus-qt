@@ -25,10 +25,8 @@ include(../defaults.pri)
 DEFINES += _debug
 
 SOURCES += support_unix.cpp \
-    subscribedispatcher.cpp \
     zeromqpublisher.cpp \
     zeromqsubscriber.cpp \
-    context.cpp \
     dispatcher.cpp \
     module.cpp \
     modulep.cpp \
@@ -37,15 +35,15 @@ SOURCES += support_unix.cpp \
 
 
 
-HEADERS  += subscribedispatcher.h \
+HEADERS  += \
     zeromqpublisher.h \
     zeromqsubscriber.h \
-    context.h \
     dispatcher.h \
     module.h \
     modulep.h \
     pluginmodulefactory.h \
-    proxy.h
+    proxy.h \
+    indigo.h
 
 INCLUDEPATH += ../modules/protos/include
 LIBS += -L$$PROTODIR -lsender_message -levents_message -lgeo_message

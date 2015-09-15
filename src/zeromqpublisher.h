@@ -10,12 +10,13 @@ class ZeroMQPublisher: public QObject
     nzmqt::ZMQSocket *publisher;
 
 public:
-    ZeroMQPublisher(nzmqt::ZMQContext*,QString bindAddress);
+    ZeroMQPublisher(nzmqt::ZMQContext*,QString bindAddress, QObject *parent = 0);
 
+#if 0
     void sendMessage(QString);
     void sendMessage(nzmqt::ZMQMessage*);
     void sendMessage(nzmqt::ZMQMessage *message, const QString filter);
-    void sendMessage(const QByteArray message, const QString filter);
+#endif
 
     QString getAddress() const;
 
@@ -24,9 +25,16 @@ public:
     nzmqt::ZMQSocket *getPublisher() const;
 
 public slots:
+    void start();
     void messageSended(QList<QByteArray>);
+    void sendMessage(const QByteArray message, const QString filter);
+    void connectTo(QString address);
+
 signals:
     void messageSend(QList<QByteArray>);
+private:
+    nzmqt::ZMQContext *_context;
+    QString _bindAddress;
 };
 
 #endif // ZEROMQPUBLISHER_H

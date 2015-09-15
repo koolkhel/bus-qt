@@ -2,6 +2,9 @@
 #include <unistd.h>
 #include <QDebug>
 #include <QApplication>
+
+#include "indigo.h"
+
 Q_LOGGING_CATEGORY(MODULE, "module")
 
 Module::Module(QObject *parent)
@@ -46,7 +49,6 @@ void Module::stop()
 void Module::publish(::indigo::pb::internal_msg &msg, QString topic)
 {
     qCDebug(MODULE) << "publishing to topic: " << topic;
-
     dispatcher->publish(mod_p, msg, topic);
 }
 
