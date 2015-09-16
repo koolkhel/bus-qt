@@ -23,6 +23,13 @@ class GuiWindowGraphicsObject: public QGraphicsObject
         indigo::pb::schedule_movement_update BusInfo;
         int m_me;
         int mvWidth;
+
+        QImage *FirstStation,
+                       *LastStation,
+                       *RegularStation,
+                       *BlankLine,
+                       *NextBus,
+                       *PrevBus;
 };
 
 #endif // GUIWINDOWGRAPHICSOBJECT_H

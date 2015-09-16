@@ -24,14 +24,20 @@ MainWindow::MainWindow(QWidget *parent) :
         qCWarning(UIMODULE) << "Error Loading resouce file(NO IMAGES)";
         abort();
     }
-    if(QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans.ttf") == -1) {
+
+    int droid_font_id = 0;
+    if((droid_font_id = QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans.ttf")) == -1) {
         qCDebug(UIMODULE) << "Error Loading font";
         abort();
     }
-    if(QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans-Bold.ttf") == -1) {
+
+    int droid_bold_font_id = 0;
+    if((droid_bold_font_id = QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans-Bold.ttf")) == -1) {
         qCDebug(UIMODULE) << "Error Loading font";
         abort();
     }
+    qDebug() << QFontDatabase::applicationFontFamilies(droid_font_id).join(",");
+    qDebug() << QFontDatabase::applicationFontFamilies(droid_bold_font_id).join(",");
 
     ui->setupUi(this);
 
@@ -162,7 +168,7 @@ void MainWindow::initializeStaticObjects()
 void MainWindow::initializeClocks()
 {
     Timer * item = new Timer();
-    item->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",45, QFont::Bold));
+    item->setFont(QFont("Droid Sans", 45, QFont::Bold));
     ui->graphicsView->scene()->addItem(item);
     item->setPos(465, staticBlockY + 35);
 
@@ -174,7 +180,7 @@ void MainWindow::initializeClocks()
         }
         clocks[i]->setDefaultTextColor(Qt::white);
         clocks[i]->setPlainText("N/A");
-        clocks[i]->setFont(QFont("../modules/UI/fonts/DroidSans.ttf",33));
+        clocks[i]->setFont(QFont("Droid Sans", 33));
         ui->graphicsView->scene()->addItem(clocks[i]);
         clocks[i]->setPos(530, staticBlockY+163 + 80*i);
     }
