@@ -4,8 +4,8 @@
 Proxy::Proxy(nzmqt::ZMQContext *context)
 {
     this->context = context;
-    this->hostPublisher = "tcp://127.0.0.1:4000";
-    this->hostSubscriber = "tcp://127.0.0.1:4001";
+    this->hostPublisher = "inproc://127.0.0.1:4000";
+    this->hostSubscriber = "inproc://127.0.0.1:4001";
 }
 
 Proxy::Proxy(nzmqt::ZMQContext *context, QString hostPublisher, QString hostSubscriber)
@@ -17,13 +17,12 @@ Proxy::Proxy(nzmqt::ZMQContext *context, QString hostPublisher, QString hostSubs
 
 void Proxy::run()
 {
-    //QThread::currentThread()->setObjectName("proxy_thread");
-    void *context = zmq_ctx_new();
-    void *frontend = zmq_socket(context, ZMQ_XPUB);
+    //QThread::currentThread()->setObjectName("proxy_thread")
+    void *frontend = zmq_socket(*context, ZMQ_XPUB);
     int rc = zmq_bind(frontend, hostPublisher.toLocal8Bit());
     assert (rc == 0);
 
-    void *backend = zmq_socket(context, ZMQ_XSUB);
+    void *backend = zmq_socket(*context, ZMQ_XSUB);
     rc = zmq_bind(backend, hostSubscriber.toLocal8Bit());
     assert (rc == 0);
 

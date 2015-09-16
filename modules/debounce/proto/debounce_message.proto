@@ -4,7 +4,7 @@ import "sender_message.proto";
 
 option java_package = "ru.indigosystem.serv.pb";
 
-option java_outer_classname = "IndigoPB";
+option java_outer_classname = "Debounce";
 option optimize_for = LITE_RUNTIME;
 
 message debounce_message {

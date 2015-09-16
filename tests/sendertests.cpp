@@ -45,7 +45,8 @@ TEST(SENDER, connect) {
         << "sender=true"
        << "zmq=false"
       << "[sender_instance]"
-      << "serverAddress=192.168.91.1"
+      //<< "serverAddress=192.168.91.1"
+         << "serverAddress=192.168.17.44"
       << "serverPort=9100"
       << "uuid=c8d1d4dc-f845-11e2-b1b2-000c29d2c11e"
        << "sendTimeout=1000";
