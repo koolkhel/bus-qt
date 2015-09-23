@@ -106,10 +106,7 @@ void BLACKBOX::doBlackboxJob()
             QString storage = selectQuery.value("storage").toString();
 
             ::indigo::pb::internal_msg message;
-            message.set_id(id);
-            ::indigo::pb::to_send *to_send = message.MutableExtension(::indigo::pb::to_send::to_send_in);
-            to_send->set_id(id);
-            to_send->set_data(data.constData(), data.size());
+            message.ParseFromArray(data.data(), data.size());
 
             qCDebug(BLACKBOXC) << "publishing data from storage: " << storage << " with id: " << id << " bytes: " << data.toHex();
             // выдаем все модулю передачи

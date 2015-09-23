@@ -43,9 +43,7 @@ QStringList SENDER::getPubTopics()
 
 void SENDER::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    if (topic != getConfigurationParameter("sendTopic", "tosend").toString())
-        return;
-
+    qCDebug(SENDERC) << "received message on topic " << topic;
     QMutexLocker locker(&outgoingMessageMutex);
     currentMessage->consumeSample(topic, message);
 }
@@ -66,7 +64,7 @@ void SENDER::start()
     connect(network, SIGNAL(messageReceived(::indigo::pb::indigo_msg&)), SLOT(serverMessageReceived(::indigo::pb::indigo_msg&)));
     network->start();
 
-    subscribe(getConfigurationParameter("sendTopic", "tosend").toString());
+    subscribe(getConfigurationParameter("sendTopic", "to_send").toString());
 
     senderTimer = new QTimer(this);
     senderTimer->setInterval(getConfigurationParameter("sendInterval", 5 * 1000).toInt());
@@ -87,6 +85,10 @@ void SENDER::performSend()
 
     // еще не отправилось, а мы следующее шлем
     if (sentMessage != NULL)
+        return;
+
+    // do not send empty messages as of yet
+    if (currentMessage->sampleIds().count() == 0)
         return;
 
     sentMessage = currentMessage;

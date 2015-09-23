@@ -11,6 +11,8 @@ OutgoingMessage::OutgoingMessage(QObject *parent) : QObject(parent)
 void OutgoingMessage::consumeSample(QString topic, indigo::pb::internal_msg &sample)
 {
     bool consumed = false;
+    qCDebug(SENDERC) << "consuming sample id " << sample.id() << " " << sample.ByteSize() << " bytes";
+
     if (sample.HasExtension(::indigo::pb::indigo_geo::geo_coords_in)) {
         qCDebug(SENDERC) << "consuming geo message id " << sample.id();
         ::indigo::pb::indigo_geo geo = sample.GetExtension(::indigo::pb::indigo_geo::geo_coords_in);
