@@ -142,7 +142,7 @@ void ProtobufNegotiator::queueMessage(::indigo::pb::indigo_msg &var)
 
     if (socket->state() == QTcpSocket::ConnectedState) {
         if (socket->write(buffer, output.ByteCount()) == -1) {
-            socket->disconnect();
+            socket->disconnectFromHost();
         }
         socket->flush();
         qCDebug(SENDERC) << "seems to send ok";
