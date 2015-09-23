@@ -12,12 +12,16 @@ TARGET = gsm-poller
 CONFIG   += console
 CONFIG   -= app_bundle
 
+include(../../paths.pri)
+
+DESTDIR=$$BINDIR
+
 TEMPLATE = app
 
 LIBS += -lgps
 LIBS += -lpthread
 
 SOURCES += \
-    main.cpp
+    gsm-poller.cpp
 
 HEADERS +=

@@ -10,13 +10,15 @@ QT += network
 SOURCES += sender.cpp \
     senderpluginfactory.cpp \
     protobufnegotiator.cpp \
-    outgoingmessage.cpp
+    outgoingmessage.cpp \
+    indigoqueue.cpp
 LIBS += -L../../src/ -lprotobuf-lite -lindigo -lsender_message -lblackbox_message
 
 HEADERS += sender.h \
     senderpluginfactory.h \
     protobufnegotiator.h \
-    outgoingmessage.h
+    outgoingmessage.h \
+    indigoqueue.h
 
 DISTFILES += \
     sender.json \

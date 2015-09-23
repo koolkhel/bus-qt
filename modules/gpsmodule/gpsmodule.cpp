@@ -54,6 +54,7 @@ void GPSMODULE::start()
     if (satSource) {
         satSource->moveToThread(nav_thread);
         connect(satSource, SIGNAL(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)), SLOT(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)));
+        satSource->setUpdateInterval(getConfigurationParameter("satUpdateInterval", QVariant(5000)).toInt());
         satSource->startUpdates();
     }
 
@@ -63,7 +64,7 @@ void GPSMODULE::start()
         connect(positionSource, SIGNAL(positionUpdated(const QGeoPositionInfo &)), SLOT(positionUpdated(const QGeoPositionInfo &)));
 
         positionSource->setPreferredPositioningMethods(QGeoPositionInfoSource::SatellitePositioningMethods);
-        positionSource->setUpdateInterval(5000);
+        positionSource->setUpdateInterval(getConfigurationParameter("updateInterval", QVariant(5000)).toInt());
         positionSource->startUpdates();
     } else {
         qCDebug(GPSMODULEC) << "no GPS available!";

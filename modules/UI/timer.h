@@ -7,7 +7,12 @@
 class Timer :public QGraphicsTextItem
 {
 public:
-    Timer(int startTime = QTime::currentTime().msecsSinceStartOfDay(), bool reverse = false);
+    enum TimerType {
+        COMMON = 0,
+        ABSOLUTE_TIME = 1
+    };
+
+    Timer(TimerType type = COMMON, int startTime = QTime::currentTime().msecsSinceStartOfDay(), bool reverse = false);
     void setFormat(QString format);
     void changeTime(int time);
     void timerEvent ( QTimerEvent * event );
@@ -16,5 +21,6 @@ private:
     bool m_reverse;
     bool overflow;
     QString format;
+    TimerType m_type;
 };
 #endif // TIMER_H

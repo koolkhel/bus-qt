@@ -87,7 +87,7 @@ void SENDER::performSend()
 
     // еще не отправилось, а мы следующее шлем
     if (sentMessage != NULL)
-        return;\
+        return;
 
     sentMessage = currentMessage;
 
@@ -98,13 +98,13 @@ void SENDER::performSend()
 
     // уходящее сообщение штампуем
     int id = outgoingMessageId++;
-    currentMessage->setId(id);
+    sentMessage->setId(id);
 
     // отправляем (с потерями)
     qCDebug(SENDERC) << QString("queuing server message id %1 with %2 messages")
-                        .arg(currentMessage->id())
-                        .arg(currentMessage->sampleIds().count());
-    network->queueMessage(currentMessage->msg());
+                        .arg(sentMessage->id())
+                        .arg(sentMessage->sampleIds().count());
+    network->queueMessage(sentMessage->msg());
 
     // ждем обратно
     sentMessageTimeoutTimer->start();
@@ -133,7 +133,17 @@ void SENDER::readKey()
 {
     QString key = getConfigurationParameter("uuid", "none").toString();
     if (key == "none") {
-        qFatal("please provide uuid for sender module");
+        QFile keyFile(getConfigurationParameter("uuidFile", "/opt/key.txt").toString());
+        if (!keyFile.open(QIODevice::ReadOnly)) {
+            qFatal("couldn't open key file\n");
+        }
+
+        QTextStream in(&keyFile);
+        key = in.readLine();
+
+
+        if (key.size() < 8)
+            qFatal("please provide uuid for sender module in /opt/key.txt");
     }
 
     qCDebug(SENDERC) << "using id " << key;
@@ -141,8 +151,8 @@ void SENDER::readKey()
     key = key.remove("-");
 
     bool ok = false;
-    u_int64_t least = key.mid(0, 16).toULongLong(&ok, 16);
-    u_int64_t most = key.mid(16, 16).toULongLong(&ok, 16);
+    u_int64_t most = key.mid(0, 16).toULongLong(&ok, 16);
+    u_int64_t least = key.mid(16, 16).toULongLong(&ok, 16);
 
     qCDebug(SENDERC) << QString("sender uses key: %1 %2").arg(least, 0, 16).arg(most, 0, 16);
 

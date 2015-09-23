@@ -141,7 +141,7 @@ TEST(BBOX, sendingConfirmed) {
 
     testModule->subscribeTopic("to_send");
 
-    for (int i = 0; i < 400; i++) {
+    for (int i = 0; i < 1; i++) {
         ::indigo::pb::internal_msg positionMessage;
         ::indigo::pb::indigo_geo *geo = positionMessage.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
 

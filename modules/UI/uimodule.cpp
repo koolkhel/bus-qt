@@ -10,7 +10,8 @@ UIModule::UIModule(QObject *parent)
 void UIModule::start()
 {
     w = new MainWindow();
-    w->show();
+    w->showMaximized();
+    w->setGeometry(0, 0, 800, 480);
     QString inputTopic= getConfigurationParameter("inputTopic", "ui_topic").toString();
     subscribe(inputTopic);
 

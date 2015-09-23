@@ -38,8 +38,6 @@ private:
 
     void collectStatistics();
 
-    void criticalCheck(bool result);
-
     int _ramRecordCount;
     int _nandRecordCount;
     int _sentRecordCount;

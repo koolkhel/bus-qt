@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     state = false;
     id_timer = 0;
-    //this->setFocus();
+    this->setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -167,14 +167,14 @@ void MainWindow::initializeStaticObjects()
 
 void MainWindow::initializeClocks()
 {
-    Timer * item = new Timer();
+    Timer * item = new Timer(Timer::ABSOLUTE_TIME);
     item->setFont(QFont("Droid Sans", 45, QFont::Bold));
     ui->graphicsView->scene()->addItem(item);
     item->setPos(465, staticBlockY + 35);
 
     for(int i = 0; i < 4; ++i) {      
         if(i == 1) {
-            clocks[i] = new Timer(0);
+            clocks[i] = new Timer(Timer::COMMON);
         } else {
             clocks[i] = new QGraphicsTextItem();
         }

@@ -1,19 +1,26 @@
 #include "blackbox.h"
 #include <QtSql>
 
+#include <sqlite3.h>
+
 #include "blackbox_message.pb.h"
 
 Q_LOGGING_CATEGORY(BLACKBOXC, "blackbox")
 
 
+#define criticalCheck(result) do { \
+    if (!result) { \
+        qCWarning(BLACKBOXC) << "blackbox error: " << db.lastError().driverText(); \
+    } \
+} while (0)
+
 
 BLACKBOX::BLACKBOX(QObject *parent)
-    :
-      _sentRecordCount(0),
-      _nandRecordCount(0),
-      _ramRecordCount(0),
-      _confirmedRecordCount(0)
 {
+    _sentRecordCount =0;
+    _nandRecordCount = 0;
+    _ramRecordCount = 0;
+    _confirmedRecordCount = 0;
     setParent(parent);
 
     this->name = "blackbox works";
@@ -76,7 +83,13 @@ void BLACKBOX::doBlackboxJob()
     if (_sentRecordCount < maxRecordCount) {
         int toSend = maxRecordCount - _sentRecordCount;
 
-        QString selectString = "SELECT id, data, storage FROM stored_data ORDER BY id ASC LIMIT :limit";
+        QString selectString =
+                "select "
+                "s.id as id, st.sent_id, s.data as data, s.storage as storage "
+                "from stored_data s left join ram.sent_data st "
+                "on s.id = st.sent_id "
+                "where st.sent_id IS NULL "
+                "order by s.id ASC limit :limit";
         QSqlQuery selectQuery(db);
         criticalCheck(selectQuery.prepare(selectString));
 
@@ -147,6 +160,8 @@ void BLACKBOX::start()
         qFatal(qPrintable(db.lastError().text()));
     }
 
+    //sqlite3_trace(static_cast<sqlite3 *>(db.driver()->handle().value<void *>()), trace, NULL);
+
     initializeDB();
     // подписываемся сразу на все, что задано в аргументах
     QStringList topics = getConfigurationParameter("inputTopics", "").toString().split(",");
@@ -183,42 +198,42 @@ void BLACKBOX::initializeDB()
                .arg(getConfigurationParameter("maxRamPages", 256).toInt()));
 
     // хранилище в ПЗУ
-    executeDDL("DROP TABLE IF EXISTS main.nand_data");
-    executeDDL("CREATE TABLE main.nand_data ("
+    //executeDDL("DROP TABLE IF EXISTS main.nand_data");
+    executeDDL("CREATE TABLE IF NOT EXISTS main.nand_data ("
       "id   INT NOT NULL,"
       "data BLOB,"
       "PRIMARY KEY (id))");
-    executeDDL("DROP INDEX IF EXISTS main.nand_data_idx");
-    executeDDL("CREATE INDEX main.nand_data_idx ON nand_data (id);");
+    //executeDDL("DROP INDEX IF EXISTS main.nand_data_idx");
+    executeDDL("CREATE INDEX IF NOT EXISTS main.nand_data_idx ON nand_data (id);");
 
     // хранилище в ОЗУ
-    executeDDL("DROP TABLE IF EXISTS ram.ram_data");
-    executeDDL("CREATE TABLE ram.ram_data ("
+    //executeDDL("DROP TABLE IF EXISTS ram.ram_data");
+    executeDDL("CREATE TABLE IF NOT EXISTS ram.ram_data ("
       "id   INT NOT NULL,"
       "data BLOB,"
       "PRIMARY KEY (id))");
-    executeDDL("DROP INDEX IF EXISTS ram.ram_data_idx");
-    executeDDL("CREATE INDEX ram.ram_data_idx ON ram_data (id)");
+    //executeDDL("DROP INDEX IF EXISTS ram.ram_data_idx");
+    executeDDL("CREATE INDEX IF NOT EXISTS ram.ram_data_idx ON ram_data (id)");
 
     // подтвержденные данные
-    executeDDL("DROP TABLE IF EXISTS ram.confirmed_data");
-    executeDDL("CREATE TABLE ram.confirmed_data ("
+    //executeDDL("DROP TABLE IF EXISTS ram.confirmed_data");
+    executeDDL("CREATE TABLE IF NOT EXISTS ram.confirmed_data ("
       "confirmed_id INT NOT NULL,"
       "PRIMARY KEY (confirmed_id))");
 
-    executeDDL("DROP TABLE IF EXISTS ram.sent_data");
-    executeDDL("CREATE TABLE ram.sent_data ("
+    //executeDDL("DROP TABLE IF EXISTS ram.sent_data");
+    executeDDL("CREATE TABLE IF NOT EXISTS ram.sent_data ("
       "sent_id INT NOT NULL,"
       "PRIMARY KEY (sent_id))");
 
     // отсюда делаем выборки для передачи сендеру и сохраняем всё, что приходит по топикам (неважно, что)
-    executeDDL("DROP VIEW IF EXISTS stored_data");
+    //executeDDL("DROP VIEW IF EXISTS stored_data");
     executeDDL("CREATE TEMP VIEW stored_data  AS     SELECT        id,        data, \"RAM\" AS STORAGE "
       "FROM ram.ram_data UNION                                       SELECT        id,        data,  \"NAND\" AS STORAGE "
       "FROM main.nand_data      ORDER BY id        ASC");
 
     // если удаляем из view, сносим так же с любого хранилища
-    executeDDL("DROP TRIGGER IF EXISTS stored_data_delete_trg");
+    //executeDDL("DROP TRIGGER IF EXISTS stored_data_delete_trg");
     executeDDL("CREATE TEMPORARY TRIGGER stored_data_delete_trg INSTEAD OF DELETE ON stored_data "
     "BEGIN "
       "DELETE FROM nand_data "
@@ -228,7 +243,7 @@ void BLACKBOX::initializeDB()
     " END; ");
 
     // статистика для того, чтобы алгоритм ориентировался
-    executeDDL("DROP VIEW IF EXISTS STATS");
+    //executeDDL("DROP VIEW IF EXISTS STATS");
     executeDDL("CREATE TEMP VIEW STATS    AS "
                       "SELECT count(*) AS CNT, 'CONFIRMED' AS TYPE FROM confirmed_data "
       " UNION SELECT count(*) AS CNT, 'SENT' AS TYPE FROM sent_data"
@@ -237,7 +252,7 @@ void BLACKBOX::initializeDB()
       " ORDER BY TYPE");
 
     // если подтвердили передачу данных, то мы из всех возможных таблиц всё удаляем
-    executeDDL("DROP TRIGGER IF EXISTS confirmed_data_trigger");
+    //executeDDL("DROP TRIGGER IF EXISTS confirmed_data_trigger");
     executeDDL("CREATE TEMPORARY TRIGGER confirmed_data_trigger AFTER INSERT ON ram.confirmed_data "
     " BEGIN "
       " DELETE FROM confirmed_data WHERE confirmed_id = NEW.confirmed_id; "
@@ -301,11 +316,5 @@ void BLACKBOX::collectStatistics()
             qCDebug(BLACKBOXC) << "sent record count: " << cnt;
             _sentRecordCount = cnt;
         }
-    }
-}
-
-void BLACKBOX::criticalCheck(bool result) {
-    if (!result) {
-        qFatal(qPrintable(db.lastError().text()));
     }
 }
