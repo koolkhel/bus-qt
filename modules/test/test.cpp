@@ -5,6 +5,8 @@
 #include "sender_message.pb.h"
 #include "tests.h"
 
+#include <QDateTime>
+
 Q_LOGGING_CATEGORY(TESTC, "test_module")
 
 static TestModule *instance = NULL;
@@ -23,6 +25,34 @@ TestModule::TestModule(QObject *parent)
 void TestModule::start()
 {
     sendTestMessage();
+
+    bool timerOutput = getConfigurationParameter("testTimerOutput", "false").toBool();
+    if (timerOutput) {
+
+        testTopic = getConfigurationParameter("testTimerTopic", "raw_gps").toString();
+        testMessageId = 0;
+        testTimer = new QTimer(this);
+        testTimer->setInterval(1000);
+        testTimer->setSingleShot(false);
+
+        connect(testTimer, SIGNAL(timeout()), this, SLOT(testSlot()));
+        testTimer->start();
+    }
+}
+
+void TestModule::testSlot()
+{
+    ::indigo::pb::internal_msg positionMessage;
+    ::indigo::pb::indigo_geo *geo = positionMessage.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
+
+    positionMessage.set_id(testMessageId++);
+
+    geo->set_longitude(35.5);
+    geo->set_latitude(36.6);
+    geo->mutable_unixtime()->set_time(QDateTime::currentMSecsSinceEpoch() / 1000);
+    geo->set_satellites_used(10);
+
+    publish(positionMessage, testTopic);
 }
 
 void TestModule::stop()
@@ -34,6 +64,7 @@ QStringList TestModule::getPubTopics()
 {
     QStringList topics;
     topics << "hello1";
+    return topics;
 }
 
 void TestModule::sendMessage(indigo::pb::internal_msg &msg, QString topic)

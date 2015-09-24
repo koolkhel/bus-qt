@@ -42,6 +42,7 @@ QStringList BLACKBOX::getPubTopics()
 
 void BLACKBOX::handleConfirmedMessages(indigo::pb::internal_msg &message)
 {
+    qCDebug(BLACKBOXC) << "handleConfirmedMessages called";
     QString insertConfirmedText = "insert into ram.confirmed_data (confirmed_id) values (:id)";
     QSqlQuery insertConfirmedQuery(db);
     insertConfirmedQuery.prepare(insertConfirmedText);
@@ -64,7 +65,7 @@ void BLACKBOX::handleConfirmedMessages(indigo::pb::internal_msg &message)
 
 void BLACKBOX::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    if (topic == "confirmed_messages") {
+    if (topic == confirmedMessagesTopic) {
         handleConfirmedMessages(message);
     } else {
         QByteArray data = QByteArray::fromStdString(message.SerializeAsString());
@@ -167,7 +168,8 @@ void BLACKBOX::start()
         subscribe(topic);
     }
 
-    subscribe("confirmed_messages");
+    confirmedMessagesTopic = getConfigurationParameter("confirmedMessagesTopic", "confirmed_messages").toString();
+    subscribe(confirmedMessagesTopic);
 
     bbTimer = new QTimer(this);
     bbTimer->setInterval(1000);
@@ -313,5 +315,17 @@ void BLACKBOX::collectStatistics()
             qCDebug(BLACKBOXC) << "sent record count: " << cnt;
             _sentRecordCount = cnt;
         }
+    }
+
+    QSqlQuery sentQuery(db);
+    criticalCheck(sentQuery.exec("select sent_id from ram.sent_data"));
+    while (sentQuery.next()) {
+        qCDebug(BLACKBOXC) << "sent_id: " << sentQuery.value("sent_id").toInt();
+    }
+
+    QSqlQuery storedQuery(db);
+    criticalCheck(storedQuery.exec("select id from stored_data"));
+    while (storedQuery.next()) {
+        qCDebug(BLACKBOXC) << "stored_id: " << storedQuery.value("id").toInt();
     }
 }

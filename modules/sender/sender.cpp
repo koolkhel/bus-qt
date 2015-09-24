@@ -43,7 +43,7 @@ QStringList SENDER::getPubTopics()
 
 void SENDER::respond(QString topic, indigo::pb::internal_msg &message)
 {
-    qCDebug(SENDERC) << "received message on topic " << topic;
+    qCDebug(SENDERC) << "received message on topic " << topic << " with id " << message.id();
     QMutexLocker locker(&outgoingMessageMutex);
     currentMessage->consumeSample(topic, message);
 }
@@ -84,12 +84,17 @@ void SENDER::performSend()
     QMutexLocker locker(&outgoingMessageMutex);
 
     // еще не отправилось, а мы следующее шлем
-    if (sentMessage != NULL)
+    if (sentMessage != NULL) {
+        qCDebug(SENDERC) << "aborting cycle due to sentMessage "
+                         << sentMessage->id() << "not confirmed";
         return;
+    }
 
     // do not send empty messages as of yet
-    if (currentMessage->sampleIds().count() == 0)
+    if (currentMessage->sampleIds().count() == 0) {
+        qCDebug(SENDERC) << "aborting cycle due to currentMessage being empty";
         return;
+    }
 
     sentMessage = currentMessage;
 
@@ -184,7 +189,7 @@ void SENDER::handleServerConfirmation(indigo::pb::indigo_msg &message)
     // готовимся публиковать ответ
     ::indigo::pb::internal_msg msg;
 
-    ::indigo::pb::confirmed_messages blackboxConfirmed = msg.GetExtension(
+    ::indigo::pb::confirmed_messages *blackboxConfirmed = msg.MutableExtension(
                 ::indigo::pb::confirmed_messages::confirmed_messages_in);
 
     // по всем подтвержденным идшникам
@@ -192,7 +197,7 @@ void SENDER::handleServerConfirmation(indigo::pb::indigo_msg &message)
 
 
     foreach (int sampleId, sentMessage->sampleIds())  {
-        blackboxConfirmed.add_message_ids(sampleId);
+        blackboxConfirmed->add_message_ids(sampleId);
     }
 
     // пусть черный ящик успокоится

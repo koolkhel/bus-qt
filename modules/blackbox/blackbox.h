@@ -44,6 +44,8 @@ private:
     int _confirmedRecordCount;
 
     QTimer *bbTimer;
+
+    QString confirmedMessagesTopic;
 };
 
 #endif // SKEL_H

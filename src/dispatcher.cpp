@@ -42,7 +42,10 @@ void Dispatcher::publish(ModuleP *modP, ::indigo::pb::internal_msg &msg, QString
     assert(modP != NULL);
     assert(modP->getPublisher() != NULL);
 
-    msg.set_id(sampleId++);
+    if (!msg.has_id()) {
+        msg.set_id(sampleId++);
+    }
+
     QByteArray data = QByteArray::fromStdString(msg.SerializeAsString());
 
     QMetaObject::invokeMethod(modP->getPublisher(), "sendMessage", Qt::QueuedConnection,

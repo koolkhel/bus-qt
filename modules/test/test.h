@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QLoggingCategory>
 #include <QDebug>
+#include <QTimer>
 
 #include "module.h"
 
@@ -30,7 +31,12 @@ public:
     // ----- end test methods --------
 
 public slots:
+    void testSlot();
     virtual void respond(QString topic, ::indigo::pb::internal_msg &message);
+private:
+    QTimer *testTimer;
+    QString testTopic;
+    int testMessageId;
 };
 
 #endif // TEST_H
