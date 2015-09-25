@@ -173,6 +173,8 @@ void SENDER::readKey()
 
 void SENDER::handleServerConfirmation(indigo::pb::indigo_msg &message)
 {
+    Q_CHECK_PTR(sentMessage);
+
     ::indigo::pb::confirmed_messages serverConfirmed = message.GetExtension(
                 ::indigo::pb::confirmed_messages::confirmed_messages_out);
     if (serverConfirmed.message_ids_size() != 1) {
@@ -213,7 +215,11 @@ void SENDER::serverMessageReceived(::indigo::pb::indigo_msg &message)
     // пришли подтверждения с сервера
     if (message.HasExtension(::indigo::pb::confirmed_messages::confirmed_messages_out)) {
         if (sentMessage == NULL) {
+            // сервер не заморачивается и подтверждает все, что ему присылают
+            // при малом таймауте одно и то же сообщение может уйти дважды
+            // то бишь ассерт тут лучше не делать
             qCWarning(SENDERC) << "confirmation received, but no messages sent yet";
+            return;
         }
 
         handleServerConfirmation(message);

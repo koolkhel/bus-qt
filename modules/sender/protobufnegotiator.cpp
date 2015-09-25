@@ -68,6 +68,7 @@ void ProtobufNegotiator::start()
 {
     socket = new QTcpSocket(this);
     socket->setSocketOption(QAbstractSocket::LowDelayOption, QVariant(1));
+    socket->setSocketOption(QAbstractSocket::KeepAliveOption, QVariant(1));
 
     connect(socket, SIGNAL(readyRead()), SLOT(readyRead()), Qt::QueuedConnection);
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(disconnected()));
@@ -115,17 +116,32 @@ void ProtobufNegotiator::disconnected()
 void ProtobufNegotiator::error(QAbstractSocket::SocketError &error)
 {
     qCDebug(SENDERC) << "error" << socket->errorString();
+    socket->reset();
 }
 
 void ProtobufNegotiator::reconnect()
 {
     qCDebug(SENDERC) << QString("connecting to %1 port %2").arg(_serverAddress).arg(_serverPort);
-    socket->connectToHost(_serverAddress, _serverPort);
+    if (socket->state() == QAbstractSocket::UnconnectedState) {
+        socket->connectToHost(_serverAddress, _serverPort);
+    }
 }
 
 void ProtobufNegotiator::stamp_uuid(::indigo::pb::indigo_msg &var)
 {
     var.mutable_device_id()->CopyFrom(_deviceId);
+}
+
+void ProtobufNegotiator::resetConnectionSlot()
+{
+    qCDebug(SENDERC) << "resetConnectionSlot";
+    socket->abort();
+    socket->connectToHost(_serverAddress, _serverPort);
+}
+
+void ProtobufNegotiator::resetConnection()
+{
+    QMetaObject::invokeMethod(this, "resetConnectionSlot", Qt::QueuedConnection);
 }
 
 // сообщение не будет доставлено, если нет связи
@@ -142,12 +158,15 @@ void ProtobufNegotiator::queueMessage(::indigo::pb::indigo_msg &var)
 
     if (socket->state() == QTcpSocket::ConnectedState) {
         if (socket->write(buffer, output.ByteCount()) == -1) {
-            socket->disconnectFromHost();
+            resetConnection();
+            qCDebug(SENDERC) << "socket write error!";
+            return;
         }
         socket->flush();
         qCDebug(SENDERC) << "seems to send ok";
     } else {
         qCWarning(SENDERC) << "socket not connected, exiting";
+        reconnect();
     }
 }
 

@@ -33,8 +33,10 @@ private slots:
     void disconnected();
     void reconnect();
     void flushOrderEvents();
+    void resetConnectionSlot();
 
 private:
+    void resetConnection();
     void stamp_uuid(::indigo::pb::indigo_msg &var);
     void consumeSocketData();
 
