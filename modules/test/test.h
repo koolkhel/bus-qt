@@ -31,6 +31,7 @@ public:
     // ----- end test methods --------
 
 public slots:
+    void testBurstSlot();
     void testSlot();
     virtual void respond(QString topic, ::indigo::pb::internal_msg &message);
 private:

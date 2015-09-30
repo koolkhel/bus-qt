@@ -109,6 +109,10 @@ void BLACKBOX::doBlackboxJob()
             ::indigo::pb::internal_msg message;
             message.ParseFromArray(data.data(), data.size());
 
+            if (!message.IsInitialized()) {
+                qCWarning(BLACKBOXC) << "rubbish message id " << id;
+                continue;
+            }
             qCDebug(BLACKBOXC) << "publishing data from storage: " << storage << " with id: " << id << " bytes: " << data.toHex();
             // выдаем все модулю передачи
             publish(message, "to_send");
@@ -172,7 +176,7 @@ void BLACKBOX::start()
     subscribe(confirmedMessagesTopic);
 
     bbTimer = new QTimer(this);
-    bbTimer->setInterval(1000);
+    bbTimer->setInterval(500);
     bbTimer->setSingleShot(false);
 
     connect(bbTimer, SIGNAL(timeout()), SLOT(doBlackboxJob()));
@@ -317,6 +321,7 @@ void BLACKBOX::collectStatistics()
         }
     }
 
+#if 0
     QSqlQuery sentQuery(db);
     criticalCheck(sentQuery.exec("select sent_id from ram.sent_data"));
     while (sentQuery.next()) {
@@ -328,4 +333,5 @@ void BLACKBOX::collectStatistics()
     while (storedQuery.next()) {
         qCDebug(BLACKBOXC) << "stored_id: " << storedQuery.value("id").toInt();
     }
+#endif
 }

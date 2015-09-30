@@ -67,7 +67,7 @@ ProtobufNegotiator::ProtobufNegotiator(QString serverAddress, int serverPort, ::
 void ProtobufNegotiator::start()
 {
     socket = new QTcpSocket(this);
-    socket->setSocketOption(QAbstractSocket::LowDelayOption, QVariant(1));
+    //socket->setSocketOption(QAbstractSocket::LowDelayOption, QVariant(1));
     socket->setSocketOption(QAbstractSocket::KeepAliveOption, QVariant(1));
 
     connect(socket, SIGNAL(readyRead()), SLOT(readyRead()), Qt::QueuedConnection);
@@ -161,6 +161,8 @@ void ProtobufNegotiator::queueMessage(::indigo::pb::indigo_msg &var)
             resetConnection();
             qCDebug(SENDERC) << "socket write error!";
             return;
+        } else {
+            qCDebug(SENDERC) << output.ByteCount() << " bytes sent";
         }
         socket->flush();
         qCDebug(SENDERC) << "seems to send ok";

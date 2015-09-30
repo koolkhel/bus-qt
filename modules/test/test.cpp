@@ -22,6 +22,14 @@ TestModule::TestModule(QObject *parent)
     qCDebug(TESTC, "hello,world");
 }
 
+void TestModule::testBurstSlot()
+{
+    for (int i = 0; i < 5000; i++) {
+        //qCDebug(TESTC) << "burst";
+        QMetaObject::invokeMethod(this, "testSlot", Qt::QueuedConnection);
+    }
+}
+
 void TestModule::start()
 {
     sendTestMessage();
@@ -38,14 +46,19 @@ void TestModule::start()
         connect(testTimer, SIGNAL(timeout()), this, SLOT(testSlot()));
         testTimer->start();
     }
+
+    bool timerOutputBurst = getConfigurationParameter("testTimerOutputBurst", "false").toBool();
+    qCDebug(TESTC) << "burst = " << timerOutputBurst;
+    if (timerOutputBurst) {
+        QTimer::singleShot(10 * 1000, this, SLOT(testBurstSlot()));
+    }
+
 }
 
 void TestModule::testSlot()
 {
     ::indigo::pb::internal_msg positionMessage;
     ::indigo::pb::indigo_geo *geo = positionMessage.MutableExtension(::indigo::pb::indigo_geo::geo_coords_in);
-
-    positionMessage.set_id(testMessageId++);
 
     geo->set_longitude(35.5);
     geo->set_latitude(36.6);
