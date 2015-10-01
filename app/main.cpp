@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QFile>
 #include <QDebug>
+#include <QDir>
 #include "dispatcher.h"
 
 void enableSignalHandling();

@@ -43,9 +43,10 @@ QStringList BLACKBOX::getPubTopics()
 void BLACKBOX::handleConfirmedMessages(indigo::pb::internal_msg &message)
 {
     qCDebug(BLACKBOXC) << "handleConfirmedMessages called";
-    QString insertConfirmedText = "insert into ram.confirmed_data (confirmed_id) values (:id)";
+    QString insertConfirmedText = "insert into ram.confirmed_data (confirmed_id) values (:id)";    
     QSqlQuery insertConfirmedQuery(db);
-    insertConfirmedQuery.prepare(insertConfirmedText);
+    criticalCheck(insertConfirmedQuery.prepare(insertConfirmedText));
+
 
     ::indigo::pb::confirmed_messages cm = message.GetExtension(::indigo::pb::confirmed_messages::confirmed_messages_in);
 
@@ -58,6 +59,7 @@ void BLACKBOX::handleConfirmedMessages(indigo::pb::internal_msg &message)
 
         // FIXME безопасно ли это делать? если кончится память, хорошо не будет
         criticalCheck(insertConfirmedQuery.exec());
+        //qCDebug(BLACKBOXC) << insertConfirmedQuery.lastError();
     }
 
     db.commit();
@@ -195,10 +197,14 @@ void BLACKBOX::initializeDB()
     // 1M хранимых данных
     //executeDDL("PRAGMA ram.PAGE_SIZE = 4096");
     //executeDDL("PRAGMA ram.MAX_PAGE_COUNT = 256");
+    executeDDL(QString("PRAGMA temp_store = 2"));
+    executeDDL(QString("PRAGMA temp_store_directory = '/var/'"));
     executeDDL(QString("PRAGMA ram.PAGE_SIZE = %1")
                .arg(getConfigurationParameter("ramPageSize", 4096).toInt()));
     executeDDL(QString("PRAGMA ram.MAX_PAGE_COUNT = %1")
                .arg(getConfigurationParameter("maxRamPages", 256).toInt()));
+
+    //fprintf(stderr, "temp = %s\n", sqlite3_temp_directory);
 
     // хранилище в ПЗУ
     //executeDDL("DROP TABLE IF EXISTS main.nand_data");

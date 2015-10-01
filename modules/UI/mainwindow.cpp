@@ -20,19 +20,20 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    if(!QResource::registerResource("../modules/UI/ui.rcc")) {
+    QString path = QApplication::applicationDirPath() + "/";
+    if(!QResource::registerResource(path + "../modules/UI/ui.rcc")) {
         qCWarning(UIMODULE) << "Error Loading resouce file(NO IMAGES)";
         abort();
     }
 
     int droid_font_id = 0;
-    if((droid_font_id = QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans.ttf")) == -1) {
+    if((droid_font_id = QFontDatabase::addApplicationFont(path + "../modules/UI/fonts/DroidSans.ttf")) == -1) {
         qCDebug(UIMODULE) << "Error Loading font";
         abort();
     }
 
     int droid_bold_font_id = 0;
-    if((droid_bold_font_id = QFontDatabase::addApplicationFont("../modules/UI/fonts/DroidSans-Bold.ttf")) == -1) {
+    if((droid_bold_font_id = QFontDatabase::addApplicationFont(path + "../modules/UI/fonts/DroidSans-Bold.ttf")) == -1) {
         qCDebug(UIMODULE) << "Error Loading font";
         abort();
     }
@@ -48,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(0, 0, 680, 100);
 
     ui->graphicsView->setScene(scene);
+    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     Line = new GuiWindowGraphicsObject();
 

@@ -1,4 +1,5 @@
 #include <QThread>
+#include <QApplication>
 #include <QSettings>
 #include <QDir>
 #include <QPluginLoader>
@@ -173,7 +174,7 @@ void Dispatcher::readConfiguration(QSettings &settings, QString moduleInstanceNa
 
  void Dispatcher::loadAllPlugins()
  {
-     QDir pluginDir("../modules/bin");
+     QDir pluginDir(QApplication::applicationDirPath() +  "/../modules/bin");
      QStringList pluginsFilter;
      pluginsFilter << "*.so";
      pluginDir.setNameFilters(pluginsFilter);

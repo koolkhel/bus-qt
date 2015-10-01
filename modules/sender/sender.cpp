@@ -256,4 +256,5 @@ void SENDER::keepAliveTimerTimeout()
     // no server confirmation needed
     ::indigo::pb::indigo_msg msg;
     network->queueMessage(msg);
+    keepAliveTimer->start();
 }
