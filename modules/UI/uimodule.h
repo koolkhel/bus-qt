@@ -18,10 +18,12 @@ class UIModule : public Module
     public:
         UIModule(QObject *parent = 0);
         ~UIModule() {}
-        void start();
-        void stop();
+
         QStringList getPubTopics();
         void respond(QString topic, ::indigo::pb::internal_msg &message);
+public slots:
+        void start();
+        void stop();
 private:
         MainWindow *w;
 };

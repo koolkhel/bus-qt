@@ -16,10 +16,11 @@ class Skel : public Module
 public:
     Skel(QObject *parent = 0);
     virtual ~Skel();
-    void start();
-    void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
+public slots:
+    void start();
+    void stop();
 };
 
 #endif // SKEL_H

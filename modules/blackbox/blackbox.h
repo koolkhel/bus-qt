@@ -19,10 +19,11 @@ class BLACKBOX : public Module
 public:
     BLACKBOX(QObject *parent = 0);
     virtual ~BLACKBOX();
-    void start();
-    void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
+public slots:
+    void start();
+    void stop();
 
 private slots:
     void doBlackboxJob();

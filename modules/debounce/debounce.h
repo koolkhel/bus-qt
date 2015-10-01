@@ -22,13 +22,14 @@ class DEBOUNCE : public Module
 public:
     DEBOUNCE(QObject *parent = 0);
     virtual ~DEBOUNCE();
-    void start();
-    void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
     bool moduleLogic(const indigo::pb::io_message &);
  public slots:
+    void start();
+    void stop();
+
     void stabilized();
 private:
     indigo::pb::internal_msg dbcMessage;

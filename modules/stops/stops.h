@@ -17,10 +17,11 @@ class STOPS : public Module
 public:
     STOPS(QObject *parent = 0);
     virtual ~STOPS();
-    void start();
-    void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
+public slots:
+    void start();
+    void stop();
 private:
     bool check(int sc);
     int typeOfLogic;

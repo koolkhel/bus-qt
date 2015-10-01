@@ -20,8 +20,7 @@ class LOGS : public Module
 public:
     LOGS(QObject *parent = 0);
     virtual ~LOGS();
-    void start();
-    void stop();
+
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 
@@ -29,6 +28,9 @@ public:
     void stopServer();
 
     void log(QString &str);
+public slots:
+    void start();
+    void stop();
 signals:
     void configurationChanged();
 private slots:

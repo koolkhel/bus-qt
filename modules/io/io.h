@@ -20,11 +20,13 @@ class IO : public Module
 public:
     IO(QObject *parent = 0);
     virtual ~IO();
-    void start();
-    void stop();
+
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
 public slots:
+    void start();
+    void stop();
+
     void doOutputJob(uint64_t content);
     void doInputJob();
 private:

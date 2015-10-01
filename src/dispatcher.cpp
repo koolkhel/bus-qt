@@ -63,6 +63,12 @@ void Dispatcher::startAll()
     //QThread::currentThread()->setObjectName("main_thread");
     foreach (QString instanceName, moduleInstances.keys()) {
         Module *module = moduleInstances.find(instanceName).value();
+        bool separateThread = module->getConfigurationParameter("thread", "false").toBool();
+        if (separateThread) {
+            QThread *thread = new QThread(this);
+            module->moveToThread(thread);
+            thread->start();
+        }
 
         ModuleP *mod_p = new ModuleP(instanceName);
 
@@ -92,7 +98,7 @@ void Dispatcher::startAll()
         connect(mod_p, SIGNAL(messageReceived(const QList<QByteArray> &)),
                 module, SLOT(messageReceived(const QList<QByteArray>&)), Qt::QueuedConnection);
 
-        module->start();
+        QMetaObject::invokeMethod(module, "start", Qt::QueuedConnection);
     }
 }
 

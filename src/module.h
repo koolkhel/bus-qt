@@ -25,14 +25,15 @@ public:
     virtual ~Module() = 0;
     friend class Dispatcher;
     void configure(QMap<QString, QVariant> &configuration, Dispatcher *d);
-    virtual void start();
-    virtual void stop();
     virtual QStringList getPubTopics() = 0;
     virtual QString getName() const;
     virtual QVariant getConfigurationParameter(const QString name, const QVariant &defaultValue) const;
     virtual QMap<QString, QVariant>& getAllConfiguration() { return configuration; }
 
 public slots:
+    virtual void start();
+    virtual void stop();
+
     void messageReceived(const QList<QByteArray> &data);
     virtual void respond(QString topic, ::indigo::pb::internal_msg &message) = 0;
 protected:

@@ -16,9 +16,6 @@ class TestModule : public Module
 public:
     TestModule(QObject *parent = 0);
     virtual ~TestModule() {}
-    virtual void start();
-    virtual void stop();
-
     virtual QStringList getPubTopics();
 
     // ----- test methods -------------
@@ -31,6 +28,9 @@ public:
     // ----- end test methods --------
 
 public slots:
+    virtual void start();
+    virtual void stop();
+
     void testBurstSlot();
     void testSlot();
     virtual void respond(QString topic, ::indigo::pb::internal_msg &message);

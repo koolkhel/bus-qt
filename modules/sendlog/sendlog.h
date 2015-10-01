@@ -19,11 +19,11 @@ class SENDLOG : public Module
 public:
     SENDLOG(QObject *parent = 0);
     virtual ~SENDLOG();
-    void start();
-    void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
-
+public slots:
+    void start();
+    void stop();
 private slots:
     void read();
 private:
