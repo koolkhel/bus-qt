@@ -42,6 +42,8 @@
 #include "gpsdsatellitesource.h"
 #include <errno.h>
 
+#include "gpsmodule.h"
+
 GpsdSatelliteSource::GpsdSatelliteSource(QObject *parent)
     : QGeoSatelliteInfoSource(parent),
       timer(NULL),
@@ -76,7 +78,7 @@ void GpsdSatelliteSource::poll()
 
 int GpsdSatelliteSource::minimumUpdateInterval() const
 {
-    return 500;
+    return 100;
 }
 
 void GpsdSatelliteSource::startUpdates()
@@ -92,6 +94,14 @@ void GpsdSatelliteSource::startUpdates()
         connect(timer, SIGNAL(timeout()), this, SLOT(poll()));
     }
     timer->start(interval);
+
+    if (outputTimer == NULL) {
+        outputTimer = new QTimer(this);
+        connect(outputTimer, SIGNAL(timeout()), SLOT(doOutput()));
+        outputTimer->setInterval(5000);
+        outputTimer->setSingleShot(false);
+    }
+    outputTimer->start();
 }
 
 void GpsdSatelliteSource::stopUpdates()
@@ -108,16 +118,18 @@ void GpsdSatelliteSource::requestUpdate(int timeout /* ms */)
         return;
     }
 
-    // 0.5 s
-    if (!gps_waiting(&gps_data, timeout * 1000 / 2)) {
+    // 500 microseconds
+    if (!gps_waiting(&gps_data, 500)) {
 
         emit requestTimeout();
+        return;
     }
 
-    if (gps_read(&gps_data) == -1) {
+    int result = gps_read(&gps_data);
+    if (result == -1) {
         // error in errno
-        qDebug() << "gps_read: " << errno;
-    } else {
+        qCDebug(GPSMODULEC) << "gps_read: " << errno;
+    } else if (result > 0) {
 
         if (gps_data.fix.mode >= MODE_2D) {
             // отдать координату
@@ -146,10 +158,17 @@ void GpsdSatelliteSource::requestUpdate(int timeout /* ms */)
                 inView.append(satInfo);
             }
 
-            emit satellitesInViewUpdated(inView);
-            emit satellitesInUseUpdated(inUse);
+            _inView = inView;
+            _inUse = inUse;
         }
     }
+}
+
+void GpsdSatelliteSource::doOutput()
+{
+    qCDebug(GPSMODULEC) << "doing SATELLITE output";
+    //emit satellitesInViewUpdated(_inView);
+    //emit satellitesInUseUpdated(_inUse);
 }
 
 QGeoSatelliteInfoSource::Error GpsdSatelliteSource::error() const

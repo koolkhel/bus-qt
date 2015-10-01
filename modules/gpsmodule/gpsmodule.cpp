@@ -49,13 +49,15 @@ void GPSMODULE::start()
     }
 
     QThread *nav_thread = new QThread(this);
+    nav_thread->start();
 
     QGeoSatelliteInfoSource *satSource  = new GpsdSatelliteSource();
     if (satSource) {
         satSource->moveToThread(nav_thread);
         connect(satSource, SIGNAL(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)), SLOT(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)));
-        satSource->setUpdateInterval(getConfigurationParameter("satUpdateInterval", QVariant(5000)).toInt());
-        satSource->startUpdates();
+        satSource->setUpdateInterval(getConfigurationParameter("satUpdateInterval", QVariant(100)).toInt());
+        QMetaObject::invokeMethod(satSource, "startUpdates", Qt::QueuedConnection);
+        //satSource->startUpdates();
     }
 
     GpsdPositionSource *positionSource = new GpsdPositionSource();
@@ -64,13 +66,12 @@ void GPSMODULE::start()
         connect(positionSource, SIGNAL(positionUpdated(const QGeoPositionInfo &)), SLOT(positionUpdated(const QGeoPositionInfo &)));
 
         positionSource->setPreferredPositioningMethods(QGeoPositionInfoSource::SatellitePositioningMethods);
-        positionSource->setUpdateInterval(getConfigurationParameter("updateInterval", QVariant(5000)).toInt());
-        positionSource->startUpdates();
+        positionSource->setUpdateInterval(getConfigurationParameter("updateInterval", QVariant(100)).toInt());
+        QMetaObject::invokeMethod(positionSource, "startUpdates", Qt::QueuedConnection);
+        //positionSource->startUpdates();
     } else {
         qCDebug(GPSMODULEC) << "no GPS available!";
     }
-
-    nav_thread->start();
 }
 
 void GPSMODULE::stop()

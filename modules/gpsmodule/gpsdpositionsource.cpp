@@ -42,6 +42,8 @@
 #include "gpsdpositionsource.h"
 #include <errno.h>
 
+#include "gpsmodule.h"
+
 GpsdPositionSource::GpsdPositionSource(QObject *parent)
     : QGeoPositionInfoSource(parent),
       logFile(new QFile(this)),
@@ -87,7 +89,7 @@ GpsdPositionSource::PositioningMethods GpsdPositionSource::supportedPositioningM
 
 int GpsdPositionSource::minimumUpdateInterval() const
 {
-    return 500;
+    return 100;
 }
 
 void GpsdPositionSource::startUpdates()
@@ -103,6 +105,14 @@ void GpsdPositionSource::startUpdates()
         connect(timer, SIGNAL(timeout()), this, SLOT(poll()));
     }
     timer->start(interval);
+
+    if (outputTimer == NULL) {
+        outputTimer = new QTimer(this);
+        connect(outputTimer, SIGNAL(timeout()), SLOT(doOutput()));
+        outputTimer->setSingleShot(false);
+        outputTimer->setInterval(5000);
+    }
+    outputTimer->start();
 }
 
 void GpsdPositionSource::stopUpdates()
@@ -110,6 +120,7 @@ void GpsdPositionSource::stopUpdates()
     gps_stream(&gps_data, WATCH_DISABLE, NULL);
 
     timer->stop();
+    outputTimer->stop();
 }
 
 void GpsdPositionSource::requestUpdate(int timeout /* ms */)
@@ -119,33 +130,42 @@ void GpsdPositionSource::requestUpdate(int timeout /* ms */)
         return;
     }
 
-    // 0.5 s
-    if (!gps_waiting(&gps_data, timeout * 1000 / 2)) {
+    // 500 microseconds waiting
+    if (!gps_waiting(&gps_data, 500)) {
 
         emit updateTimeout();
+        return;
     }
 
-    if (gps_read(&gps_data) == -1) {
+    int result = gps_read(&gps_data);
+    if (result == -1) {
         // error in errno
-        qDebug() << "gps_read: " << errno;
-    } else {
+        qCDebug(GPSMODULEC) << "gps_read: " << errno;
+    } else if (result > 0) {
+
+        // отдать координату
+        QGeoCoordinate coordinate(gps_data.fix.latitude, gps_data.fix.longitude, gps_data.fix.altitude);
+
+        QGeoPositionInfo update(coordinate, QDateTime::fromTime_t(gps_data.fix.time));
+
+        update.setAttribute(QGeoPositionInfo::GroundSpeed, gps_data.fix.speed);
+        update.setAttribute(QGeoPositionInfo::Direction, gps_data.fix.track);
+        update.setAttribute(QGeoPositionInfo::VerticalSpeed, gps_data.fix.climb);
+        update.setAttribute(QGeoPositionInfo::HorizontalAccuracy, gps_data.fix.epx + gps_data.fix.epy);
 
         if (gps_data.fix.mode >= MODE_2D) {
-            // отдать координату
-            QGeoCoordinate coordinate(gps_data.fix.latitude, gps_data.fix.longitude, gps_data.fix.altitude);
-
-            QGeoPositionInfo update(coordinate, QDateTime::fromTime_t(gps_data.fix.time));
-
-            update.setAttribute(QGeoPositionInfo::GroundSpeed, gps_data.fix.speed);
-            update.setAttribute(QGeoPositionInfo::Direction, gps_data.fix.track);
-            update.setAttribute(QGeoPositionInfo::VerticalSpeed, gps_data.fix.climb);
-            update.setAttribute(QGeoPositionInfo::HorizontalAccuracy, gps_data.fix.epx + gps_data.fix.epy);
 
             lastPosition = update;
-            if (update.isValid()) {
-                emit positionUpdated(update);
-            }
+
         }
+    }
+}
+
+void GpsdPositionSource::doOutput()
+{
+    qCDebug(GPSMODULEC) << "doing POSITION output";
+    if (lastPosition.isValid()) {
+        // emit positionUpdated(lastPosition);
     }
 }
 

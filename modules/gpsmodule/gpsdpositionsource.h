@@ -75,10 +75,12 @@ public slots:
 private slots:
     void poll();
     void connectGpsd();
+    void doOutput();
 
 private:            
     QFile *logFile;
     QTimer *timer;
+    QTimer *outputTimer;
     QGeoPositionInfo lastPosition;
 
     struct gps_data_t gps_data;

@@ -22,10 +22,11 @@ class GPSMODULE : public Module
 public:
     GPSMODULE(QObject *parent = 0);
     virtual ~GPSMODULE();
-    void start();
-    void stop();
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
+public slots:
+    void start();
+    void stop();
 
 private slots:
     void positionUpdated(const QGeoPositionInfo &);

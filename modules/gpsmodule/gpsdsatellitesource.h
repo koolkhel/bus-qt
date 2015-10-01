@@ -74,12 +74,16 @@ public slots:
 private slots:
     void poll();
     void connectGpsd();
-
+    void doOutput();
 private:
     QTimer *timer;
+    QTimer *outputTimer;
 
     struct gps_data_t gps_data;
     bool connected;
+
+    QList<QGeoSatelliteInfo> _inView;
+    QList<QGeoSatelliteInfo> _inUse;
 };
 
 #endif
