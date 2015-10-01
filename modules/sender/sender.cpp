@@ -76,6 +76,17 @@ void SENDER::start()
     sentMessageTimeoutTimer->setInterval(getConfigurationParameter("sendTimeout", 80 * 1000).toInt());
     sentMessageTimeoutTimer->setSingleShot(true);
     connect(sentMessageTimeoutTimer, SIGNAL(timeout()), SLOT(sentMessageTimeout()));
+
+    bool doKeepAlive = false;
+    doKeepAlive = getConfigurationParameter("keepAlive", QVariant("true")).toBool();
+    if (doKeepAlive) {
+        keepAliveTimer = new QTimer(this);
+        keepAliveTimer->setInterval(getConfigurationParameter("keepAliveInterval", QVariant(60000)).toInt());
+        keepAliveTimer->setSingleShot(true);
+        connect(keepAliveTimer, SIGNAL(timeout()), SLOT(keepAliveTimerTimeout()));
+        keepAliveTimer->start();
+    }
+
 }
 
 void SENDER::performSend()
@@ -112,6 +123,7 @@ void SENDER::performSend()
                         .arg(sentMessage->id())
                         .arg(sentMessage->sampleIds().count());
     network->queueMessage(sentMessage->msg());
+    keepAliveTimer->start();
 
     // ждем обратно
     sentMessageTimeoutTimer->start();
@@ -233,7 +245,15 @@ void SENDER::sentMessageTimeout()
 
     // отправляем (с потерями)
     network->queueMessage(sentMessage->msg());
+    keepAliveTimer->start();
 
     // ждем обратно
     sentMessageTimeoutTimer->start();
+}
+
+void SENDER::keepAliveTimerTimeout()
+{
+    // no server confirmation needed
+    ::indigo::pb::indigo_msg msg;
+    network->queueMessage(msg);
 }

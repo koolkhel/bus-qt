@@ -27,15 +27,17 @@ class SENDER : public Module
 public:
     SENDER(QObject *parent = 0);
     virtual ~SENDER();
-    void start();
-    void stop();
+
     virtual QStringList getPubTopics();
     virtual void respond(QString topic, indigo::pb::internal_msg &message);
-
+public slots:
+    void start();
+    void stop();
 private slots:
     void serverMessageReceived(::indigo::pb::indigo_msg &message);
     void performSend();
     void sentMessageTimeout();
+    void keepAliveTimerTimeout();
 private:
     void handleServerConfirmation(::indigo::pb::indigo_msg &message);
     void readKey();
@@ -52,6 +54,8 @@ private:
 
     QTimer *senderTimer;
     QTimer *sentMessageTimeoutTimer;
+
+    QTimer *keepAliveTimer;
 };
 
 #endif // SKEL_H
