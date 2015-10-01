@@ -49,7 +49,6 @@ void GPSMODULE::start()
     }
 
     QThread *nav_thread = new QThread(this);
-    nav_thread->start();
 
     QGeoSatelliteInfoSource *satSource  = new GpsdSatelliteSource();
     if (satSource) {
@@ -72,6 +71,8 @@ void GPSMODULE::start()
     } else {
         qCDebug(GPSMODULEC) << "no GPS available!";
     }
+
+    nav_thread->start();
 }
 
 void GPSMODULE::stop()

@@ -47,6 +47,7 @@
 GpsdSatelliteSource::GpsdSatelliteSource(QObject *parent)
     : QGeoSatelliteInfoSource(parent),
       timer(NULL),
+      outputTimer(NULL),
       connected(false)
 {
     qRegisterMetaType<QList<QGeoSatelliteInfo> >("QList<QGeoSatelliteInfo>");
@@ -83,6 +84,7 @@ int GpsdSatelliteSource::minimumUpdateInterval() const
 
 void GpsdSatelliteSource::startUpdates()
 {
+    qCDebug(GPSMODULEC) << "startUpdates";
     gps_stream(&gps_data, WATCH_ENABLE | WATCH_JSON, NULL);
 
     int interval = updateInterval();
@@ -101,7 +103,8 @@ void GpsdSatelliteSource::startUpdates()
         outputTimer->setInterval(5000);
         outputTimer->setSingleShot(false);
     }
-    outputTimer->start();
+
+    outputTimer->start();;
 }
 
 void GpsdSatelliteSource::stopUpdates()
@@ -167,8 +170,10 @@ void GpsdSatelliteSource::requestUpdate(int timeout /* ms */)
 void GpsdSatelliteSource::doOutput()
 {
     qCDebug(GPSMODULEC) << "doing SATELLITE output";
-    //emit satellitesInViewUpdated(_inView);
-    //emit satellitesInUseUpdated(_inUse);
+    if (_inView.size() > 0)
+        emit satellitesInViewUpdated(_inView);
+    if (_inUse.size() > 0)
+        emit satellitesInUseUpdated(_inUse);
 }
 
 QGeoSatelliteInfoSource::Error GpsdSatelliteSource::error() const

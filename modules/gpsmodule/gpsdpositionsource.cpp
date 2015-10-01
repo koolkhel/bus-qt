@@ -48,6 +48,7 @@ GpsdPositionSource::GpsdPositionSource(QObject *parent)
     : QGeoPositionInfoSource(parent),
       logFile(new QFile(this)),
       timer(NULL),
+      outputTimer(NULL),
       connected(false)
 {
     qRegisterMetaType<QGeoPositionInfo>("QGeoPositionInfo");
@@ -94,6 +95,7 @@ int GpsdPositionSource::minimumUpdateInterval() const
 
 void GpsdPositionSource::startUpdates()
 {
+    qCDebug(GPSMODULEC) << "startUpdates";
     gps_stream(&gps_data, WATCH_ENABLE | WATCH_JSON, NULL);
 
     int interval = updateInterval();
@@ -126,7 +128,7 @@ void GpsdPositionSource::stopUpdates()
 void GpsdPositionSource::requestUpdate(int timeout /* ms */)
 {
     if (!connected) {
-        qDebug() << "gpsd not connected";
+        qCDebug(GPSMODULEC) << "gpsd not connected";
         return;
     }
 
@@ -165,7 +167,7 @@ void GpsdPositionSource::doOutput()
 {
     qCDebug(GPSMODULEC) << "doing POSITION output";
     if (lastPosition.isValid()) {
-        // emit positionUpdated(lastPosition);
+        emit positionUpdated(lastPosition);
     }
 }
 
